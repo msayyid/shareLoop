@@ -2,20 +2,52 @@ extends layout
 block content 
     .main-content 
         h1 Categories 
-        .categories-container 
+
+        .nav-grid
             each category in categories 
-                .category-card 
-                    h2
-                        a(href=`./all-categories/${category.category_id}`) #{category.category_name }
-                    if category.description 
-                        p=category.description 
-                    else 
-                        p No description Available
-                    if category.icon 
-                        p=category.icon 
-                    else 
-                        p No icon available
-                    p Listing count: #{category.listing_count}
+                a.nav-card(href=`/all-categories/${category.category_id}`)
+
+                    // Icon / placeholder
+                    .category-icon
+                        span 
+                            if category.category_name == "Books"
+                                | 📚
+                            else if category.category_name == "Electronics"
+                                | 💻
+                            else if category.category_name == "Sports"
+                                | ⚽
+                            else
+                                | 📦
+
+                    // Title
+                    h2 #{category.category_name}
+
+                    // Description (only if exists)
+                    if category.description
+                        p.category-desc #{category.description}
+
+                    // Listing count
+                    p.category-count #{category.listing_count} listings
+
+
+//- extends layout 
+//- block content 
+//-     .main-content 
+//-         h1 Categories 
+//-         .categories-container 
+//-             each category in categories 
+//-                 .category-card 
+//-                     h2
+//-                         a(href=`./all-categories/${category.category_id}`) #{category.category_name }
+//-                     if category.description 
+//-                         p=category.description 
+//-                     else 
+//-                         p No description Available
+//-                     if category.icon 
+//-                         p=category.icon 
+//-                     else 
+//-                         p No icon available
+//-                     p Listing count: #{category.listing_count}
 
         //- table(border=1)
         //-     tr  

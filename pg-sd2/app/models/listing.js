@@ -55,6 +55,24 @@ class Listing {
         
         return result;
     }
+
+    static async getAllTags() {
+        const sql = `select * from tags`;
+        const result = await db.query(sql);
+        return result;
+    }
+
+    static async getListingsByTagId(tag_id) {
+        const sql = `select l.*, t.tag_id, t.tag_name, c.category_name, c.category_id
+                            from listings l
+                            join listing_tags lt on lt.listing_id = l.listing_id
+                            join tags t on t.tag_id = lt.tag_id
+                            join categories c on c.category_id = l.category_id
+                            where t.tag_id = ?`;
+        const result = await db.query(sql, [tag_id]);
+        return result;
+
+    }
 }
 
 module.exports = {Listing}

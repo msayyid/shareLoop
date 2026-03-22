@@ -1,26 +1,57 @@
 extends layout 
 block content 
     .main-content
-        h1 All Users Formatted Page 
-        table(border=1)
-            tr 
-                th user_id 
-                th user_name 
-                th bio
-                th email 
-                th location 
-                th Loop Points
-                th rating 
-                th Joined on
+        h1 Community Members
 
-            for user in results 
-                tr 
-                    td #{user.user_id}
-                    td 
-                        a(href=`./single-user/${user.user_id}`) #{user.first_name} #{user.last_name}
-                    td #{user.bio}
-                    td #{user.email} 
-                    td #{user.location}
-                    td #{user.points}
-                    td #{user.average_rating}
-                    td #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+        .nav-grid
+            each user in results
+                a.nav-card(href=`/single-user/${user.user_id}`)
+
+                    // Avatar (placeholder)
+                    .user-avatar
+                        span 👤
+
+                    // Name
+                    h3 #{user.first_name} #{user.last_name}
+
+                    // Bio (only if exists)
+                    if user.bio
+                        p.user-bio #{user.bio} 
+                    //- p i am bio
+
+                    // Info
+                    p.user-meta 📍 #{user.location || "Unknown"}
+                    p.user-meta ⭐ #{user.average_rating || "N/A"}
+                    p.user-meta 🔁 #{user.points} points
+
+                    // Date
+                    p.user-date Joined #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+
+
+//- extends layout 
+//- block content 
+//-     .main-content
+//-         h1 All Users Formatted Page 
+//-         table(border=1)
+//-             tr 
+//-                 th user_id 
+//-                 th user_name 
+//-                 th bio
+//-                 th email 
+//-                 th location 
+//-                 th Loop Points
+//-                 th rating 
+//-                 th Joined on
+
+//-             for user in results 
+//-                 tr 
+//-                     td #{user.user_id}
+//-                     td 
+//-                         a(href=`./single-user/${user.user_id}`) #{user.first_name} #{user.last_name}
+//-                     td #{user.bio}
+//-                     td #{user.email} 
+//-                     td #{user.location}
+//-                     td #{user.points}
+//-                     td #{user.average_rating}
+//-                     td #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}

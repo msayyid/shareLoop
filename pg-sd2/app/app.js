@@ -22,7 +22,7 @@ const { Category } = require("./models/category");
 
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.send("Hello world!");
+    res.render("home-page")
 });
 
 // users
@@ -56,10 +56,14 @@ app.get("/all-listings-formatted", async function(req, res) {
                         from listings l
                         join categories c on l.category_id = c.category_id`;
     const result = await db.query(sql);
+    const tags = await Listing.getAllTags();
     res.render("all-listings-formatted", {
-        listings:result
+        listings:result,
+        tags:tags
     });
     console.log(result);
+    console.log("these are the tags only");
+    console.log(tags);
 });
 
 app.get("/listing-detail/:listing_id", async function (req, res){
@@ -91,6 +95,17 @@ app.get("/all-categories/:id", async function(req, res) {
     console.log("this is what i need");
     console.log(listings);
 
+});
+
+// get listings by tags
+app.get("/tags/:id", async function(req, res) {
+    const tag_id = req.params.id;
+    const listings = await Listing.getListingsByTagId(tag_id);
+    res.render("tag-listings", {
+        listings:listings
+    });
+    console.log("we ve got tag listings in here");
+    console.log(listings);
 });
 
 app.get("/project_db_test", async function (req, res) {

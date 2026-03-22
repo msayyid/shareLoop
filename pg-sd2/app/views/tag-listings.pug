@@ -1,0 +1,20 @@
+extends layout 
+block content 
+    .main-content 
+        
+        if listings.length > 0
+            h1 Listings for tag "#{listings[0].tag_name}"
+        else 
+            h1 No listings found
+        //- p= listings[0].tag_name 
+        .listings-container 
+            for listing in listings 
+                .listing-box 
+                    h3  
+                        a(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+                    p Category: #{listing.category_name}
+                    p Description: #{listing.description}
+                    p Exchange Type: #{listing.exchange_type}
+                    p Condition: #{listing.condition_status} 
+                    p Available: #{listing.is_available ? "Yes" : "No"} 
+                    p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}

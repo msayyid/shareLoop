@@ -1,0 +1,21 @@
+extends layout 
+block content 
+    .main-content 
+        .hero
+            h1 Welcome to ShareLoop
+            p.tagline Share More. Waste Less. Connect Better.
+            p.description Lend, swap, or give away items with people nearby — completely free, no money ever changes hands.
+
+        .nav-grid 
+            .nav-card
+                h3 Listings 
+                p Browse all available items
+                a(href=`/all-listings-formatted`) Go
+            .nav-card
+                h3 Users 
+                p View Community Members
+                a(href=`/all-users-formatted`) Go
+            .nav-card
+                h3 Categories 
+                p Explore by category
+                a(href=`/all-categories`) Go

@@ -1,17 +1,39 @@
-extends layout 
+extends layout
 block content 
     .main-content 
         h1 All Listings 
-        for listing in listings 
-            .listing-box
-                h3
-                    a(href=`./listing-detail/${listing.listing_id}`) #{listing.title}
-                p Category: #{listing.category_name}
-                p Description: #{listing.description}
-                p Exchange Type: #{listing.exchange_type} 
-                p Condition: #{listing.condition_status} 
-                p Available: #{listing.is_available ? "Yes" : "No"}
-                p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+        .tag-container
+            h3 Tags:
+            .tag-list
+                each tag in tags
+                    a.tag(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
+
+        .nav-grid 
+            each listing in listings 
+                .nav-card
+                    img(src="https://via.placeholder.com/300x150")
+                    h3
+                        a(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+                    p Category: #{listing.category_name}
+                    p Description: #{listing.description}
+                    p Exchange Type: #{listing.exchange_type} 
+                    p Condition: #{listing.condition_status} 
+                    p Available: #{listing.is_available ? "Yes" : "No"}
+                    p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+        //- .listings-container
+            
+            for listing in listings 
+                .listing-box
+                    h3
+                        a(href=`./listing-detail/${listing.listing_id}`) #{listing.title}
+                    p Category: #{listing.category_name}
+                    p Description: #{listing.description}
+                    p Exchange Type: #{listing.exchange_type} 
+                    p Condition: #{listing.condition_status} 
+                    p Available: #{listing.is_available ? "Yes" : "No"}
+                    p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
 
 
         //- h1 Item Listings 

@@ -1,0 +1,121 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.main-content {
+    width: 80%;
+    margin: 30px auto;
+}
+
+.listing-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.listing-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.listing-box p {
+    margin: 6px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background: #f0f0f0;
+    width: 30%;
+}
+
+
+.categories-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.category-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.category-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.category-card p {
+    margin: 8px 0;
+}
+
+.category-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+.listings-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.listing-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.listing-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.listing-box p {
+    margin: 6px 0;
+}
+
+.listing-box a {
+    text-decoration: none;
+    color: black;
+}
+
+.listing-box a:hover {
+    text-decoration: underline;
+}
+
+.listing-box:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-text {
+    align-items: center;
+    text-align: center;
+}
+
+old css
