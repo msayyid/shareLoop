@@ -1,21 +1,59 @@
-extends layout 
-block content 
-    .main-content 
-        .hero
-            h1 Welcome to ShareLoop
-            p.tagline Share More. Waste Less. Connect Better.
-            p.description Lend, swap, or give away items with people nearby — completely free, no money ever changes hands.
+extends layout
 
-        .nav-grid 
-            .nav-card
-                h3 Listings 
-                p Browse all available items
-                a(href=`/all-listings-formatted`) Go
-            .nav-card
-                h3 Users 
-                p View Community Members
-                a(href=`/all-users-formatted`) Go
-            .nav-card
-                h3 Categories 
-                p Explore by category
-                a(href=`/all-categories`) Go
+block content
+    .text-center.py-5.mb-4
+        h1.display-5.fw-bold.mb-3 Welcome to ShareLoop
+        p.lead.text-muted.mb-2 Share More. Waste Less. Connect Better.
+        p.text-muted.mb-0
+            | Lend, swap, or give away items with people nearby - completely free, no money ever changes hands.
+
+    .row.g-4.justify-content-center
+        .col-md-6.col-lg-4
+            .card.h-100.shadow-sm.border-0.text-center
+                .card-body.d-flex.flex-column
+                    .display-5.mb-3 📦
+                    h4.card-title Listings
+                    p.card-text.text-muted.mb-4 Browse all available items
+                    .mt-auto
+                        a.btn.btn-dark.w-100(href="/all-listings-formatted") View Listings
+
+        .col-md-6.col-lg-4
+            .card.h-100.shadow-sm.border-0.text-center
+                .card-body.d-flex.flex-column
+                    .display-5.mb-3 👥
+                    h4.card-title Users
+                    p.card-text.text-muted.mb-4 View community members
+                    .mt-auto
+                        a.btn.btn-dark.w-100(href="/all-users-formatted") View Users
+
+        .col-md-6.col-lg-4
+            .card.h-100.shadow-sm.border-0.text-center
+                .card-body.d-flex.flex-column
+                    .display-5.mb-3 🗂️
+                    h4.card-title Categories
+                    p.card-text.text-muted.mb-4 Explore listings by category
+                    .mt-auto
+                        a.btn.btn-dark.w-100(href="/all-categories") View Categories
+
+
+//- extends layout 
+//- block content 
+//-     .main-content 
+//-         .hero
+//-             h1 Welcome to ShareLoop
+//-             p.tagline Share More. Waste Less. Connect Better.
+//-             p.description Lend, swap, or give away items with people nearby — completely free, no money ever changes hands.
+
+//-         .nav-grid 
+//-             .nav-card
+//-                 h3 Listings 
+//-                 p Browse all available items
+//-                 a(href=`/all-listings-formatted`) Go
+//-             .nav-card
+//-                 h3 Users 
+//-                 p View Community Members
+//-                 a(href=`/all-users-formatted`) Go
+//-             .nav-card
+//-                 h3 Categories 
+//-                 p Explore by category
+//-                 a(href=`/all-categories`) Go

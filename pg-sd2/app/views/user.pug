@@ -1,23 +1,79 @@
-extends layout 
-block content 
-    .main-content  
-        h1 User Profile Page
-        h1 User ID: #{user.user_id}
-        h1 User Name: #{user.first_name}  #{user.last_name}
-        h1 User Email Address: #{user.email}
-        br
+extends layout
 
-        h2 Detailed Data for #{user.first_name} #{user.last_name}
-        - const hiddentFields = ['created_at', 'latitude', 'longitude', 'updated_at', 'password_hash']
-        table(border=1)
-            tr 
-                th Field 
-                th Value 
+block content
+    .row.justify-content-center
+        .col-lg-8
+            .card.shadow-sm.border-0
+                .card-body.p-4
+                    .text-center.mb-4
+                        img.rounded-circle.mb-3(
+                            src="https://via.placeholder.com/140"
+                            alt="User avatar"
+                            width="140"
+                            height="140"
+                        )
+
+                        h1.card-title.mb-1 #{user.first_name} #{user.last_name}
+                        p.text-muted.mb-0 Community member on ShareLoop
+
+                    .row.g-3.mt-2
+                        .col-md-6
+                            .card.h-100.bg-light
+                                .card-body
+                                    h6.card-subtitle.mb-3.text-muted Basic Information
+                                    p.mb-2
+                                        strong User ID:
+                                        |  #{user.user_id}
+                                    p.mb-2
+                                        strong Email:
+                                        |  #{user.email}
+                                    p.mb-0
+                                        strong Location:
+                                        |  #{user.location || "Unknown"}
+
+                        .col-md-6
+                            .card.h-100.bg-light
+                                .card-body
+                                    h6.card-subtitle.mb-3.text-muted Community Stats
+                                    p.mb-2
+                                        strong Points:
+                                        |  #{user.points || 0}
+                                    p.mb-2
+                                        strong Rating:
+                                        |  #{user.average_rating || "N/A"}
+                                    p.mb-0
+                                        strong Joined:
+                                        |  #{user.formatted_created_at || "Unknown"}
+
+                    .mt-4
+                        h5.mb-2 Bio
+                        p.mb-0 #{user.bio || "No bio available."}
+
+                .card-footer.bg-white.border-0.pt-0.pb-4.px-4
+                    .d-flex.flex-wrap.gap-2
+                        a.btn.btn-dark(href="/all-users-formatted") Back to Users
+
+
+//- extends layout 
+//- block content 
+//-     .main-content  
+//-         h1 User Profile Page
+//-         h1 User ID: #{user.user_id}
+//-         h1 User Name: #{user.first_name}  #{user.last_name}
+//-         h1 User Email Address: #{user.email}
+//-         br
+
+//-         h2 Detailed Data for #{user.first_name} #{user.last_name}
+//-         - const hiddentFields = ['created_at', 'latitude', 'longitude', 'updated_at', 'password_hash']
+//-         table(border=1)
+//-             tr 
+//-                 th Field 
+//-                 th Value 
         
-            each value, key in user 
-                if !hiddentFields.includes(key)
-                    tr 
-                        td #{key}
-                        td #{value} 
+//-             each value, key in user 
+//-                 if !hiddentFields.includes(key)
+//-                     tr 
+//-                         td #{key}
+//-                         td #{value} 
 
-        h3 Joined On #{user.formatted_created_at}
+//-         h3 Joined On #{user.formatted_created_at}

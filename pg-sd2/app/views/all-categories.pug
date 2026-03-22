@@ -1,15 +1,17 @@
-extends layout 
-block content 
-    .main-content 
-        h1 Categories 
+extends layout
 
-        .nav-grid
-            each category in categories 
-                a.nav-card(href=`/all-categories/${category.category_id}`)
+block content
+    .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+        div
+            h1.mb-1 Categories
+            p.text-muted.mb-0 Explore items by category
 
-                    // Icon / placeholder
-                    .category-icon
-                        span 
+    .row.g-4
+        each category in categories
+            .col-md-6.col-lg-4
+                .card.h-100.shadow-sm.border-0.text-center
+                    .card-body.d-flex.flex-column
+                        .display-5.mb-3
                             if category.category_name == "Books"
                                 | 📚
                             else if category.category_name == "Electronics"
@@ -19,48 +21,45 @@ block content
                             else
                                 | 📦
 
-                    // Title
-                    h2 #{category.category_name}
+                        h4.card-title.mb-2 #{category.category_name}
 
-                    // Description (only if exists)
-                    if category.description
-                        p.category-desc #{category.description}
+                        if category.description
+                            p.card-text.text-muted.mb-3 #{category.description}
 
-                    // Listing count
-                    p.category-count #{category.listing_count} listings
+                        p.text-muted.small.mb-3 #{category.listing_count} listings
 
+                        .mt-auto
+                            a.btn.btn-dark.w-100(href=`/all-categories/${category.category_id}`) View Category
 
-//- extends layout 
+//- extends layout
+
 //- block content 
 //-     .main-content 
 //-         h1 Categories 
-//-         .categories-container 
+
+//-         .nav-grid
 //-             each category in categories 
-//-                 .category-card 
-//-                     h2
-//-                         a(href=`./all-categories/${category.category_id}`) #{category.category_name }
-//-                     if category.description 
-//-                         p=category.description 
-//-                     else 
-//-                         p No description Available
-//-                     if category.icon 
-//-                         p=category.icon 
-//-                     else 
-//-                         p No icon available
-//-                     p Listing count: #{category.listing_count}
+//-                 a.nav-card(href=`/all-categories/${category.category_id}`)
 
-        //- table(border=1)
-        //-     tr  
-        //-         th Category ID 
-        //-         th Category Name 
-        //-         th Description 
-        //-         th icon 
-        //-         th listing_count 
+//-                     // Icon / placeholder
+//-                     .category-icon
+//-                         span 
+//-                             if category.category_name == "Books"
+//-                                 | 📚
+//-                             else if category.category_name == "Electronics"
+//-                                 | 💻
+//-                             else if category.category_name == "Sports"
+//-                                 | ⚽
+//-                             else
+//-                                 | 📦
 
-        //-     for category in categories 
-        //-         tr 
-        //-             td=category.category_id 
-        //-             td=category.category_name 
-        //-             td=category.description 
-        //-             td=category.icon 
-        //-             td=category.listing_count
+//-                     // Title
+//-                     h2 #{category.category_name}
+
+//-                     // Description (only if exists)
+//-                     if category.description
+//-                         p.category-desc #{category.description}
+
+//-                     // Listing count
+//-                     p.category-count #{category.listing_count} listings
+

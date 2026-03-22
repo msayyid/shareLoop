@@ -1,58 +1,148 @@
 extends layout
 
 block content
-    .main-content
-        h2 The Detail Page for the Listing
-        h2 Full Detail Page For: #{listing.title}
+    .row.justify-content-center
+        .col-lg-8
+            .card.shadow-sm.border-0
+                img.card-img-top(
+                    src="https://via.placeholder.com/900x320"
+                    alt="Listing image"
+                )
 
-        table(border=1)
-            tr
-                th Field
-                th Value
+                .card-body
+                    h1.card-title.mb-2= listing.title
+                    p.text-muted.mb-4 View full details for this community listing
 
-            tr
-                td Listing ID
-                td= listing.listing_id
+                    .d-flex.flex-wrap.gap-2.mb-3
+                        span.badge.text-bg-secondary= listing.category_name
+                        span.badge.text-bg-info= listing.exchange_type
+                        if listing.is_available
+                            span.badge.text-bg-success Available
+                        else
+                            span.badge.text-bg-danger Not Available
 
-            tr
-                td Title
-                td= listing.title
+                    p.text-muted.mb-1
+                        strong Owner:
+                        |  
+                        if listing.user_id
+                            a.link-dark.text-decoration-none(href=`/single-user/${listing.user_id}`) #{listing.first_name}
+                        else
+                            | #{listing.first_name}
 
-            tr
-                td Owner
-                td= listing.first_name
+                    h5.mb-2.mt-4 Description
+                    p.mb-4= listing.description || "No description available."
 
-            tr
-                td Category
-                td= listing.category_name
+                    .row.g-3
+                        .col-md-6
+                            .card.h-100.bg-light
+                                .card-body
+                                    h6.card-subtitle.mb-3.text-muted Condition
+                                    p.mb-2
+                                        strong Status:
+                                        |  #{listing.condition_status || "Unknown"}
+                                    p.mb-0
+                                        strong Notes:
+                                        |  #{listing.condition_notes || "None"}
 
-            tr
-                td Description
-                td= listing.description
+                        .col-md-6
+                            .card.h-100.bg-light
+                                .card-body
+                                    h6.card-subtitle.mb-3.text-muted Dates
+                                    p.mb-2
+                                        strong Created:
+                                        |  #{listing.formatted_created_at || "Unknown"}
+                                    p.mb-0
+                                        strong Updated:
+                                        |  #{listing.formatted_updated_at || "Unknown"}
 
-            tr
-                td Exchange Type
-                td= listing.exchange_type
+                .card-footer.bg-white.border-0.pt-0.pb-4.px-4
+                    .d-flex.flex-wrap.gap-2
+                        a.btn.btn-dark(href="/all-listings-formatted") Back to Listings
+                        if listing.category_id
+                            a.btn.btn-outline-secondary(href=`/all-categories/${listing.category_id}`) More in this Category
 
-            tr
-                td Condition Status
-                td= listing.condition_status
 
-            tr
-                td Condition Notes
-                td= listing.condition_notes || "None"
+//- extends layout 
+//- block content 
+//-     .main-content 
+//-         .detail-card 
+//-             img.detail-image(src="http.//via.placeholder.com/800x300")
 
-            tr
-                td Available
-                td= listing.is_available ? "Yes" : "No"
+//-             h1= listing.title 
+//-             p.detail-meta Category: #{listing.category_name}
+//-             p.detail-meta Owner:  #{listing.first_name} 
+//-             p.detail-meta Available: #{listing.is_available ? "Yes" : "No"}
 
-            tr
-                td Created At
-                td= listing.formatted_created_at
+//-             .detail-section 
+//-                 h3 Description 
+//-                 p= listing.description 
 
-            tr
-                td Updated At
-                td= listing.formatted_updated_at
+//-             .detail-section 
+//-                 h3 Exchange Details 
+//-                 p Exchange Type: #{listing.exchange_type} 
+//-                 p Condition: #{listing.condition_status} 
+//-                 p Notes: #{listing.condition_notes || "None"}
+
+//-             .detail-section 
+//-                 h3 Dates 
+//-                 p Created: #{listing.formatted_created_at} 
+//-                 p Updated: #{listing.formatted_updated_at}
+
+//- extends layout
+
+//- block content
+//-     .main-content
+//-         h2 The Detail Page for the Listing
+//-         h2 Full Detail Page For: #{listing.title}
+
+//-         table(border=1)
+//-             tr
+//-                 th Field
+//-                 th Value
+
+//-             tr
+//-                 td Listing ID
+//-                 td= listing.listing_id
+
+//-             tr
+//-                 td Title
+//-                 td= listing.title
+
+//-             tr
+//-                 td Owner
+//-                 td= listing.first_name
+
+//-             tr
+//-                 td Category
+//-                 td= listing.category_name
+
+//-             tr
+//-                 td Description
+//-                 td= listing.description
+
+//-             tr
+//-                 td Exchange Type
+//-                 td= listing.exchange_type
+
+//-             tr
+//-                 td Condition Status
+//-                 td= listing.condition_status
+
+//-             tr
+//-                 td Condition Notes
+//-                 td= listing.condition_notes || "None"
+
+//-             tr
+//-                 td Available
+//-                 td= listing.is_available ? "Yes" : "No"
+
+//-             tr
+//-                 td Created At
+//-                 td= listing.formatted_created_at
+
+//-             tr
+//-                 td Updated At
+//-                 td= listing.formatted_updated_at
         //- table(border=1)
         //-     tr 
         //-         th Listing ID

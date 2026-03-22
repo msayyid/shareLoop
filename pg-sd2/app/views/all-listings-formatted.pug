@@ -1,50 +1,83 @@
 extends layout
-block content 
-    .main-content 
-        h1 All Listings 
 
-        .tag-container
-            h3 Tags:
-            .tag-list
+block content
+    .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+        div
+            h1.mb-1 All Listings
+            p.text-muted.mb-0 Browse items available in the ShareLoop community
+
+    .card.shadow-sm.border-0.mb-4
+        .card-body
+            h5.card-title.mb-3 Filter by Tags
+            .d-flex.flex-wrap.gap-2
                 each tag in tags
-                    a.tag(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
+                    a.btn.btn-outline-secondary.btn-sm(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
 
-        .nav-grid 
-            each listing in listings 
-                .nav-card
-                    img(src="https://via.placeholder.com/300x150")
-                    h3
-                        a(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
-                    p Category: #{listing.category_name}
-                    p Description: #{listing.description}
-                    p Exchange Type: #{listing.exchange_type} 
-                    p Condition: #{listing.condition_status} 
-                    p Available: #{listing.is_available ? "Yes" : "No"}
-                    p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+    .row.g-4
+        each listing in listings
+            .col-md-6.col-lg-4
+                .card.h-100.shadow-sm.border-0
+                    img.card-img-top(
+                        src="https://via.placeholder.com/300x150"
+                        alt="Listing image"
+                    )
 
-        //- .listings-container
-            
-            for listing in listings 
-                .listing-box
-                    h3
-                        a(href=`./listing-detail/${listing.listing_id}`) #{listing.title}
-                    p Category: #{listing.category_name}
-                    p Description: #{listing.description}
-                    p Exchange Type: #{listing.exchange_type} 
-                    p Condition: #{listing.condition_status} 
-                    p Available: #{listing.is_available ? "Yes" : "No"}
-                    p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+                    .card-body.d-flex.flex-column
+                        h5.card-title
+                            a.text-decoration-none.text-dark(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+
+                        p.text-muted.mb-2
+                            strong Category:
+                            |  #{listing.category_name}
+
+                        p.card-text.mb-2
+                            strong Description:
+                            |  #{listing.description}
+
+                        p.mb-1
+                            strong Exchange Type:
+                            |  #{listing.exchange_type}
+
+                        p.mb-1
+                            strong Condition:
+                            |  #{listing.condition_status}
+
+                        p.mb-1
+                            strong Available:
+                            if listing.is_available
+                                span.badge.text-bg-success.ms-1 Yes
+                            else
+                                span.badge.text-bg-danger.ms-1 No
+
+                        p.text-muted.small.mt-2.mb-0
+                            strong Created:
+                            |  #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+                        .mt-auto.pt-3
+                            a.btn.btn-dark.w-100(href=`/listing-detail/${listing.listing_id}`) View Details
 
 
-        //- h1 Item Listings 
-        
-        //- h2 One item in one table for now 
-        //- for listing in listings 
-        //-     table(border=1)
-        //-         tr 
-        //-             th field 
-        //-             th value 
-        //-         for val, key in listing 
-        //-             tr 
-        //-                 td #{key}
-        //-                 td #{val} 
+
+//- extends layout
+//- block content 
+//-     .main-content 
+//-         h1 All Listings 
+
+//-         .tag-container
+//-             h3 Tags:
+//-             .tag-list
+//-                 each tag in tags
+//-                     a.tag(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
+
+//-         .nav-grid 
+//-             each listing in listings 
+//-                 .nav-card
+//-                     img(src="https://via.placeholder.com/300x150")
+//-                     h3
+//-                         a(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+//-                     p Category: #{listing.category_name}
+//-                     p Description: #{listing.description}
+//-                     p Exchange Type: #{listing.exchange_type} 
+//-                     p Condition: #{listing.condition_status} 
+//-                     p Available: #{listing.is_available ? "Yes" : "No"}
+//-                     p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}

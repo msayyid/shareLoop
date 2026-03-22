@@ -101,8 +101,10 @@ app.get("/all-categories/:id", async function(req, res) {
 app.get("/tags/:id", async function(req, res) {
     const tag_id = req.params.id;
     const listings = await Listing.getListingsByTagId(tag_id);
+    const tags = await Listing.getAllTags();
     res.render("tag-listings", {
-        listings:listings
+        listings:listings,
+        tags:tags
     });
     console.log("we ve got tag listings in here");
     console.log(listings);
