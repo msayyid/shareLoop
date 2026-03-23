@@ -84,8 +84,8 @@ app.get("/listing-detail/:listing_id", async function (req, res){
 // categories
 app.get("/all-categories", async function(req, res) {
     const categories = await Category.getAllCategories();
-    const category_id = categories[0]
-    const total = await Category.getListingsCountByCategory(category_id);
+    // const category_id = categories[0]
+    // const total = await Category.getListingsCountByCategory(category_id);
     res.render("all-categories", {
         categories:categories
     });
