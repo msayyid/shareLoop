@@ -42,6 +42,7 @@ app.get("/single-user/:id", async function(req, res) {
     const uId = req.params.id;
     let user = new User(uId);
     await user.getUser();
+    await user.setProfilePic("profile_pic_1.jpg");
     res.render("user", {
         user:user
     });
@@ -83,6 +84,8 @@ app.get("/listing-detail/:listing_id", async function (req, res){
 // categories
 app.get("/all-categories", async function(req, res) {
     const categories = await Category.getAllCategories();
+    const category_id = categories[0]
+    const total = await Category.getListingsCountByCategory(category_id);
     res.render("all-categories", {
         categories:categories
     });

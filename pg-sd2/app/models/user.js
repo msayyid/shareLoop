@@ -51,6 +51,13 @@ class User {
 
 
     }
+
+    async setProfilePic(filename) {
+        const sql = `update users set profile_pic = ? where user_id = ?`;
+        await db.query(sql, [filename, this.user_id]);
+        this.profile_pic = filename;
+
+    }
 }
 
 module.exports = { User }
