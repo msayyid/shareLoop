@@ -30,13 +30,22 @@ app.get("/", function(req, res) {
 app.get("/all-users-formatted", async function(req, res) {
     const sql = `select * from users`;
     const results = await db.query(sql);
+
+    // set the pictures path
+    results.forEach(user => {
+        if (user.profile_pic) {
+            user.image_path = `/images/users/${user.profile_pic}`;
+        } else {
+            user.image_path = `/images/users/default-avatar.jpg`;
+        }
+    })
     res.render("all-users-formatted", {
         results: results
     });
     console.log("i can see all the users that will be formatted in here");
     console.log(results);
 
-})
+});
 
 app.get("/single-user/:id", async function(req, res) {
     const uId = req.params.id;
