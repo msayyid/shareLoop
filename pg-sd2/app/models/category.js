@@ -34,6 +34,7 @@ class Category {
         Object.assign(this, result[0]);
     }
 
+
     // static async getListingsCountByCategory(category_id) {
     //     const sql = `select count(*) as total_by_category from listings
     //                             where category_id = ? `

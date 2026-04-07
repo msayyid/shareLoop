@@ -1,0 +1,11 @@
+extends layout 
+block content 
+    h1 This is the minimal login page for now 
+    form(action="/login" method="POST")
+        label(for="email") Enter your email: 
+        input("name"="email")
+        div
+        label(for="password") Enter your password 
+        input("name"="password")
+        div
+        input(type="submit" value="Login")

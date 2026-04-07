@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 24, 2026 at 04:16 AM
+-- Generation Time: Apr 07, 2026 at 05:42 PM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -304,7 +304,7 @@ INSERT INTO `tags` (`tag_id`, `tag_name`, `usage_count`) VALUES
 CREATE TABLE `users` (
   `user_id` int NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
+  `password_hash` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `bio` text,
@@ -328,21 +328,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_name`, `bio`, `location`, `latitude`, `longitude`, `profile_pic`, `points`, `average_rating`, `total_ratings`, `items_lent`, `items_borrowed`, `items_given`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'alex.turner@roehampton.ac.uk', 'h1', 'Alex', 'Turner', 'Computer science student who likes sharing useful study items. Usually available around campus on weekdays.', 'Roehampton, London', NULL, NULL, 'profile_pic_1.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:30:10'),
-(2, 'sarah.khan@roehampton.ac.uk', 'h2', 'Sarah', 'Khan', 'Postgraduate student based in Putney. Happy to pass on items that are still useful to others.', 'Putney, London', NULL, NULL, 'profile_pic_2.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:30:30'),
-(3, 'james.wilson@roehampton.ac.uk', 'h3', 'James', 'Wilson', 'Enjoys cooking and keeping things practical. Usually responds in the evening.', 'Wandsworth, London', NULL, NULL, 'profile_pic_3.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:30:47'),
-(4, 'emma.clarke@roehampton.ac.uk', 'h4', 'Emma', 'Clarke', 'Keeps active and likes simple item swaps. Prefers clear communication and arranged pickup times.', 'Barnes, London', NULL, NULL, 'profile_pic_4.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:31:08'),
-(5, 'daniel.lee@roehampton.ac.uk', 'h5', 'Daniel', 'Lee', 'Final-year student clearing out spare home items. Mostly shares things that are still in solid condition.', 'Fulham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(6, 'olivia.brown@roehampton.ac.uk', 'h6', 'Olivia', 'Brown', 'Often lends books and revision materials to other students. Based near Clapham.', 'Clapham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(7, 'noah.davis@roehampton.ac.uk', 'h7', 'Noah', 'Davis', 'Tech-friendly student with a few spare accessories and home items. Open to swaps for useful essentials.', 'Tooting, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(8, 'mia.evans@roehampton.ac.uk', 'h8', 'Mia', 'Evans', 'Likes keeping things tidy and passing on items instead of wasting them. Usually free on weekends.', 'Richmond, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(9, 'liam.taylor@roehampton.ac.uk', 'h9', 'Liam', 'Taylor', 'Sports enthusiast who shares equipment when it is not being used. Quick to reply when available.', 'Kingston, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(10, 'ava.moore@roehampton.ac.uk', 'h10', 'Ava', 'Moore', 'Moving between student places and trying to keep things simple. Happy to give away practical items.', 'Hammersmith, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(11, 'ethan.white@roehampton.ac.uk', 'h11', 'Ethan', 'White', 'Second-year student interested in databases and systems. Usually lends books and desk items.', 'Chelsea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(12, 'sophia.martin@roehampton.ac.uk', 'h12', 'Sophia', 'Martin', 'Keeps spare accessories and kitchen items in good condition. Prefers local pickup.', 'Putney, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(13, 'lucas.hall@roehampton.ac.uk', 'h13', 'Lucas', 'Hall', 'Enjoys cooking and sharing appliances that still have plenty of use left. Based in Wimbledon.', 'Wimbledon, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(14, 'amelia.young@roehampton.ac.uk', 'h14', 'Amelia', 'Young', 'Fitness-focused student with a few sports items to lend or swap. Flexible with collection times.', 'Battersea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00'),
-(15, 'harry.king@roehampton.ac.uk', 'h15', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-03-23 21:12:00');
+(1, 'alex.turner@roehampton.ac.uk', '$2b$10$LfSszi8yuKSH3Q0xuacgVOfM0PSSta6x97YN685ROgM2n6nmMDZHe', 'Alex', 'Turner', 'Computer science student who likes sharing useful study items. Usually available around campus on weekdays.', 'Roehampton, London', NULL, NULL, 'profile_pic_1.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:46'),
+(2, 'sarah.khan@roehampton.ac.uk', '$2b$10$XS976wXNYqCjoJcASD7JqeJsNnrB35bJkG1i5qkSfx2vrMMEGsGr6', 'Sarah', 'Khan', 'Postgraduate student based in Putney. Happy to pass on items that are still useful to others.', 'Putney, London', NULL, NULL, 'profile_pic_2.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(3, 'james.wilson@roehampton.ac.uk', '$2b$10$b4lHyhYiliVJImduM1oUm.WBHDQVFoNl9YzI0qeV/A4tZ3pN9UjIa', 'James', 'Wilson', 'Enjoys cooking and keeping things practical. Usually responds in the evening.', 'Wandsworth, London', NULL, NULL, 'profile_pic_3.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(4, 'emma.clarke@roehampton.ac.uk', '$2b$10$2U3J0uaCrck/ZmRZg7fTg.T0w8K6pSb5Se1.AhkRzfpVQt8pTi9k2', 'Emma', 'Clarke', 'Keeps active and likes simple item swaps. Prefers clear communication and arranged pickup times.', 'Barnes, London', NULL, NULL, 'profile_pic_4.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(5, 'daniel.lee@roehampton.ac.uk', '$2b$10$TxCde1B0UX570ghJWR9HCenPjAwKNwpUpC200Coi0HsK3Fjm1Nenm', 'Daniel', 'Lee', 'Final-year student clearing out spare home items. Mostly shares things that are still in solid condition.', 'Fulham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(6, 'olivia.brown@roehampton.ac.uk', '$2b$10$zYQGYEzdDoOwF1gVn8R4huq.vV7VEjjoW3NjClOLgC98Y.VpbV3yO', 'Olivia', 'Brown', 'Often lends books and revision materials to other students. Based near Clapham.', 'Clapham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(7, 'noah.davis@roehampton.ac.uk', '$2b$10$vLP6lTp7E7dMrgxWNksWmuXfeF3jaF5mt/awWvA2DOs1ONXXQj5kW', 'Noah', 'Davis', 'Tech-friendly student with a few spare accessories and home items. Open to swaps for useful essentials.', 'Tooting, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(8, 'mia.evans@roehampton.ac.uk', '$2b$10$NopsGh9iRi55vH880mEnceQQhk9T2ZqQnFEUh83GTW4sQmPgufrdS', 'Mia', 'Evans', 'Likes keeping things tidy and passing on items instead of wasting them. Usually free on weekends.', 'Richmond, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(9, 'liam.taylor@roehampton.ac.uk', '$2b$10$S7qjz1d/tTuRzI0kDCct4.4Hs9t1e9QdWaFGaxTmoGoplLppBxhUC', 'Liam', 'Taylor', 'Sports enthusiast who shares equipment when it is not being used. Quick to reply when available.', 'Kingston, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(10, 'ava.moore@roehampton.ac.uk', '$2b$10$zM6Q2TN8zQ29XdIAZBS4k.4R80ZChj7feBdLda92MOdPRaBaNjMoW', 'Ava', 'Moore', 'Moving between student places and trying to keep things simple. Happy to give away practical items.', 'Hammersmith, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(11, 'ethan.white@roehampton.ac.uk', '$2b$10$e1FryKPnxtISeQ3LodzZg.ppMP3Vt8gHZywM0t/AUopi5RavQ54RG', 'Ethan', 'White', 'Second-year student interested in databases and systems. Usually lends books and desk items.', 'Chelsea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(12, 'sophia.martin@roehampton.ac.uk', '$2b$10$h2KYYw/X5zRppwbnv7ETq.iWtRMFj.yNA1GHNZ1c.DuiaMYmm8H9m', 'Sophia', 'Martin', 'Keeps spare accessories and kitchen items in good condition. Prefers local pickup.', 'Putney, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(13, 'lucas.hall@roehampton.ac.uk', '$2b$10$VSWt3Uox9g2LSLgPzxC35OFXBMtoZ.MDjTRgNWoSMmksyFknijDNa', 'Lucas', 'Hall', 'Enjoys cooking and sharing appliances that still have plenty of use left. Based in Wimbledon.', 'Wimbledon, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(14, 'amelia.young@roehampton.ac.uk', '$2b$10$LzVPVZMsM0Fg//fYLIgc5ejhCbtl3S3Q7wRNbA8iCrYmgVtLVWEV2', 'Amelia', 'Young', 'Fitness-focused student with a few sports items to lend or swap. Flexible with collection times.', 'Battersea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(15, 'harry.king@roehampton.ac.uk', '$2b$10$Shn2umyt0PjnQ8qfrFkFBOVbBHIL18P/ulbP6H869WowT6Bwz6UIS', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47');
 
 --
 -- Indexes for dumped tables
