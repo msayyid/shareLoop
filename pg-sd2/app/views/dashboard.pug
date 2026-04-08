@@ -1,7 +1,58 @@
-h1 User Dashboard 
-h2 Hi, #{user.first_name}
-p #{user.last_name}
-p #{user.email}
-p #{user.password_hash}
-p #{user.user_id}
-p #{user.bio}
+extends layout
+
+block content
+    .container.mt-4
+
+        // ===== USER INFO =====
+        .row.mb-4
+            .col-md-8
+                h2 Hi, #{user.first_name} 👋
+                p.text-muted #{user.bio}
+                p
+                    strong Email:
+                    |  #{user.email}
+
+            .col-md-4.text-end
+                a.btn.btn-dark(href="/listings/new") + Create Listing
+
+        hr
+
+        // ===== MY LISTINGS =====
+        h3.mb-3 My Listings
+
+        if listings.length === 0
+            .alert.alert-light.border
+                p.mb-0 You don’t have any listings yet.
+                a(href="/listings/new") Create your first listing
+
+        else
+            .row.g-4
+                each listing in listings
+                    .col-md-6.col-lg-4
+                        .card.h-100.shadow-sm
+
+                            // IMAGE
+                            img.card-img-top(src=listing.image_path, alt="listing image")
+
+                            .card-body.d-flex.flex-column
+
+                                // TITLE
+                                h5.card-title #{listing.title}
+
+                                // DESCRIPTION (short)
+                                p.card-text.text-muted #{listing.description}
+
+                                // DETAILS
+                                p.mb-1
+                                    strong Type:
+                                    |  #{listing.exchange_type}
+
+                                p.mb-2
+                                    strong Status:
+                                    if listing.is_available
+                                        span.text-success Available
+                                    else
+                                        span.text-danger Unavailable
+
+                                // BUTTON (future: link to detail page)
+                                a.btn.btn-outline-dark.mt-auto(href=`/listing-detail/${listing.listing_id}`) View Details

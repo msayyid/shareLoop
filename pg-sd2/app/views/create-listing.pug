@@ -1,0 +1,34 @@
+extends layout 
+block content 
+    .container.mt-4
+
+        h2 Create New Listing
+
+        form(action="/listings" method="POST")
+
+            .mb-3
+                label.form-label Title
+                input.form-control(type="text" name="title" required)
+
+            .mb-3
+                label.form-label Description
+                textarea.form-control(name="description" required)
+
+            .mb-3
+                label.form-label Exchange Type
+                select.form-select(name="exchange_type" required)
+                    option(value="") Select type
+                    option(value="lending") Lending
+                    option(value="swap") Swap
+                    option(value="giveaway") Give Away
+            .mb-3
+                label.form-label Category
+                select.form-select(name="category_id" required)
+                    option(value="") Select category
+                    option(value="1") Books
+                    option(value="2") Electronics
+                    option(value="3") Kitchen
+                    option(value="4") Sports
+                    option(value="5") Furniture
+
+            button.btn.btn-dark(type="submit") Create Listing

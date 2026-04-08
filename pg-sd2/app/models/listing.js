@@ -135,6 +135,21 @@ class Listing {
         });
         return result;
     }
+
+    // create listing class method
+    static async createListing(userId, title, description, exchangeType, categoryId) {
+        const sql = `insert into listings (
+                                user_id,
+                                category_id,
+                                title,
+                                description,
+                                exchange_type,
+                                is_available
+                                )
+                    values (?, ?, ?, ?, ?, 1)`;
+        const result = await db.query(sql, [userId, categoryId, title, description, exchangeType]);
+        return result;
+    }
 }
 
 module.exports = {Listing}

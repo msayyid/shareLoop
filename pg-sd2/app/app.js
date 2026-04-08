@@ -115,10 +115,32 @@ app.get("/dashboard", requireLogin, async function (req, res) {
 
     const user = new User(uId);
     await user.getUser();
+    const listings = await Listing.getListingsByUserId(uId);
     console.log(user);
+    console.log("AND HERE WE HAVE GOT USER'S LISTINGS");
+    console.log(listings);
     res.render("dashboard", {
-        user: user
+        user: user,
+        listings: listings
     });
+});
+
+// create listing route
+app.get("/listings/new", requireLogin, (req, res) => {
+    res.render("create-listing");
+});
+
+app.post("/listings", requireLogin, async function(req, res) {
+    const uId = req.session.uId;
+    const { title, description, exchange_type, category_id } = req.body;
+    try {
+        await Listing.createListing(uId, title, description, exchange_type, category_id);
+        res.redirect("/dashboard");
+    } catch(err) {
+        console.error(err)
+        res.send("Error creating listing");
+    }
+    
 });
 
 // Create a route for root - / home page
