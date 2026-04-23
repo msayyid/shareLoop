@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    .container.mt-4
+
+        h2 Edit Listing
+
+        form(action=`/listings/${listing.listing_id}/edit` method="POST")
+
+            // TITLE
+            .mb-3
+                label.form-label Title
+                input.form-control(
+                    type="text"
+                    name="title"
+                    value=listing.title
+                    required
+                )
+
+            // DESCRIPTION
+            .mb-3
+                label.form-label Description
+                textarea.form-control(name="description" required)= listing.description
+
+            // EXCHANGE TYPE
+            .mb-3
+                label.form-label Exchange Type
+                select.form-select(name="exchange_type" required)
+                    option(value="lending" selected=(listing.exchange_type === "lending")) Lending
+                    option(value="swap" selected=(listing.exchange_type === "swap")) Swap
+                    option(value="giveaway" selected=(listing.exchange_type === "giveaway")) Give Away
+
+            // CATEGORY
+            .mb-3
+                label.form-label Category
+                select.form-select(name="category_id" required)
+                    option(value="1" selected=(listing.category_id === 1)) Books
+                    option(value="2" selected=(listing.category_id === 2)) Electronics
+                    option(value="3" selected=(listing.category_id === 3)) Kitchen
+                    option(value="4" selected=(listing.category_id === 4)) Sports
+                    option(value="5" selected=(listing.category_id === 5)) Furniture
+
+            // SUBMIT
+            button.btn.btn-dark(type="submit") Update Listing

@@ -35,7 +35,7 @@ class Listing {
                             from listings l
                             join categories c on l.category_id = c.category_id
                             join users u on u.user_id = l.user_id
-                            where l.listing_id = ?`;
+                            where l.listing_id = ? and l.is_active = 1`;
 
         const result = await db.query(sql, [this.listing_id]);
         this.formatted_created_at = result[0].created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
@@ -50,7 +50,7 @@ class Listing {
         const sql = `select l.*, c.category_name 
                             from listings l
                             join categories c on c.category_id = l.category_id
-                            where l.category_id=?`;
+                            where l.category_id=? and l.is_active = 1`;
         const result = await db.query(sql, [category_id]);
         result.forEach(listing => {
             if (listing.photo_url_1) {
@@ -75,7 +75,7 @@ class Listing {
                             join listing_tags lt on lt.listing_id = l.listing_id
                             join tags t on t.tag_id = lt.tag_id
                             join categories c on c.category_id = l.category_id
-                            where t.tag_id = ?`;
+                            where t.tag_id = ? and l.is_active = 1`;
         const result = await db.query(sql, [tag_id]);
         console.log("THIS IS A METHOD TO GET LISTINGS BY TAGS");
         result.forEach(listing => {
@@ -91,7 +91,7 @@ class Listing {
     }
 
     static async getListingsCount() {
-        const sql = `select count(*) as total from listings`;
+        const sql = `select count(*) as total from listings where is_active = 1`;
         const total = await db.query(sql);
         return total;
     }
@@ -105,7 +105,7 @@ class Listing {
     }
 
     static async getListingsByUserId(user_id) {
-        const sql = `select * from listings where user_id = ?`;
+        const sql = `select * from listings where user_id = ? and is_active = 1`;
         const result = await db.query(sql, [user_id]);
         result.forEach(listing => {
             if (listing.photo_url_1) {
@@ -121,6 +121,7 @@ class Listing {
         const sql = `select l.*, c.category_name
                             from listings l
                             join categories c on c.category_id = l.category_id
+                            where l.is_active = 1
                             order by l.created_at desc
                             limit 6
                              
@@ -148,6 +149,31 @@ class Listing {
                                 )
                     values (?, ?, ?, ?, ?, 1)`;
         const result = await db.query(sql, [userId, categoryId, title, description, exchangeType]);
+        return result;
+    }
+
+    static async getListingById(listingId) {
+        const sql = `select * from listings
+                            where listing_id = ? and is_active = 1`;
+
+        const result = await db.query(sql, [listingId]);
+        return result[0];
+    }
+
+    // update/edit listing in db
+    static async updateListing(listingId, title, description, exchange_type, category_id) {
+        const sql = `update listings
+                     set title = ?, description = ?, exchange_type = ?, category_id = ?
+                     where listing_id = ?`;
+        const result = await db.query(sql, [title, description, exchange_type, category_id, listingId]);
+        return result;
+    }
+
+    // delete listing in db
+    static async deleteListing(listingId) {
+
+        const sql = `UPDATE listings SET is_active = 0 WHERE listing_id = ?`;
+        const result = await db.query(sql, [listingId]);
         return result;
     }
 }

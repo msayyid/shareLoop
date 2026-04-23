@@ -119,6 +119,13 @@ class User {
         return match;
     }
 
+    static async createUser(first_name, last_name, email, password_hash) {
+        const sql = `insert into users (first_name, last_name, email, password_hash)
+                                values (?, ?, ?, ?)`;
+        const result = await db.query(sql, [first_name, last_name, email, password_hash]);
+        return result;
+    }
+
 
 }
 

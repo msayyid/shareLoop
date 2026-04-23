@@ -54,5 +54,20 @@ block content
                                     else
                                         span.text-danger Unavailable
 
-                                // BUTTON (future: link to detail page)
-                                a.btn.btn-outline-dark.mt-auto(href=`/listing-detail/${listing.listing_id}`) View Details
+                                // BUTTONS
+                                .div.mt-auto.d-flex.gap-2
+
+                                    // View button
+                                    a.btn.btn-outline-dark(
+                                        href=`/listing-detail/${listing.listing_id}`
+                                    ) View
+
+                                    // Delete form
+                                    form(
+                                        action=`/listings/${listing.listing_id}/delete`
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this listing?');"
+                                    )
+                                        button.btn.btn-danger(type="submit") Delete
+
+                                

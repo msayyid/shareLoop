@@ -39,6 +39,17 @@ html(lang="en")
                         li.nav-item
                             a.nav-link(href="/all-listings-formatted") Listings
 
+                        if loggedIn
+                            li.nav-item
+                                a.nav-link(href="/dashboard") Dashboard
+                            li.nav-item
+                                a.nav-link(href="/logout") Logout
+                        else
+                            li.nav-item
+                                a.nav-link(href="/login") Login
+                            li.nav-item
+                                a.nav-link(href="/register") Register
+
         // CATEGORY BAR (ROW 2)
         if categories && categories.length
             .bg-white.border-bottom

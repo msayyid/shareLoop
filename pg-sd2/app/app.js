@@ -23,6 +23,8 @@ const { User } = require("./models/user");
 const { Listing } = require("./models/listing");
 const { Category } = require("./models/category");
 
+const bcrypt = require("bcryptjs");
+
 // set the sessions
 const session = require("express-session");
 app.use(session({
@@ -43,6 +45,12 @@ function requireLogin(req, res, next) {
     next();
 
 }
+
+// loggedIn middleware
+app.use((req, res, next) => {
+    res.locals.loggedIn = req.session.uId;
+    next(); // move to the next middleware
+});
 
 
 
@@ -80,7 +88,7 @@ app.post("/login", async function(req, res) {
         } else {
             req.session.uId = userData.user_id;
             console.log("Successful login redirecting to home page");
-            return res.redirect("/");
+            return res.redirect("/dashboard");
 
         }  
         
@@ -108,6 +116,37 @@ app.get("/register", function(req, res) {
     res.render("register");
 });
 
+app.post("/register", async function(req, res) {
+    const {first_name, last_name, email, password} = req.body;
+    if (!email || !password || !first_name || !last_name) {
+        console.error("missing fields in register page");
+        return res.redirect("/register");
+    }
+
+    const password_hash = await bcrypt.hash(password, 10);
+
+    try {
+        const user = await User.createUser(first_name, last_name, email, password_hash);
+        return res.redirect("/login");
+    } catch (err) {
+        console.error(err);
+        res.send("error registering a user");
+
+    }
+    
+});
+
+
+//logout route
+app.get("/logout", requireLogin, async function(req, res) {
+    req.session.destroy(function(err) {
+        if (err) {
+            console.error(err);
+            return res.send("error loggin out");
+        }
+        res.redirect("/");
+    });
+});
 
 // dashboard
 app.get("/dashboard", requireLogin, async function (req, res) {
@@ -125,6 +164,8 @@ app.get("/dashboard", requireLogin, async function (req, res) {
     });
 });
 
+
+
 // create listing route
 app.get("/listings/new", requireLogin, (req, res) => {
     res.render("create-listing");
@@ -141,6 +182,95 @@ app.post("/listings", requireLogin, async function(req, res) {
         res.send("Error creating listing");
     }
     
+});
+
+// edit listing route get
+app.get("/listings/:id/edit", requireLogin, async function(req, res) {
+    const listingId = req.params.id;
+    const uId = req.session.uId;
+    const listing = await Listing.getListingById(listingId);
+    if (!listing) {
+        
+        console.error("No listing found");
+        res.redirect("/");
+        return;
+    }
+
+    // check ownership
+    if (listing.user_id !== parseInt(uId)) {
+        // block access 
+        console.error("Unauthorized access attempt");
+        return res.redirect("/dashboard");
+    }
+
+    res.render("edit", {
+        listing:listing
+    });
+    }
+);
+
+// edit listing route POST
+app.post("/listings/:id/edit", requireLogin, async function(req, res) {
+    const uId = req.session.uId;
+    const listingId = req.params.id;
+    const listing = await Listing.getListingById(listingId);
+
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/dashboard");
+    }
+
+    if (parseInt(uId) !== listing.user_id) {
+        console.error("unauthorized edit attempt");
+        return res.redirect("/dashboard");
+    }
+
+    // extract form data from the body
+    const {title, description, exchange_type, category_id} = req.body;
+    try {
+        const result = await Listing.updateListing(listingId, title, description, exchange_type, category_id);
+        if (result.affectedRows >= 0) {
+            return res.redirect(`/listing-detail/${listingId}`); // redirect to the listing detail page with new data, does it get updated in there btw?
+        } else {
+            console.error("update failed");
+            return res.redirect("/dashboard");
+        }
+    } catch(err) {
+        console.error(err);
+        console.log("update failed going to back to edit page");
+        res.redirect(`/listings/${listingId}/edit`); // how do i send a message or do i need it
+        return;
+
+    }
+});
+
+// delete route post
+app.post("/listings/:id/delete", requireLogin, async function (req, res) {
+    const uId = req.session.uId;
+    const listingId = req.params.id;
+    const listing = await Listing.getListingById(listingId);
+
+    // check listing
+    if (!listing) {
+        console.error("no listing found");
+        res.redirect("/dashboard");
+        return;
+    }
+
+    // check ownership
+    if (listing.user_id !== parseInt(uId)) {
+        console.log("unauthorized access");
+        return res.redirect("/dashboard");
+    }
+
+    // now delete
+    result = await Listing.deleteListing(listingId);
+    if (result.affectedRows === 0) {
+        console.error("error deleting a listing");
+        return res.redirect("/dashboard");
+    }
+    console.log(`listing with id: ${listingId} just got deleted`);
+    return res.redirect("/dashboard");
 });
 
 // Create a route for root - / home page
