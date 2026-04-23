@@ -22,6 +22,7 @@ app.use(express.urlencoded({ extended: true}));
 const { User } = require("./models/user");
 const { Listing } = require("./models/listing");
 const { Category } = require("./models/category");
+const { Request } = require("./models/request");
 
 const bcrypt = require("bcryptjs");
 
@@ -155,12 +156,14 @@ app.get("/dashboard", requireLogin, async function (req, res) {
     const user = new User(uId);
     await user.getUser();
     const listings = await Listing.getListingsByUserId(uId);
+    const requests = await Request.getRequestsForOwner(uId);
     console.log(user);
     console.log("AND HERE WE HAVE GOT USER'S LISTINGS");
     console.log(listings);
     res.render("dashboard", {
         user: user,
-        listings: listings
+        listings: listings,
+        requests:requests
     });
 });
 
@@ -271,6 +274,44 @@ app.post("/listings/:id/delete", requireLogin, async function (req, res) {
     }
     console.log(`listing with id: ${listingId} just got deleted`);
     return res.redirect("/dashboard");
+});
+
+
+// REQUEST ROUTES
+app.post("/listings/:id/request", async function (req, res) {
+    const listingId = parseInt(req.params.id);
+    const uId = req.session.uId;
+
+    // if not logged in redirect to login page
+    if (!uId) {
+        return res.redirect("/login");
+    }
+
+    const listing = await Listing.getListingById(listingId);
+
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect(`/listing-detail/${listingId}`);
+    }
+    
+    if (listing.user_id === parseInt(uId)) {
+        console.error("you can't request your own item");
+        return res.redirect(`/listing-detail/${listingId}`); // we should fix this, the user's own itesm must not be seen in the listings
+    }
+
+    // check if request exists/ duplicate check
+    const exists = await Request.getPendingRequest(uId, listingId);
+    if (exists) {
+        console.error("already requested!");
+        return res.redirect(`/listing-detail/${listingId}`);
+    }
+
+    // create request
+    const request = await Request.createRequest(uId, listingId);
+    console.log("request created");
+    return res.redirect(`/listing-detail/${listingId}`); // where should we go in here?
+
+
 });
 
 // Create a route for root - / home page

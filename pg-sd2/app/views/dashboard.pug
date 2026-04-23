@@ -70,4 +70,24 @@ block content
                                     )
                                         button.btn.btn-danger(type="submit") Delete
 
+        // ===== INCOMING REQUESTS =====
+        h3.mb-3 Incoming Requests
+
+        if requests.length === 0
+            .alert.alert-light.border
+                p.mb-0 No one has requested your listings yet.
+
+        else
+            .list-group
+                each request in requests
+                    .list-group-item.d-flex.justify-content-between.align-items-center
+
+                        .d-flex.flex-column
+                            strong #{request.first_name} requested "#{request.title}"
+                            span.text-muted Status: #{request.status}
+
+                        .d-flex.gap-2
+                            button.btn.btn-success.btn-sm Accept
+                            button.btn.btn-outline-danger.btn-sm Reject
+
                                 

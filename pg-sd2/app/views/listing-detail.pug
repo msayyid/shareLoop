@@ -62,6 +62,11 @@ block content
                         if listing.category_id
                             a.btn.btn-outline-secondary(href=`/all-categories/${listing.category_id}`) More in this Category
 
+                        form(
+                            action=`/listings/${listing.listing_id}/request`
+                            method="POST"
+                        )
+                            button.btn.btn-success(type="submit") Request Item
 
 //- extends layout 
 //- block content 
