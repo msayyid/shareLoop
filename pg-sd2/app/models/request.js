@@ -88,6 +88,34 @@ class Request {
         const result = await db.query(sql, [requestId]);
         return result;
     }
+
+    static async declineOtherRequests(listingId, acceptedRequestId) {
+        const sql = `update requests
+                     set status = 'declined'
+                     where listing_id = ?
+                     and request_id != ?
+                     and status = 'pending'`;
+        const result = await db.query(sql, [listingId, acceptedRequestId]);
+        return result;
+    }
+
+    static async hasUserRequested(userId, listingId) {
+        const sql = `select * from requests
+                     where requester_id = ?
+                     and listing_id = ?
+                     and status = 'pending'`;
+        const result = await db.query(sql, [userId, listingId]);
+        return result.length > 0;
+    }
+
+    static async markComplete(requestId) {
+        const sql = `update requests
+                     set status = 'completed'
+                     where request_id = ?
+                     and status = 'accepted'`;
+        const result = await db.query(sql, [requestId]);
+        return result;
+    }
 }
 
 module.exports = { Request };

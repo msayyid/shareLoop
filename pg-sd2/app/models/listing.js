@@ -184,6 +184,15 @@ class Listing {
         const result = await db.query(sql, [listingId]);
         return result;
     }
+
+    static async markAvailable(listingId) {
+        const sql = `update listings
+                     set is_available = 1
+                     where listing_id = ?
+                     and is_active = 1`;
+        const result = await db.query(sql, [listingId]);
+        return result;
+    }
 }
 
 module.exports = {Listing}

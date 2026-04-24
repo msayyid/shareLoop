@@ -350,7 +350,11 @@ app.post("/requests/:id/accept", requireLogin, async function(req, res) {
     } else {
         // update listing availability
         await Listing.markUnavailable(listing.listing_id);
+
+        // cancel the request for this item for other users
+        await Request.declineOtherRequests(listing.listing_id, requestId);
         console.log("Request Accepted successfully");
+        console.log("request cancelled for other users successfully");
         return res.redirect("/dashboard");
     }
 });
@@ -438,6 +442,44 @@ app.post("/requests/:id/cancel", requireLogin, async function(req, res) {
 
 });
 
+// mark a request as completed by owner
+app.post("/requests/:id/complete", requireLogin, async function(req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found");
+        return res.redirect("/dashboard");
+    }
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/dashboard");
+    }
+
+    if (parseInt(uId) !== listing.user_id) { // i do not have user_id in requests table and this method does not include we can get it from listings, i will need to rewrite the sql for this method?
+        console.error("it is not your item to makr!!!");
+        return res.redirect("/dashboard");
+    }
+    
+    if (request.status !== "accepted") {
+        console.error("you can't mark non-accepted requests completed");
+        return res.redirect("/dashboard");
+    }
+
+    await Request.markComplete(requestId); // i do not have htis yet
+    // mark listing available if lending
+    if (listing.exchange_type === "lending") {
+        await Listing.markAvailable(listing.listing_id);
+        // we could have more checks in here
+    }
+    console.log("request marked complete and listing updated if needed");
+    res.redirect("/dashboard")
+
+});
+
+
 // Create a route for root - / home page
 app.get("/", async function(req, res) {
     const listings = await Listing.getRecentListings();
@@ -514,12 +556,23 @@ app.get("/all-listings-formatted", async function(req, res) {
 });
 
 app.get("/listing-detail/:listing_id", async function (req, res){
+    const uId = req.session.uId;
+    
     const listing_id = req.params.listing_id;
+
     let listing = new Listing(listing_id);
     await listing.getListingData();
+
+    let hasRequested = false;
+
+    if (uId) {
+        hasRequested = await Request.hasUserRequested(uId, listing_id);
+    }
+
     listing.setImagePath();
     res.render("listing-detail", {
-        listing:listing
+        listing:listing,
+        hasRequested:hasRequested
     });
     console.log(listing);
 });

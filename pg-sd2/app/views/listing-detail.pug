@@ -59,14 +59,26 @@ block content
                 .card-footer.bg-white.border-0.pt-0.pb-4.px-4
                     .d-flex.flex-wrap.gap-2
                         a.btn.btn-dark(href="/all-listings-formatted") Back to Listings
+
                         if listing.category_id
                             a.btn.btn-outline-secondary(href=`/all-categories/${listing.category_id}`) More in this Category
 
-                        form(
-                            action=`/listings/${listing.listing_id}/request`
-                            method="POST"
-                        )
-                            button.btn.btn-success(type="submit") Request Item
+                        // REQUEST LOGIC
+                        if !loggedIn
+                            span.text-muted Please log in to request this item
+
+                        else if !listing.is_available
+                            span.text-danger This item is no longer available
+
+                        else if hasRequested
+                            span.text-warning You have already requested this item
+
+                        else
+                            form(
+                                action=`/listings/${listing.listing_id}/request`
+                                method="POST"
+                            )
+                                button.btn.btn-success(type="submit") Request Item
 
 //- extends layout 
 //- block content 

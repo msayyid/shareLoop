@@ -93,4 +93,11 @@ block content
                                         button.btn.btn-success.btn-sm(type="submit") Accept
                                     form(action=`/requests/${request.request_id}/reject` method="POST")
                                         button.btn.btn-outline-danger.btn-sm(type="submit") Reject
-                                
+
+                            else if request.status === 'accepted'
+                                form(
+                                    action=`/requests/${request.request_id}/complete`
+                                    method="POST"
+                                    onsubmit="return confirm('Mark this request as completed?');"
+                                )
+                                    button.btn.btn-primary.btn-sm(type="submit") Mark as Completed
