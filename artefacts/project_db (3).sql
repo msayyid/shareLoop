@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 24, 2026 at 06:04 AM
+-- Generation Time: Apr 24, 2026 at 09:51 AM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -78,7 +78,7 @@ CREATE TABLE `listings` (
 --
 
 INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `description`, `exchange_type`, `condition_status`, `condition_notes`, `photo_url_1`, `photo_url_2`, `photo_url_3`, `swap_preferences`, `is_available`, `view_count`, `request_count`, `created_at`, `updated_at`, `is_active`) VALUES
-(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 0, 0, 0, '2026-03-19 00:26:42', '2026-04-24 04:54:49', 1),
+(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-24 09:46:07', 1),
 (2, 2, 2, 'MacBook Charger', 'Works perfectly', 'giveaway', 'good', NULL, 'listing_pic_2.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:13', 1),
 (3, 3, 3, 'Rice Cooker', 'Small size', 'lending', 'fair', NULL, 'listing_pic_3.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:37', 1),
 (4, 4, 5, 'Yoga Mat number two', 'Barely used, and just got changed, still swap tho, but cateogry is furniture', 'swap', 'like_new', NULL, 'listing_pic_4.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-23 04:16:35', 0),
@@ -110,7 +110,11 @@ INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `descri
 (30, 15, 5, 'Foldable Drying Rack', 'Useful foldable drying rack for small student rooms or shared flats.', 'lending', 'good', 'Folds flat and is easy to store.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:10:00', '2026-03-23 10:10:00', 1),
 (34, 4, 1, 'chingiz khan', 'a book about the conqueror of the world', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-08 17:05:49', '2026-04-08 17:05:49', 1),
 (35, 4, 2, 'laptop', 'my old laptop, i bough a new one', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-09 07:07:46', '2026-04-09 07:07:46', 1),
-(36, 16, 2, 'keyboard', 'giving away mac keyboard', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-23 05:01:25', 1);
+(36, 16, 2, 'keyboard', 'giving away mac keyboard', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-23 05:01:25', 1),
+(37, 1, 5, 'testing 1', 'fawerqweruwqpoieur', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:11', '2026-04-24 08:36:37', 1),
+(38, 1, 5, 'tresting 2', 'ju2389ruiofsadjopi', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:25', '2026-04-24 08:39:41', 1),
+(39, 1, 5, 'testing 4', 'jaoiuf238oivpjaoip', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:37', '2026-04-24 08:40:36', 1),
+(40, 1, 1, 'nonlending testing', '23764y987hasfd98uh', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 09:47:05', '2026-04-24 09:47:24', 1);
 
 -- --------------------------------------------------------
 
@@ -259,14 +263,22 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`request_id`, `requester_id`, `listing_id`, `status`, `message`, `requested_duration`, `swap_offer_description`, `requested_date`, `responded_date`, `completed_date`, `owner_notes`) VALUES
-(1, 16, 1, 'accepted', NULL, NULL, NULL, '2026-04-23 07:05:28', NULL, NULL, NULL),
+(1, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-23 07:05:28', NULL, NULL, NULL),
 (2, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-23 07:22:01', NULL, NULL, NULL),
-(3, 4, 1, 'accepted', NULL, NULL, NULL, '2026-04-23 07:23:16', NULL, NULL, NULL),
+(3, 4, 1, 'completed', NULL, NULL, NULL, '2026-04-23 07:23:16', NULL, NULL, NULL),
 (4, 4, 16, 'accepted', NULL, NULL, NULL, '2026-04-23 07:23:32', NULL, NULL, NULL),
 (5, 16, 1, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:07', NULL, NULL, NULL),
 (6, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:35', NULL, NULL, NULL),
 (7, 16, 6, 'pending', NULL, NULL, NULL, '2026-04-24 05:54:40', NULL, NULL, NULL),
-(8, 16, 34, 'cancelled', NULL, NULL, NULL, '2026-04-24 05:56:06', NULL, NULL, NULL);
+(8, 16, 34, 'cancelled', NULL, NULL, NULL, '2026-04-24 05:56:06', NULL, NULL, NULL),
+(9, 16, 37, 'accepted', NULL, NULL, NULL, '2026-04-24 08:35:22', NULL, NULL, NULL),
+(10, 2, 37, 'cancelled', NULL, NULL, NULL, '2026-04-24 08:35:56', NULL, NULL, NULL),
+(11, 2, 38, 'completed', NULL, NULL, NULL, '2026-04-24 08:38:59', NULL, NULL, NULL),
+(12, 16, 38, 'declined', NULL, NULL, NULL, '2026-04-24 08:39:11', NULL, NULL, NULL),
+(13, 2, 39, 'declined', NULL, NULL, NULL, '2026-04-24 08:40:24', NULL, NULL, NULL),
+(14, 16, 39, 'accepted', NULL, NULL, NULL, '2026-04-24 08:40:28', NULL, NULL, NULL),
+(15, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-24 09:45:16', NULL, NULL, NULL),
+(16, 16, 40, 'completed', NULL, NULL, NULL, '2026-04-24 09:47:15', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -427,7 +439,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `listings`
 --
 ALTER TABLE `listings`
-  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -445,7 +457,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tags`
