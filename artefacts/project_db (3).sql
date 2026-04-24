@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 07, 2026 at 05:42 PM
+-- Generation Time: Apr 24, 2026 at 06:04 AM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -69,44 +69,48 @@ CREATE TABLE `listings` (
   `view_count` int DEFAULT '0',
   `request_count` int DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_active` tinyint DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `listings`
 --
 
-INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `description`, `exchange_type`, `condition_status`, `condition_notes`, `photo_url_1`, `photo_url_2`, `photo_url_3`, `swap_preferences`, `is_available`, `view_count`, `request_count`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:18:53'),
-(2, 2, 2, 'MacBook Charger', 'Works perfectly', 'giveaway', 'good', NULL, 'listing_pic_2.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:13'),
-(3, 3, 3, 'Rice Cooker', 'Small size', 'lending', 'fair', NULL, 'listing_pic_3.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:37'),
-(4, 4, 4, 'Yoga Mat', 'Barely used', 'swap', 'like_new', NULL, 'listing_pic_4.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:57'),
-(5, 5, 5, 'Desk Chair', 'Used but comfy', 'giveaway', 'well_used', NULL, 'listing_pic_5.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:20:15'),
-(6, 6, 1, 'Algorithms Book', 'Helpful for exams', 'lending', 'good', NULL, 'listing_pic_6.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:20:35'),
-(7, 7, 2, 'Bluetooth Speaker', 'Loud and clear', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(8, 8, 3, 'Toaster', 'Works fine', 'giveaway', 'fair', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(9, 9, 4, 'Football', 'Almost new', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(10, 10, 5, 'Study Desk', 'Moving out', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(11, 11, 1, 'Database Systems Book', 'Second year module', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(12, 12, 2, 'Wireless Mouse', 'Smooth and fast', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(13, 13, 3, 'Air Fryer', 'Great condition', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(14, 14, 4, 'Dumbbells Set', '5kg each', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(15, 15, 5, 'Lamp', 'Desk lamp', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42'),
-(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:00:00', '2026-03-23 09:00:00'),
-(17, 2, 2, 'USB-C Hub', 'Small hub with HDMI and USB ports. Still works well and handy for library or home use.', 'giveaway', 'good', 'Minor scratches from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:05:00', '2026-03-23 09:05:00'),
-(18, 3, 3, 'Saucepan Set', 'Set of two saucepans suitable for a shared student kitchen. Clean and fully usable.', 'lending', 'good', 'Handles are slightly worn but sturdy.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:10:00', '2026-03-23 09:10:00'),
-(19, 4, 4, 'Skipping Rope', 'Lightweight skipping rope for quick workouts at home or outdoors.', 'swap', 'like_new', 'Used only a couple of times.', NULL, NULL, NULL, 'Open to swapping for a yoga block or resistance band.', 1, 0, 0, '2026-03-23 09:15:00', '2026-03-23 09:15:00'),
-(20, 5, 5, 'Bedside Table', 'Compact bedside table with one shelf. Good for student rooms with limited space.', 'giveaway', 'fair', 'A few marks on the top surface.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:20:00', '2026-03-23 09:20:00'),
-(21, 6, 1, 'Statistics Flashcards', 'Printed revision flashcards for core statistics topics. Useful before tests or coursework deadlines.', 'giveaway', 'good', 'Kept in a small ring binder.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:25:00', '2026-03-23 09:25:00'),
-(22, 7, 2, 'Wired Keyboard', 'Full-size keyboard that works well for essays, coding, and general study use.', 'lending', 'good', 'A bit shiny on some keys from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:30:00', '2026-03-23 09:30:00'),
-(23, 8, 3, 'Electric Kettle', 'Simple kettle that boils quickly and works fine. Good spare item for a new flat.', 'giveaway', 'good', 'Limescale cleaned recently.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:35:00', '2026-03-23 09:35:00'),
-(24, 9, 4, 'Resistance Bands Set', 'Set of resistance bands for home workouts. Easy to store and carry.', 'lending', 'like_new', 'Includes carry pouch.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:40:00', '2026-03-23 09:40:00'),
-(25, 10, 5, 'Laundry Basket', 'Lightweight laundry basket that is easy to carry between room and laundry area.', 'giveaway', 'good', 'Clean and in good shape.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:45:00', '2026-03-23 09:45:00'),
-(26, 11, 1, 'Operating Systems Textbook', 'Older edition but still helpful for understanding core operating systems topics.', 'swap', 'fair', 'Some highlighted sections and light edge wear.', NULL, NULL, NULL, 'Would like to swap for another computing book or a desk accessory.', 1, 0, 0, '2026-03-23 09:50:00', '2026-03-23 09:50:00'),
-(27, 12, 2, 'Desk Fan', 'Small desk fan that is useful during warmer months in halls or shared flats.', 'lending', 'good', 'Quiet on the lower setting.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:55:00', '2026-03-23 09:55:00'),
-(28, 13, 3, 'Baking Tray', 'Standard baking tray that still has plenty of use left. Good for basic oven cooking.', 'giveaway', 'well_used', 'Visible signs of use but still works properly.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:00:00', '2026-03-23 10:00:00'),
-(29, 14, 4, 'Tennis Racket', 'Casual-use tennis racket suitable for beginners or occasional games.', 'swap', 'good', 'Grip is still decent and frame is intact.', NULL, NULL, NULL, 'Open to swapping for another sports item of similar use.', 1, 0, 0, '2026-03-23 10:05:00', '2026-03-23 10:05:00'),
-(30, 15, 5, 'Foldable Drying Rack', 'Useful foldable drying rack for small student rooms or shared flats.', 'lending', 'good', 'Folds flat and is easy to store.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:10:00', '2026-03-23 10:10:00');
+INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `description`, `exchange_type`, `condition_status`, `condition_notes`, `photo_url_1`, `photo_url_2`, `photo_url_3`, `swap_preferences`, `is_available`, `view_count`, `request_count`, `created_at`, `updated_at`, `is_active`) VALUES
+(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 0, 0, 0, '2026-03-19 00:26:42', '2026-04-24 04:54:49', 1),
+(2, 2, 2, 'MacBook Charger', 'Works perfectly', 'giveaway', 'good', NULL, 'listing_pic_2.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:13', 1),
+(3, 3, 3, 'Rice Cooker', 'Small size', 'lending', 'fair', NULL, 'listing_pic_3.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:37', 1),
+(4, 4, 5, 'Yoga Mat number two', 'Barely used, and just got changed, still swap tho, but cateogry is furniture', 'swap', 'like_new', NULL, 'listing_pic_4.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-23 04:16:35', 0),
+(5, 5, 5, 'Desk Chair', 'Used but comfy', 'giveaway', 'well_used', NULL, 'listing_pic_5.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:20:15', 1),
+(6, 6, 1, 'Algorithms Book', 'Helpful for exams', 'lending', 'good', NULL, 'listing_pic_6.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:20:35', 1),
+(7, 7, 2, 'Bluetooth Speaker', 'Loud and clear', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(8, 8, 3, 'Toaster', 'Works fine', 'giveaway', 'fair', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(9, 9, 4, 'Football', 'Almost new', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(10, 10, 5, 'Study Desk', 'Moving out', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(11, 11, 1, 'Database Systems Book', 'Second year module', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(12, 12, 2, 'Wireless Mouse', 'Smooth and fast', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(13, 13, 3, 'Air Fryer', 'Great condition', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(14, 14, 4, 'Dumbbells Set', '5kg each', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(15, 15, 5, 'Lamp', 'Desk lamp', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
+(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 0, 0, 0, '2026-03-23 09:00:00', '2026-04-24 05:47:04', 1),
+(17, 2, 2, 'USB-C Hub', 'Small hub with HDMI and USB ports. Still works well and handy for library or home use.', 'giveaway', 'good', 'Minor scratches from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:05:00', '2026-03-23 09:05:00', 1),
+(18, 3, 3, 'Saucepan Set', 'Set of two saucepans suitable for a shared student kitchen. Clean and fully usable.', 'lending', 'good', 'Handles are slightly worn but sturdy.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:10:00', '2026-03-23 09:10:00', 1),
+(19, 4, 4, 'Skipping Rope', 'Lightweight skipping rope for quick workouts at home or outdoors.', 'swap', 'like_new', 'Used only a couple of times.', NULL, NULL, NULL, 'Open to swapping for a yoga block or resistance band.', 1, 0, 0, '2026-03-23 09:15:00', '2026-04-23 04:17:11', 0),
+(20, 5, 5, 'Bedside Table', 'Compact bedside table with one shelf. Good for student rooms with limited space.', 'giveaway', 'fair', 'A few marks on the top surface.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:20:00', '2026-03-23 09:20:00', 1),
+(21, 6, 1, 'Statistics Flashcards', 'Printed revision flashcards for core statistics topics. Useful before tests or coursework deadlines.', 'giveaway', 'good', 'Kept in a small ring binder.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:25:00', '2026-03-23 09:25:00', 1),
+(22, 7, 2, 'Wired Keyboard', 'Full-size keyboard that works well for essays, coding, and general study use.', 'lending', 'good', 'A bit shiny on some keys from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:30:00', '2026-03-23 09:30:00', 1),
+(23, 8, 3, 'Electric Kettle', 'Simple kettle that boils quickly and works fine. Good spare item for a new flat.', 'giveaway', 'good', 'Limescale cleaned recently.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:35:00', '2026-03-23 09:35:00', 1),
+(24, 9, 4, 'Resistance Bands Set', 'Set of resistance bands for home workouts. Easy to store and carry.', 'lending', 'like_new', 'Includes carry pouch.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:40:00', '2026-03-23 09:40:00', 1),
+(25, 10, 5, 'Laundry Basket', 'Lightweight laundry basket that is easy to carry between room and laundry area.', 'giveaway', 'good', 'Clean and in good shape.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:45:00', '2026-03-23 09:45:00', 1),
+(26, 11, 1, 'Operating Systems Textbook', 'Older edition but still helpful for understanding core operating systems topics.', 'swap', 'fair', 'Some highlighted sections and light edge wear.', NULL, NULL, NULL, 'Would like to swap for another computing book or a desk accessory.', 1, 0, 0, '2026-03-23 09:50:00', '2026-03-23 09:50:00', 1),
+(27, 12, 2, 'Desk Fan', 'Small desk fan that is useful during warmer months in halls or shared flats.', 'lending', 'good', 'Quiet on the lower setting.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:55:00', '2026-03-23 09:55:00', 1),
+(28, 13, 3, 'Baking Tray', 'Standard baking tray that still has plenty of use left. Good for basic oven cooking.', 'giveaway', 'well_used', 'Visible signs of use but still works properly.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:00:00', '2026-03-23 10:00:00', 1),
+(29, 14, 4, 'Tennis Racket', 'Casual-use tennis racket suitable for beginners or occasional games.', 'swap', 'good', 'Grip is still decent and frame is intact.', NULL, NULL, NULL, 'Open to swapping for another sports item of similar use.', 1, 0, 0, '2026-03-23 10:05:00', '2026-03-23 10:05:00', 1),
+(30, 15, 5, 'Foldable Drying Rack', 'Useful foldable drying rack for small student rooms or shared flats.', 'lending', 'good', 'Folds flat and is easy to store.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:10:00', '2026-03-23 10:10:00', 1),
+(34, 4, 1, 'chingiz khan', 'a book about the conqueror of the world', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-08 17:05:49', '2026-04-08 17:05:49', 1),
+(35, 4, 2, 'laptop', 'my old laptop, i bough a new one', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-09 07:07:46', '2026-04-09 07:07:46', 1),
+(36, 16, 2, 'keyboard', 'giving away mac keyboard', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-23 05:01:25', 1);
 
 -- --------------------------------------------------------
 
@@ -143,7 +147,6 @@ INSERT INTO `listing_tags` (`listing_id`, `tag_id`) VALUES
 (9, 3),
 (12, 3),
 (24, 3),
-(4, 5),
 (7, 5),
 (13, 5),
 (19, 5),
@@ -242,7 +245,7 @@ CREATE TABLE `requests` (
   `requester_id` int NOT NULL,
   `listing_id` int NOT NULL,
   `status` enum('pending','accepted','declined','completed','cancelled') DEFAULT 'pending',
-  `message` text NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `requested_duration` varchar(255) DEFAULT NULL,
   `swap_offer_description` text,
   `requested_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -256,16 +259,14 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`request_id`, `requester_id`, `listing_id`, `status`, `message`, `requested_duration`, `swap_offer_description`, `requested_date`, `responded_date`, `completed_date`, `owner_notes`) VALUES
-(1, 2, 1, 'pending', 'Can I borrow this for revision?', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(2, 3, 2, 'accepted', 'Is charger still available?', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(3, 4, 3, 'completed', 'Need it for cooking', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(4, 5, 4, 'pending', 'Can swap with skipping rope', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(5, 6, 5, 'completed', 'Need chair urgently', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(6, 7, 6, 'pending', 'Can I take this for a week?', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(7, 8, 7, 'accepted', 'Interested in speaker', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(8, 9, 8, 'completed', 'Can collect today', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(9, 10, 9, 'pending', 'Need football for match', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL),
-(10, 11, 10, 'completed', 'Desk still available?', NULL, NULL, '2026-03-19 00:27:05', NULL, NULL, NULL);
+(1, 16, 1, 'accepted', NULL, NULL, NULL, '2026-04-23 07:05:28', NULL, NULL, NULL),
+(2, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-23 07:22:01', NULL, NULL, NULL),
+(3, 4, 1, 'accepted', NULL, NULL, NULL, '2026-04-23 07:23:16', NULL, NULL, NULL),
+(4, 4, 16, 'accepted', NULL, NULL, NULL, '2026-04-23 07:23:32', NULL, NULL, NULL),
+(5, 16, 1, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:07', NULL, NULL, NULL),
+(6, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:35', NULL, NULL, NULL),
+(7, 16, 6, 'pending', NULL, NULL, NULL, '2026-04-24 05:54:40', NULL, NULL, NULL),
+(8, 16, 34, 'cancelled', NULL, NULL, NULL, '2026-04-24 05:56:06', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -308,7 +309,7 @@ CREATE TABLE `users` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `bio` text,
-  `location` varchar(255) NOT NULL,
+  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `latitude` decimal(10,7) DEFAULT NULL,
   `longitude` decimal(10,7) DEFAULT NULL,
   `profile_pic` varchar(255) DEFAULT 'default-avatar.png',
@@ -342,7 +343,8 @@ INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_na
 (12, 'sophia.martin@roehampton.ac.uk', '$2b$10$h2KYYw/X5zRppwbnv7ETq.iWtRMFj.yNA1GHNZ1c.DuiaMYmm8H9m', 'Sophia', 'Martin', 'Keeps spare accessories and kitchen items in good condition. Prefers local pickup.', 'Putney, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
 (13, 'lucas.hall@roehampton.ac.uk', '$2b$10$VSWt3Uox9g2LSLgPzxC35OFXBMtoZ.MDjTRgNWoSMmksyFknijDNa', 'Lucas', 'Hall', 'Enjoys cooking and sharing appliances that still have plenty of use left. Based in Wimbledon.', 'Wimbledon, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
 (14, 'amelia.young@roehampton.ac.uk', '$2b$10$LzVPVZMsM0Fg//fYLIgc5ejhCbtl3S3Q7wRNbA8iCrYmgVtLVWEV2', 'Amelia', 'Young', 'Fitness-focused student with a few sports items to lend or swap. Flexible with collection times.', 'Battersea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(15, 'harry.king@roehampton.ac.uk', '$2b$10$Shn2umyt0PjnQ8qfrFkFBOVbBHIL18P/ulbP6H869WowT6Bwz6UIS', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47');
+(15, 'harry.king@roehampton.ac.uk', '$2b$10$Shn2umyt0PjnQ8qfrFkFBOVbBHIL18P/ulbP6H869WowT6Bwz6UIS', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
+(16, 'mnorb@is.here', '$2b$10$Y09mbXD/Fcvt1zh4YJP0vunsnLcQAy2KXYm6kDEx5RX/bNcSuaEYi', 'Mukhammadsaiid', 'Norbaev', NULL, NULL, NULL, NULL, 'default-avatar.png', 50, 0.00, 0, 0, 0, 0, 1, '2026-04-23 05:00:24', '2026-04-23 05:00:24');
 
 --
 -- Indexes for dumped tables
@@ -425,7 +427,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `listings`
 --
 ALTER TABLE `listings`
-  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -443,7 +445,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -455,7 +457,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables

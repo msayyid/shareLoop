@@ -176,6 +176,14 @@ class Listing {
         const result = await db.query(sql, [listingId]);
         return result;
     }
+
+    static async markUnavailable(listingId) {
+        const sql = `update listings
+                     set is_available = 0
+                     where listing_id = ?`;
+        const result = await db.query(sql, [listingId]);
+        return result;
+    }
 }
 
 module.exports = {Listing}

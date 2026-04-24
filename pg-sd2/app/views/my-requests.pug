@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    .container.mt-4
+
+        h2.mb-4 My Requests
+
+        if requests.length === 0
+            .alert.alert-light.border
+                p.mb-0 You haven’t made any requests yet.
+
+        else
+            .list-group
+                each request in requests
+                    .list-group-item.d-flex.justify-content-between.align-items-center
+
+                        // LEFT SIDE (info)
+                        .d-flex.flex-column
+                            strong You requested "#{request.title}"
+                            span.text-muted Status: #{request.status}
+
+                        // RIGHT SIDE (actions)
+                        .d-flex.gap-2.align-items-center
+
+                            // STATUS BADGE
+                            if request.status === 'pending'
+                                span.badge.bg-warning.text-dark Pending
+                            else if request.status === 'accepted'
+                                span.badge.bg-success Accepted
+                            else if request.status === 'declined'
+                                span.badge.bg-danger Declined
+                            else if request.status === 'cancelled'
+                                span.badge.bg-secondary Cancelled
+
+                            // VIEW BUTTON
+                            a.btn.btn-outline-dark.btn-sm(
+                                href=`/listing-detail/${request.listing_id}`
+                            ) View
+
+                            // CANCEL BUTTON (only if pending)
+                            if request.status === 'pending'
+                                form(
+                                    action=`/requests/${request.request_id}/cancel`
+                                    method="POST"
+                                    onsubmit="return confirm('Cancel this request?');"
+                                )
+                                    button.btn.btn-outline-danger.btn-sm(type="submit") Cancel

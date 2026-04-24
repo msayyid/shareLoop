@@ -314,6 +314,130 @@ app.post("/listings/:id/request", async function (req, res) {
 
 });
 
+// accept request route POST
+app.post("/requests/:id/accept", requireLogin, async function(req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId; // requireLogin is used therefore there's no need to do extra check on uId
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found, accept route problem");
+        return res.redirect("/dashboard");
+    }
+
+    if (request.status !== "pending") {
+        console.error("Already accepted REQUEST");
+        return res.redirect("/dashboard");
+    }
+    
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found, accept route problem");
+        return res.redirect("/dashboard");
+    }
+
+    // check ownership
+    if (parseInt(uId) !== listing.user_id) {
+        console.error("this is not a request to your listing!!!!");
+        return res.redirect("/dashboard");
+    }
+
+    // update statuc
+    const updated = await Request.acceptRequest(requestId); // i do not have this mehtod yet
+    if (updated.affectedRows == 0) {
+        console.error("Erorr accepting the request");
+        return res.redirect("/dashboard");
+    } else {
+        // update listing availability
+        await Listing.markUnavailable(listing.listing_id);
+        console.log("Request Accepted successfully");
+        return res.redirect("/dashboard");
+    }
+});
+
+// reject request route
+app.post("/requests/:id/reject", requireLogin, async function(req, res) {
+    const requestId = req.params.id; // route param always exists no need for extra check
+    const uId = req.session.uId;
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found, reject route");
+        return res.redirect("/dashboard");
+    }
+
+    if (request.status !== "pending") {
+        console.error("request is not pending, can't be rejected!!!");
+        return res.redirect("/dashboard");
+    }
+
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found to reject");
+        return res.redirect("/dashboard");
+    }
+
+    // check ownership
+    if (listing.user_id !== parseInt(uId)) {
+        console.error("unauthorized access");
+        return res.redirect("/dashboard");
+    }
+
+    // update status
+    const updated = await Request.rejectRequest(requestId);
+    if (updated.affectedRows === 0) {
+        console.error("error occured rejecting a request");
+        return res.redirect("/dashboard");
+    } else {
+
+        console.log("request rejected/declined successfully");
+        return res.redirect("/dashboard");
+    }
+});
+
+// MY REQUESTS ROUTE
+app.get("/my-requests", requireLogin, async function(req, res) {
+    const uId = req.session.uId;
+
+    const requests = await Request.getRequestsByUser(uId);
+    console.log(requests);
+    res.render("my-requests", {
+        requests:requests
+    });
+
+    // should we create a new pug for my requests or should it be shown in the dashboard?
+});
+
+// cancel a pending request POST
+app.post("/requests/:id/cancel", requireLogin, async function(req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found");
+        return res.redirect("/my-requests");
+    }
+    // ownership check
+    if (parseInt(uId) !== request.requester_id) {
+        console.error("unauthorized access!!");
+        return res.redirect("/my-requests");
+    }
+
+    if (request.status !== "pending") {
+        console.error("you can't cancel non-pending requests");
+        return res.redirect("/my-requests");
+    }
+
+    const cancelled = await Request.cancelRequest(requestId); // i do not have htis method yet
+    if (cancelled.affectedRows === 0) {
+        console.error("error occured while cancelling a reqeust");
+        return res.redirect("/my-requests");
+    }
+    console.log("request cancelled successfully");
+    return res.redirect("/my-requests");
+
+});
+
 // Create a route for root - / home page
 app.get("/", async function(req, res) {
     const listings = await Listing.getRecentListings();

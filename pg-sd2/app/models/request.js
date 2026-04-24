@@ -44,6 +44,50 @@ class Request {
         const result = await db.query(sql, [userId]);
         return result;
     }
+
+    static async getRequestById(requestId) {
+        const sql = `select * from requests
+                     where request_id = ?`;
+        const result = await db.query(sql, [requestId]);
+        return result[0];
+    }
+
+    static async acceptRequest(requestId) {
+        const sql = `update requests
+                     set status = 'accepted'
+                     where request_id = ? 
+                     and status = 'pending'`;
+        const result = await db.query(sql, [requestId]);
+        return result; 
+    }
+
+    static async rejectRequest(requestId) {
+        const sql = `update requests
+                     set status = 'declined'
+                     where request_id = ?
+                     and status = 'pending'`;
+        const result = await db.query(sql, [requestId]);
+        return result;
+    }
+
+    static async getRequestsByUser(userId) {
+        const sql = `select r.*, l.title
+                     from requests r
+                     join listings l on l.listing_id = r.listing_id
+                     where r.requester_id = ?
+                     order by r.requested_date desc`;
+        const result = await db.query(sql, [userId]);
+        return result;
+    }
+
+    static async cancelRequest(requestId) {
+        const sql = `update requests
+                     set status = 'cancelled'
+                     where request_id = ?
+                     and status = 'pending'`;
+        const result = await db.query(sql, [requestId]);
+        return result;
+    }
 }
 
 module.exports = { Request };
