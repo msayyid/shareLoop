@@ -23,6 +23,7 @@ const { User } = require("./models/user");
 const { Listing } = require("./models/listing");
 const { Category } = require("./models/category");
 const { Request } = require("./models/request");
+const { Rating } = require("./models/rating");
 
 const bcrypt = require("bcryptjs");
 
@@ -157,6 +158,10 @@ app.get("/dashboard", requireLogin, async function (req, res) {
     await user.getUser();
     const listings = await Listing.getListingsByUserId(uId);
     const requests = await Request.getRequestsForOwner(uId);
+
+    for (let req of requests) {
+        req.hasRated = await Rating.hasUserRated(req.request_id, uId);
+    }
     console.log(user);
     console.log("AND HERE WE HAVE GOT USER'S LISTINGS");
     console.log(listings);
@@ -404,12 +409,15 @@ app.get("/my-requests", requireLogin, async function(req, res) {
     const uId = req.session.uId;
 
     const requests = await Request.getRequestsByUser(uId);
+    for (let req of requests) {
+        req.hasRated = await Rating.hasUserRated(req.request_id, uId);
+        console.log("DEBUG:", req.request_id, req.hasRated);
+    }
     console.log(requests);
     res.render("my-requests", {
         requests:requests
     });
 
-    // should we create a new pug for my requests or should it be shown in the dashboard?
 });
 
 // cancel a pending request POST
@@ -476,6 +484,121 @@ app.post("/requests/:id/complete", requireLogin, async function(req, res) {
     }
     console.log("request marked complete and listing updated if needed");
     res.redirect("/dashboard")
+
+});
+
+// RATINGS
+app.post("/requests/:id/rate", requireLogin, async function (req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found");
+        return res.redirect("/my-requests");
+    }
+
+    if (request.status !== "completed") {
+        console.error("you can't rate non-completed requests");
+        return res.redirect("/my-requests"); // i dont' know where to redirect
+    }
+
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/my-requests"); // ?????
+    }
+
+    const isRequester = uId === request.requester_id;
+    const redirectUrl = isRequester ? "/my-requests" : "/dashboard";
+
+    // check user is a part of request
+    // user is NOT requester AND NOT owner
+    if (uId !== request.requester_id && uId !== listing.user_id) {
+        // checking if the user is either a requester or the owner
+        console.error("you can't rate. you are not part of this request");
+        return res.redirect(redirectUrl); // i am not sure about this at all now
+    }
+
+
+    // check user has not rated yet
+
+    const alreadyRated = await Rating.hasUserRated(requestId, uId);
+    if (alreadyRated) {
+        console.error("you already rated");
+        return res.redirect(redirectUrl);
+    }
+
+    const { score, comment } = req.body;
+    if (!score || score < 1 || score > 5) {
+        console.error("invalid score");
+        return res.redirect(redirectUrl);
+    }
+
+    if (comment && comment.length > 500) {
+        console.error("comment too long");
+        return res.redirect(redirectUrl);
+    }
+    let ratedId;
+
+    if (uId === request.requester_id) {
+        // requester rating owner
+        ratedId = listing.user_id;
+    } else {
+        // owner is rating requester
+        ratedId = request.requester_id;
+    }
+    try {
+        await Rating.createRating(requestId, uId, ratedId, score, comment);
+    } catch (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+            console.error("user already rated (DB CONSTRAINT)");
+            return res.redirect(redirectUrl);
+        }
+        throw err; // other errors
+    }
+    return res.redirect(redirectUrl);
+});
+
+// rating route
+app.get("/requests/:id/rate", requireLogin, async function (req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found");
+        return res.redirect("/my-requests");
+    }
+
+    if (request.status !== "completed") {
+        console.error("you can't rate non-completed requests");
+        return res.redirect("/my-requests");
+    }
+
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/my-requests");
+    }
+
+    const isRequester = uId === request.request_id;
+    const redirectUrl = isRequester ? "/my-requests" : "/dashboard";
+    // user part of the request
+    if (uId !== listing.user_id && uId !== request.requester_id) {
+        console.error("you are not part of the request");
+        return res.redirect(redirectUrl);
+    }
+
+    const alreadyRated = await Rating.hasUserRated(requestId, uId);
+    if (alreadyRated) {
+        console.error("rating failed");
+        return res.redirect(redirectUrl);
+    }
+
+    return res.render("rate", {
+        request,
+        listing
+    });
 
 });
 

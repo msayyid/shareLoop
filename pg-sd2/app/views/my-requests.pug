@@ -17,12 +17,31 @@ block content
                         // LEFT SIDE (info)
                         .d-flex.flex-column
                             strong You requested "#{request.title}"
-                            span.text-muted Status: #{request.status}
 
                         // RIGHT SIDE (actions)
                         .d-flex.gap-2.align-items-center
 
-                            // STATUS BADGE
+                            // VIEW BUTTON
+                            a.btn.btn-outline-dark.btn-sm(
+                                href=`/listing-detail/${request.listing_id}`
+                            ) View
+
+                            // CANCEL BUTTON
+                            if request.status === 'pending'
+                                form(
+                                    action=`/requests/${request.request_id}/cancel`
+                                    method="POST"
+                                    onsubmit="return confirm('Cancel this request?');"
+                                )
+                                    button.btn.btn-outline-danger.btn-sm(type="submit") Cancel
+
+                            // RATE BUTTON (only completed)
+                            if request.status === 'completed' && !request.hasRated
+                                a.btn.btn-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/rate`
+                                ) Rate
+
+                            // STATUS BADGE (always last)
                             if request.status === 'pending'
                                 span.badge.bg-warning.text-dark Pending
                             else if request.status === 'accepted'
@@ -31,17 +50,5 @@ block content
                                 span.badge.bg-danger Declined
                             else if request.status === 'cancelled'
                                 span.badge.bg-secondary Cancelled
-
-                            // VIEW BUTTON
-                            a.btn.btn-outline-dark.btn-sm(
-                                href=`/listing-detail/${request.listing_id}`
-                            ) View
-
-                            // CANCEL BUTTON (only if pending)
-                            if request.status === 'pending'
-                                form(
-                                    action=`/requests/${request.request_id}/cancel`
-                                    method="POST"
-                                    onsubmit="return confirm('Cancel this request?');"
-                                )
-                                    button.btn.btn-outline-danger.btn-sm(type="submit") Cancel
+                            else if request.status === 'completed'
+                                span.badge.bg-primary Completed

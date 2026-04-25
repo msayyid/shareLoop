@@ -1,0 +1,76 @@
+extends layout
+
+block content
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6
+
+                .card.shadow-sm
+                    .card-body
+
+                        h3.mb-3 Rate your experience
+
+                        p.text-muted.mb-4
+                            | You are rating "
+                            strong #{listing.title}
+                            | "
+
+                        form(action=`/requests/${request.request_id}/rate` method="POST")
+
+                            // ⭐ STAR RATING
+                            .mb-4
+                                label.form-label Select rating:
+
+                                .star-rating
+                                    input(type="radio" id="star5" name="score" value="5" required)
+                                    label(for="star5") ★
+
+                                    input(type="radio" id="star4" name="score" value="4")
+                                    label(for="star4") ★
+
+                                    input(type="radio" id="star3" name="score" value="3")
+                                    label(for="star3") ★
+
+                                    input(type="radio" id="star2" name="score" value="2")
+                                    label(for="star2") ★
+
+                                    input(type="radio" id="star1" name="score" value="1")
+                                    label(for="star1") ★
+
+                            // COMMENT
+                            .mb-4
+                                label.form-label Comment (optional)
+                                textarea.form-control(
+                                    name="comment"
+                                    rows="3"
+                                    placeholder="Write your feedback..."
+                                )
+
+                            // BUTTONS
+                            .d-flex.justify-content-between
+                                a.btn.btn-outline-secondary(href="/my-requests") Cancel
+                                button.btn.btn-primary(type="submit") Submit Rating
+
+    // ⭐ CSS (simple but clean)
+    style.
+        .star-rating {
+            direction: rtl;
+            display: inline-flex;
+            gap: 5px;
+            font-size: 2rem;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
