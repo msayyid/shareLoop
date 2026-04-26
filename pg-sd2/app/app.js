@@ -24,6 +24,8 @@ const { Listing } = require("./models/listing");
 const { Category } = require("./models/category");
 const { Request } = require("./models/request");
 const { Rating } = require("./models/rating");
+const { Message } = require("./models/message");
+const { Notification } = require("./models/notification");
 
 const bcrypt = require("bcryptjs");
 
@@ -52,6 +54,24 @@ function requireLogin(req, res, next) {
 app.use((req, res, next) => {
     res.locals.loggedIn = req.session.uId;
     next(); // move to the next middleware
+});
+
+// notification middleware
+app.use(async (req, res, next) => {
+    if (req.session.uId) {
+        const notifications = await db.query(
+            `select * from notifications
+            where user_id = ?
+            order by created_at desc
+            limit 5`,
+            [req.session.uId]
+        );
+
+        res.locals.notifications = notifications;
+    } else {
+        res.locals.notifications = [];
+    }
+    next();
 });
 
 
@@ -298,25 +318,64 @@ app.post("/listings/:id/request", async function (req, res) {
         console.error("no listing found");
         return res.redirect(`/listing-detail/${listingId}`);
     }
-    
-    if (listing.user_id === parseInt(uId)) {
-        console.error("you can't request your own item");
-        return res.redirect(`/listing-detail/${listingId}`); // we should fix this, the user's own itesm must not be seen in the listings
+
+    if (parseInt(uId) === listing.user_id) {
+        console.error("Cannot request your own item");
+        return res.redirect("/dashboard");
     }
 
-    // check if request exists/ duplicate check
-    const exists = await Request.getPendingRequest(uId, listingId);
-    if (exists) {
-        console.error("already requested!");
+    // check if ANY request exists (including inquiry)
+
+    const activeRequest = await Request.findActiveRequest(uId, listingId);
+    const inquiryRequest = await Request.findInquiryRequest(uId, listingId);
+
+    let requestId;
+
+    if (activeRequest) {
+        // already active request exists
+        console.error("already requested");
         return res.redirect(`/listing-detail/${listingId}`);
+
+    } else if (inquiryRequest) {
+        // convert inquiry → real request
+        await Request.confirmRequest(inquiryRequest.request_id);
+        requestId = inquiryRequest.request_id;
+        console.log("inquiry converted to real request");
+
+    } else {
+        // create new request
+        requestId = await Request.createRequest(uId, listingId, false);
+        console.log("new request created");
     }
 
-    // create request
-    const request = await Request.createRequest(uId, listingId);
-    console.log("request created");
-    return res.redirect(`/listing-detail/${listingId}`); // where should we go in here?
+    // notifications
+    await Notification.create(
+        listing.user_id,
+        "request",
+        "Someone requested your item",
+        `/requests/${requestId}/messages`
+    );
+    // const activeRequest = await Request.findActiveRequest(uId, listingId);
 
+    // const existingRequest = await Request.findByUserAndListing(uId, listingId);
 
+    // if (activeRequest) {
+    //     // already has active request
+    //     console.error("already requested");
+    //     return res.redirect(`/listing-detail/${listingId}`);
+
+    // } else if (existingRequest && existingRequest.is_inquiry) {
+    //     // convert inquiry → real request
+    //     await Request.confirmRequest(existingRequest.request_id);
+    //     console.log("inquiry converted to real request");
+
+    // } else {
+    //     // create new request
+    //     await Request.createRequest(uId, listingId, false);
+    //     console.log("new request created");
+    // }
+
+    return res.redirect(`/listing-detail/${listingId}`);
 });
 
 // accept request route POST
@@ -348,7 +407,7 @@ app.post("/requests/:id/accept", requireLogin, async function(req, res) {
     }
 
     // update statuc
-    const updated = await Request.acceptRequest(requestId); // i do not have this mehtod yet
+    const updated = await Request.acceptRequest(requestId);
     if (updated.affectedRows == 0) {
         console.error("Erorr accepting the request");
         return res.redirect("/dashboard");
@@ -359,7 +418,14 @@ app.post("/requests/:id/accept", requireLogin, async function(req, res) {
         // cancel the request for this item for other users
         await Request.declineOtherRequests(listing.listing_id, requestId);
         console.log("Request Accepted successfully");
-        console.log("request cancelled for other users successfully");
+        // notify requester
+        await Notification.create(
+            request.requester_id,
+            "request",
+            "Your request was accepted",
+            `/requests/${requestId}/messages`
+        );
+
         return res.redirect("/dashboard");
     }
 });
@@ -400,6 +466,15 @@ app.post("/requests/:id/reject", requireLogin, async function(req, res) {
     } else {
 
         console.log("request rejected/declined successfully");
+
+        // notify requester
+        await Notification.create(
+            request.requester_id,
+            "request",
+            "Your request was declined",
+            `/requests/${requestId}/messages`
+        );
+
         return res.redirect("/dashboard");
     }
 });
@@ -602,6 +677,168 @@ app.get("/requests/:id/rate", requireLogin, async function (req, res) {
 
 });
 
+// messaging routes 
+app.get("/requests/:id/messages", requireLogin, async function (req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no request found");
+        return res.redirect("/dashboard"); // dashboard for now
+    }
+
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/dashboard");
+    }
+
+    // permission check
+    // i m not sure about this check
+    // i need to check if the user that want to message is either a requester or an owner? wait i don' tknow in here
+
+    if (parseInt(uId) !== listing.user_id && parseInt(uId) !== request.requester_id) {
+        console.error("permission errror");
+        return res.redirect("/dashboard");
+    }
+
+    const messages = await Message.getMessagesByRequestId(requestId);
+
+    res.render("messages", {
+        messages:messages,
+        request:request,
+        listing:listing,
+        uId:uId
+    });
+});
+
+// post route message
+app.post("/requests/:id/messages", requireLogin, async function(req, res) {
+    const requestId = req.params.id;
+    const uId = req.session.uId;
+
+    const request = await Request.getRequestById(requestId);
+    if(!request) {
+        console.error("no request found");
+        return res.redirect("/dashboard");
+    }
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no listing found");
+        return res.redirect("/dashboard");
+    }
+
+    // permission check
+    if (parseInt(uId) !== listing.user_id && parseInt(uId) !== request.requester_id) {
+        console.error("permission denied");
+        return res.redirect("/dashboard");
+    }
+
+    const message = req.body.message.trim();
+
+    if (!message) {
+        console.error("INVALID MESSAGE");  
+        return res.redirect(`/requests/${requestId}/messages`);
+    }
+
+    // determine receiverId
+    let receiverId;
+    if (uId === request.requester_id) {
+        receiverId = listing.user_id;
+    } else {
+        receiverId = request.requester_id;
+    }
+
+    await Message.createMessage(requestId, uId, receiverId, message);
+    await Notification.create(
+        receiverId, 
+        "message", 
+        "You have a new message",
+        `/requests/${requestId}/messages`
+    );
+    res.redirect(`/requests/${requestId}/messages`);
+});
+
+// ajax api for messages
+app.get("/api/requests/:id/messages", requireLogin, async function(req, res) {
+    const requestId = req.params.id;
+    const uId = parseInt(req.session.uId);
+
+    const request = await Request.getRequestById(requestId);
+    if (!request) {
+        console.error("no rquest found");
+        return res.status(404).json({ error: "Request not found"});
+    }
+
+    const listing = await Listing.getListingById(request.listing_id);
+    if (!listing) {
+        console.error("no lisitng found");
+        return res.status(404).json({ error: "Listing not found"});
+    }
+
+    // permission check
+    if (uId !== listing.user_id && uId !== request.requester_id) {
+        console.error("permission denied");
+        return res.status(404).json({ error: "Permission denied"});
+    }
+
+    // determine receiverId // i mixed thiese up with post route
+    // let receiverId;
+    // if (uId === request.requester_id) {
+    //     receiverId = listing.user_id;
+    // } else {
+    //     receiverId = request.request_id;
+    // }
+    const messages = await Message.getMessagesByRequestId(requestId);
+
+    return res.json(messages);
+
+    // await Message.createMessage(requestId, uId, receiverId, message);
+});
+
+
+app.get("/requests/:listingId/start-chat", requireLogin, async function (req, res) {
+    const listingId = req.params.listingId;
+    const uId = req.session.uId;
+
+    const listing = await Listing.getListingById(listingId);
+    if(!listing) {
+        console.error("no listing found");
+        return res.redirect("/dashboard");
+    }
+
+    if (parseInt(uId) === listing.user_id) {
+        console.error("Cannot chat on your own listing");
+        return res.redirect("/dashboard");
+    }
+
+    // check if request already exists
+    let request = await Request.findByUserAndListing(uId, listingId);
+
+    if (!request) {
+        const requestId = await Request.createRequest(uId, listingId, true);
+        request = { request_id : requestId };
+    }
+
+    // redirect to chat
+    res.redirect(`/requests/${request.request_id}/messages`);
+});
+
+// confirm route for request
+app.post("/requests/:id/confirm", requireLogin, async function (req, res) {
+    const requestId = req.params.id;
+    await Request.confirmRequest(requestId);
+    res.redirect(`requests/${requestId}/messages`);
+});
+
+
+// chats
+app.get("/my-chats", requireLogin, async function (req, res) {
+    const uId = req.session.uId;
+    const chats = await Message.getUserChats(uId);
+    res.render("my-chats", {chats});
+});
 
 // Create a route for root - / home page
 app.get("/", async function(req, res) {
@@ -638,19 +875,29 @@ app.get("/all-users-formatted", async function(req, res) {
 });
 
 app.get("/single-user/:id", async function(req, res) {
-    const uId = req.params.id;
-    let user = new User(uId);
+    const profileUserId = req.params.id;
+    let user = new User(profileUserId);
     await user.getUser();
     user.setImagePath();
-    let listings = await Listing.getListingsByUserId(uId);
+    let listings = await Listing.getListingsByUserId(profileUserId);
+
+    // get average rating for the user
+    const ratingData = await Rating.getAverageRating(profileUserId);
+    console.log("RATING DATA: ", ratingData);
+
+    // get reviews for the user
+    const reviews = await Rating.getRatingsForUser(profileUserId);
+
     res.render("user", {
         user:user,
-        listings:listings
+        listings:listings,
+        ratingData:ratingData,
+        reviews:reviews
     });
-    console.log("now i need to be seeing a user with a givn id");
-    console.log(user);
-    console.log("these are the listings of the current user");
-    console.log(listings);
+    // console.log("now i need to be seeing a user with a givn id");
+    // console.log(user);
+    // console.log("these are the listings of the current user");
+    // console.log(listings);
 });
 
 // listings
@@ -695,7 +942,8 @@ app.get("/listing-detail/:listing_id", async function (req, res){
     listing.setImagePath();
     res.render("listing-detail", {
         listing:listing,
-        hasRequested:hasRequested
+        hasRequested:hasRequested,
+        uId:uId
     });
     console.log(listing);
 });

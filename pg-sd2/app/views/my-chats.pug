@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    .container.mt-4
+
+        h2.mb-4 My Chats
+
+        if chats.length === 0
+            .alert.alert-light.border
+                p.mb-0 You have no conversations yet.
+
+        else
+            .list-group
+
+                each chat in chats
+                    a.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(
+                        href=`/requests/${chat.request_id}/messages`
+                    )
+
+                        // LEFT
+                        .d-flex.flex-column
+                            strong #{chat.title}
+                            small.text-muted Chat with #{chat.first_name}
+
+                        // RIGHT
+                        span.badge.bg-light.text-dark Open

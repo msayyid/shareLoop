@@ -1,0 +1,111 @@
+extends layout
+
+block content
+    .container.mt-4
+
+        // ===== HEADER =====
+        .d-flex.justify-content-between.align-items-center.mb-3
+            h5.mb-0 Chat about "#{listing.title}"
+            a.btn.btn-outline-dark.btn-sm(href="/dashboard") Back
+
+        // ===== MESSAGES BOX =====
+        .card.shadow-sm
+            .card-body#chat-box(style="height:400px; overflow-y:auto;")
+
+                if messages.length === 0
+                    p.text-muted No messages yet. Start the conversation.
+
+                else
+                    each msg in messages
+                        .d-flex.mb-3(class=msg.sender_id == uId ? "justify-content-end" : "justify-content-start")
+                            .p-2.rounded(
+                                style=`
+                                    max-width:60%;
+                                    background-color:${msg.sender_id == uId ? '#0d6efd' : '#f1f1f1'};
+                                    color:${msg.sender_id == uId ? 'white' : 'black'};
+                                `
+                            )
+                                p.mb-1 #{msg.message}
+                                small(style="font-size:0.7rem; opacity:0.7;") #{msg.first_name}
+
+        // ===== INPUT =====
+        form.mt-3(method="POST")
+            .input-group
+                input.form-control(
+                    type="text"
+                    name="message"
+                    placeholder="Type a message..."
+                    required
+                )
+                button.btn.btn-dark(type="submit") Send
+
+        // ===== AJAX SCRIPT =====
+        script.
+            const requestId = !{request.request_id};
+            const uId = !{uId};
+            let lastMessageId = 0;
+            let isFirstLoad = true; // Flag to force scroll on first load
+
+            const chatBox = document.getElementById("chat-box");
+
+            function scrollToBottom() {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function renderMessage(msg) {
+                const isMe = msg.sender_id == uId;
+                const wrapper = document.createElement("div");
+                wrapper.className = "d-flex mb-3 " + (isMe ? "justify-content-end" : "justify-content-start");
+
+                const bubble = document.createElement("div");
+                bubble.style.maxWidth = "60%";
+                bubble.style.padding = "8px";
+                bubble.style.borderRadius = "10px";
+                bubble.style.backgroundColor = isMe ? "#0d6efd" : "#f1f1f1";
+                bubble.style.color = isMe ? "white" : "black";
+
+                bubble.innerHTML = `
+                    <p style="margin:0;">${msg.message}</p>
+                    <small style="font-size:0.7rem; opacity:0.7;">${msg.first_name}</small>
+                `;
+
+                wrapper.appendChild(bubble);
+                chatBox.appendChild(wrapper);
+            }
+
+            async function loadMessages() {
+                try {
+                    const res = await fetch(`/api/requests/${requestId}/messages`);
+                    const messages = await res.json();
+
+                    // Check if user is near bottom BEFORE adding new messages
+                    const isNearBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 150;
+                    let addedNew = false;
+
+                    messages.forEach(msg => {
+                        if (msg.message_id > lastMessageId) {
+                            renderMessage(msg);
+                            lastMessageId = msg.message_id;
+                            addedNew = true;
+                        }
+                    });
+
+                    // Logic: Scroll to bottom if it's the first time loading OR if a new message arrived while at the bottom
+                    if (isFirstLoad || (addedNew && isNearBottom)) {
+                        scrollToBottom();
+                        isFirstLoad = false;
+                    }
+
+                } catch (err) {
+                    console.error("Error loading messages:", err);
+                }
+            }
+
+            // Run immediately
+            loadMessages();
+
+            // Poll every 3 seconds
+            setInterval(loadMessages, 3000);
+
+            // Also: If the page uses standard form submission to send messages, 
+            // the "First Load" logic above will handle the scroll after the redirect.

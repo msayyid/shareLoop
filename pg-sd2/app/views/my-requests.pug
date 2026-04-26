@@ -26,6 +26,12 @@ block content
                                 href=`/listing-detail/${request.listing_id}`
                             ) View
 
+                            // MESSAGE BUTTON
+                            if request.status !== 'declined' && request.status !== 'cancelled'
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
                             // CANCEL BUTTON
                             if request.status === 'pending'
                                 form(

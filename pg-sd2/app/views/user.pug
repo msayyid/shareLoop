@@ -54,7 +54,10 @@ block content
                                         |  #{user.points || 0}
                                     p.mb-2
                                         strong Rating:
-                                        |  #{user.average_rating || "N/A"} ⭐
+                                        if ratingData && ratingData.total_ratings > 0 && ratingData.avg_rating
+                                            |  #{ratingData.avg_rating.toFixed(1)} ⭐ (#{ratingData.total_ratings} reviews)
+                                        else
+                                            |  No ratings yet
                                     p.mb-2
                                         strong Lent:
                                         |  #{user.items_lent || 0}
@@ -94,6 +97,36 @@ block content
                                                 p.text-muted.mb-0 #{listing.exchange_type || "Unknown"}
                         else
                             p.text-muted This user has no listings yet.
+
+                // ===== REVIEWS =====
+                .mt-5
+                    h5.mb-3 Reviews (#{reviews.length})
+
+                    if reviews.length > 0
+                        .list-group
+                            each review in reviews
+                                .list-group-item
+
+                                    // TOP ROW
+                                    .d-flex.justify-content-between.align-items-center
+                                        strong #{review.first_name}
+                                        span.text-muted #{new Date(review.created_at).toLocaleDateString()}
+
+                                    // LISTING CONTEXT
+                                    p.text-muted.mb-1
+                                        | For: "#{review.title}"
+
+                                    // STARS
+                                    - const stars = "★".repeat(review.score) + "☆".repeat(5 - review.score)
+                                    p.mb-1(style="color:#ffc107; font-size:1.1rem;") #{stars}
+
+                                    // COMMENT
+                                    if review.comment
+                                        p.mb-0 #{review.comment}
+                                    else
+                                        p.text-muted.mb-0 No comment
+                    else
+                        p.text-muted No reviews yet.
 
                 // Footer
                 .card-footer.bg-white.border-0.pt-0.pb-4.px-4

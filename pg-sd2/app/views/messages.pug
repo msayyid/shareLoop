@@ -1,0 +1,113 @@
+extends layout
+
+block content
+    .container.mt-4
+
+        // ===== HEADER =====
+        .d-flex.justify-content-between.align-items-center.mb-3
+            h5.mb-0 Chat about "#{listing.title}"
+            a.btn.btn-outline-dark.btn-sm(href="/dashboard") Back
+
+        // ===== MESSAGES BOX =====
+        .card.shadow-sm
+            .card-body#chat-box(style="height:400px; overflow-y:auto;")
+
+        // ===== INPUT =====
+        form.mt-3(method="POST")
+            .input-group
+                input.form-control(
+                    type="text"
+                    name="message"
+                    placeholder="Type a message..."
+                    required
+                )
+                button.btn.btn-dark(type="submit") Send
+
+        // ===== AJAX SCRIPT =====
+        script.
+            const requestId = !{request.request_id};
+            const uId = !{uId};
+            let lastMessageId = 0;
+            let isFirstLoad = true;
+
+            const chatBox = document.getElementById("chat-box");
+
+            function scrollToBottom() {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function formatTime(ts) {
+                const d = new Date(ts);
+                return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function renderMessage(msg, showHeader) {
+                const isMe = msg.sender_id == uId;
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "d-flex flex-column mb-2 " + (isMe ? "align-items-end" : "align-items-start");
+
+                // show name only if new group
+                if (showHeader) {
+                    const name = document.createElement("small");
+                    name.style.fontSize = "0.7rem";
+                    name.style.opacity = "0.6";
+                    name.textContent = isMe ? "You" : msg.first_name;
+                    wrapper.appendChild(name);
+                }
+
+                const bubble = document.createElement("div");
+                bubble.style.maxWidth = "60%";
+                bubble.style.padding = "8px";
+                bubble.style.borderRadius = "10px";
+                bubble.style.marginTop = "2px";
+                bubble.style.backgroundColor = isMe ? "#0d6efd" : "#f1f1f1";
+                bubble.style.color = isMe ? "white" : "black";
+
+                bubble.innerHTML = `
+                    <p style="margin:0;">${msg.message}</p>
+                    <div style="font-size:0.65rem; opacity:0.6; text-align:right;">
+                        ${formatTime(msg.created_at)}
+                    </div>
+                `;
+
+                wrapper.appendChild(bubble);
+                chatBox.appendChild(wrapper);
+            }
+
+            async function loadMessages() {
+                try {
+                    const res = await fetch(`/api/requests/${requestId}/messages`);
+                    const messages = await res.json();
+
+                    const isNearBottom =
+                        chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 150;
+
+                    let addedNew = false;
+                    let prevSender = null;
+
+                    messages.forEach(msg => {
+                        if (msg.message_id > lastMessageId) {
+
+                            const showHeader = msg.sender_id !== prevSender;
+
+                            renderMessage(msg, showHeader);
+
+                            prevSender = msg.sender_id;
+                            lastMessageId = msg.message_id;
+                            addedNew = true;
+                        }
+                    });
+
+                    if (isFirstLoad || (addedNew && isNearBottom)) {
+                        scrollToBottom();
+                        isFirstLoad = false;
+                    }
+
+                } catch (err) {
+                    console.error("Error loading messages:", err);
+                }
+            }
+
+            loadMessages();
+            setInterval(loadMessages, 500);

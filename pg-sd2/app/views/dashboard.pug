@@ -90,6 +90,12 @@ block content
                         // RIGHT
                         .d-flex.gap-2.align-items-center
 
+                            // MESSAGE BUTTON (always available except declined)
+                            if request.status !== 'declined'
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
                             if request.status === 'pending'
                                 form(action=`/requests/${request.request_id}/accept` method="POST")
                                     button.btn.btn-success.btn-sm(type="submit") Accept

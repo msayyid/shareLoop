@@ -42,8 +42,31 @@ html(lang="en")
                         if loggedIn
                             li.nav-item
                                 a.nav-link(href="/dashboard") Dashboard
+
+                            li.nav-item
+                                a.nav-link.fw-bold(href="/my-chats") My Chats
+
+                            // 🔔 Notifications
+                            li.nav-item.dropdown
+                                a.nav-link.dropdown-toggle(
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                ) 🔔
+
+                                ul.dropdown-menu.dropdown-menu-end
+                                    if notifications.length === 0
+                                        li
+                                            span.dropdown-item.text-muted No notifications
+                                    else
+                                        each n in notifications
+                                            li
+                                                a.dropdown-item(href=n.link)
+                                                    | #{n.message}
+
                             li.nav-item
                                 a.nav-link(href="/logout") Logout
+
                         else
                             li.nav-item
                                 a.nav-link(href="/login") Login
