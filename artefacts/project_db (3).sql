@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 24, 2026 at 09:51 AM
+-- Generation Time: Apr 27, 2026 at 03:47 AM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -78,7 +78,7 @@ CREATE TABLE `listings` (
 --
 
 INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `description`, `exchange_type`, `condition_status`, `condition_notes`, `photo_url_1`, `photo_url_2`, `photo_url_3`, `swap_preferences`, `is_available`, `view_count`, `request_count`, `created_at`, `updated_at`, `is_active`) VALUES
-(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-24 09:46:07', 1),
+(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-27 01:38:49', 1),
 (2, 2, 2, 'MacBook Charger', 'Works perfectly', 'giveaway', 'good', NULL, 'listing_pic_2.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:13', 1),
 (3, 3, 3, 'Rice Cooker', 'Small size', 'lending', 'fair', NULL, 'listing_pic_3.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:37', 1),
 (4, 4, 5, 'Yoga Mat number two', 'Barely used, and just got changed, still swap tho, but cateogry is furniture', 'swap', 'like_new', NULL, 'listing_pic_4.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-23 04:16:35', 0),
@@ -93,7 +93,7 @@ INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `descri
 (13, 13, 3, 'Air Fryer', 'Great condition', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
 (14, 14, 4, 'Dumbbells Set', '5kg each', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
 (15, 15, 5, 'Lamp', 'Desk lamp', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
-(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 0, 0, 0, '2026-03-23 09:00:00', '2026-04-24 05:47:04', 1),
+(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:00:00', '2026-04-25 05:55:00', 1),
 (17, 2, 2, 'USB-C Hub', 'Small hub with HDMI and USB ports. Still works well and handy for library or home use.', 'giveaway', 'good', 'Minor scratches from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:05:00', '2026-03-23 09:05:00', 1),
 (18, 3, 3, 'Saucepan Set', 'Set of two saucepans suitable for a shared student kitchen. Clean and fully usable.', 'lending', 'good', 'Handles are slightly worn but sturdy.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:10:00', '2026-03-23 09:10:00', 1),
 (19, 4, 4, 'Skipping Rope', 'Lightweight skipping rope for quick workouts at home or outdoors.', 'swap', 'like_new', 'Used only a couple of times.', NULL, NULL, NULL, 'Open to swapping for a yoga block or resistance band.', 1, 0, 0, '2026-03-23 09:15:00', '2026-04-23 04:17:11', 0),
@@ -111,10 +111,11 @@ INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `descri
 (34, 4, 1, 'chingiz khan', 'a book about the conqueror of the world', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-08 17:05:49', '2026-04-08 17:05:49', 1),
 (35, 4, 2, 'laptop', 'my old laptop, i bough a new one', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-09 07:07:46', '2026-04-09 07:07:46', 1),
 (36, 16, 2, 'keyboard', 'giving away mac keyboard', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-23 05:01:25', 1),
-(37, 1, 5, 'testing 1', 'fawerqweruwqpoieur', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:11', '2026-04-24 08:36:37', 1),
+(37, 1, 5, 'testing 1', 'fawerqweruwqpoieur', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-24 08:34:11', '2026-04-27 01:38:46', 1),
 (38, 1, 5, 'tresting 2', 'ju2389ruiofsadjopi', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:25', '2026-04-24 08:39:41', 1),
 (39, 1, 5, 'testing 4', 'jaoiuf238oivpjaoip', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:37', '2026-04-24 08:40:36', 1),
-(40, 1, 1, 'nonlending testing', '23764y987hasfd98uh', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 09:47:05', '2026-04-24 09:47:24', 1);
+(40, 1, 1, 'nonlending testing', '23764y987hasfd98uh', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 09:47:05', '2026-04-24 09:47:24', 1),
+(41, 1, 1, 'new listing', '56798fsadkhfiljh', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-26 18:28:15', '2026-04-27 01:38:16', 1);
 
 -- --------------------------------------------------------
 
@@ -186,30 +187,84 @@ INSERT INTO `listing_tags` (`listing_id`, `tag_id`) VALUES
 
 CREATE TABLE `messages` (
   `message_id` int NOT NULL,
-  `sender_id` int NOT NULL,
-  `receiver_id` int NOT NULL,
   `request_id` int DEFAULT NULL,
-  `listing_id` int DEFAULT NULL,
-  `content` text NOT NULL,
+  `sender_id` int DEFAULT NULL,
+  `receiver_id` int DEFAULT NULL,
+  `message` text,
   `is_read` tinyint(1) DEFAULT '0',
-  `sent_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`message_id`, `sender_id`, `receiver_id`, `request_id`, `listing_id`, `content`, `is_read`, `sent_at`) VALUES
-(1, 2, 1, 1, NULL, 'Hi, is this available?', 0, '2026-03-19 00:27:17'),
-(2, 1, 2, 1, NULL, 'Yes, it is', 0, '2026-03-19 00:27:17'),
-(3, 3, 2, 2, NULL, 'Can I pick it up today?', 0, '2026-03-19 00:27:17'),
-(4, 4, 3, 3, NULL, 'Thanks for the cooker', 0, '2026-03-19 00:27:17'),
-(5, 5, 4, 4, NULL, 'Still interested?', 0, '2026-03-19 00:27:17'),
-(6, 6, 5, 5, NULL, 'Can I collect tonight?', 0, '2026-03-19 00:27:17'),
-(7, 7, 6, 6, NULL, 'Need it urgently', 0, '2026-03-19 00:27:17'),
-(8, 8, 7, 7, NULL, 'Is it loud?', 0, '2026-03-19 00:27:17'),
-(9, 9, 8, 8, NULL, 'I will come later', 0, '2026-03-19 00:27:17'),
-(10, 10, 9, 9, NULL, 'Is it still available?', 0, '2026-03-19 00:27:17');
+INSERT INTO `messages` (`message_id`, `request_id`, `sender_id`, `receiver_id`, `message`, `is_read`, `created_at`) VALUES
+(4, 3, 16, 1, 'hello friend', 0, '2026-04-26 19:51:36'),
+(5, 3, 16, 1, 'hello friend', 0, '2026-04-26 19:56:18'),
+(6, 3, 16, 1, 'fasdasdfasdf', 0, '2026-04-26 19:58:15'),
+(7, 3, 16, 1, 'hello friend', 0, '2026-04-26 20:00:08'),
+(8, 6, 16, 1, 'hello', 0, '2026-04-26 20:03:53'),
+(9, 6, 1, 16, 'hello friend', 0, '2026-04-26 20:04:16'),
+(10, 3, 16, 1, 'hello friend', 0, '2026-04-26 20:21:22'),
+(11, 3, 16, 1, 'FIRST NOTIFICATION MY FRIEND', 0, '2026-04-26 20:31:33'),
+(12, 3, 16, 1, 'SECOND NOTIFCATION', 0, '2026-04-26 20:32:28'),
+(13, 6, 16, 1, 'THRID NOTIFICATION', 0, '2026-04-26 20:32:46'),
+(14, 3, 16, 1, 'hello', 0, '2026-04-27 01:22:51'),
+(15, 3, 16, 1, 'fasdfasdfa', 0, '2026-04-27 01:26:12'),
+(16, 3, 1, 16, 'wasdfasf', 0, '2026-04-27 01:34:47'),
+(17, 3, 16, 1, 'asdfsadfa', 0, '2026-04-27 01:35:03'),
+(18, 3, 16, 1, 'fasdfasdfaewsftadsfvasdfcv', 0, '2026-04-27 01:35:19'),
+(19, 3, 16, 1, 'fasdfasdfasdfcasd', 0, '2026-04-27 01:35:25'),
+(20, 3, 16, 1, 'saipdfhaposdujfhopiasdjfopiaj', 0, '2026-04-27 01:39:32'),
+(21, 3, 16, 1, 'fasdfasdfasdf', 0, '2026-04-27 01:39:38'),
+(22, 4, 16, 1, 'fasdfasdfasdfas', 0, '2026-04-27 01:39:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `notification_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `message` text,
+  `link` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `message`, `link`, `is_read`, `created_at`) VALUES
+(1, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:21:22'),
+(2, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:31:33'),
+(3, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:32:28'),
+(4, 1, 'message', 'You have a new message', '/requests/6/messages', 1, '2026-04-26 20:32:46'),
+(5, 1, 'request', 'Someone requested your item', '/requests/7/messages', 1, '2026-04-26 20:54:46'),
+(6, 16, 'request', 'Your request was accepted', '/requests/4/messages', 1, '2026-04-26 20:59:30'),
+(7, 16, 'request', 'Your request was declined', '/requests/5/messages', 1, '2026-04-26 20:59:44'),
+(8, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:22:51'),
+(9, 1, 'request', 'Someone requested your item', '/requests/8/messages', 1, '2026-04-27 01:23:47'),
+(10, 16, 'request', 'Your request was declined', '/requests/8/messages', 1, '2026-04-27 01:24:15'),
+(11, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:26:12'),
+(12, 16, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:34:47'),
+(13, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:03'),
+(14, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:19'),
+(15, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:25'),
+(16, 16, 'request', 'Your request was accepted', '/requests/6/messages', 1, '2026-04-27 01:38:06'),
+(17, 16, 'request', 'Your request was accepted', '/requests/7/messages', 1, '2026-04-27 01:38:16'),
+(18, 1, 'request', 'Someone requested your item', '/requests/9/messages', 1, '2026-04-27 01:39:17'),
+(19, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:39:32'),
+(20, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:39:38'),
+(21, 1, 'message', 'You have a new message', '/requests/4/messages', 1, '2026-04-27 01:39:50'),
+(22, 1, 'request', 'Someone requested your item', '/requests/10/messages', 1, '2026-04-27 01:40:00'),
+(23, 1, 'request', 'Someone requested your item', '/requests/11/messages', 1, '2026-04-27 01:45:07'),
+(24, 1, 'request', 'Someone requested your item', '/requests/12/messages', 1, '2026-04-27 01:45:48');
 
 -- --------------------------------------------------------
 
@@ -224,7 +279,7 @@ CREATE TABLE `ratings` (
   `rated_id` int NOT NULL,
   `score` int NOT NULL,
   `comment` text,
-  `rating_type` enum('as_lender','as_borrower','as_swapper','as_giver','as_receiver') NOT NULL,
+  `rating_type` enum('as_lender','as_borrower','as_swapper','as_giver','as_receiver') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -233,10 +288,9 @@ CREATE TABLE `ratings` (
 --
 
 INSERT INTO `ratings` (`rating_id`, `request_id`, `rater_id`, `rated_id`, `score`, `comment`, `rating_type`, `created_at`) VALUES
-(1, 3, 4, 3, 5, NULL, 'as_borrower', '2026-03-19 00:27:24'),
-(2, 5, 6, 5, 4, NULL, 'as_giver', '2026-03-19 00:27:24'),
-(3, 8, 9, 8, 5, NULL, 'as_receiver', '2026-03-19 00:27:24'),
-(4, 10, 11, 10, 4, NULL, 'as_giver', '2026-03-19 00:27:24');
+(1, 7, 16, 1, 5, '', NULL, '2026-04-27 01:50:50'),
+(2, 4, 16, 1, 2, 'good', NULL, '2026-04-27 01:51:00'),
+(3, 6, 16, 1, 4, 'fsadfasfa', NULL, '2026-04-27 01:51:04');
 
 -- --------------------------------------------------------
 
@@ -255,30 +309,25 @@ CREATE TABLE `requests` (
   `requested_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `responded_date` timestamp NULL DEFAULT NULL,
   `completed_date` timestamp NULL DEFAULT NULL,
-  `owner_notes` text
+  `owner_notes` text,
+  `is_inquiry` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `requests`
 --
 
-INSERT INTO `requests` (`request_id`, `requester_id`, `listing_id`, `status`, `message`, `requested_duration`, `swap_offer_description`, `requested_date`, `responded_date`, `completed_date`, `owner_notes`) VALUES
-(1, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-23 07:05:28', NULL, NULL, NULL),
-(2, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-23 07:22:01', NULL, NULL, NULL),
-(3, 4, 1, 'completed', NULL, NULL, NULL, '2026-04-23 07:23:16', NULL, NULL, NULL),
-(4, 4, 16, 'accepted', NULL, NULL, NULL, '2026-04-23 07:23:32', NULL, NULL, NULL),
-(5, 16, 1, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:07', NULL, NULL, NULL),
-(6, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-24 04:56:35', NULL, NULL, NULL),
-(7, 16, 6, 'pending', NULL, NULL, NULL, '2026-04-24 05:54:40', NULL, NULL, NULL),
-(8, 16, 34, 'cancelled', NULL, NULL, NULL, '2026-04-24 05:56:06', NULL, NULL, NULL),
-(9, 16, 37, 'accepted', NULL, NULL, NULL, '2026-04-24 08:35:22', NULL, NULL, NULL),
-(10, 2, 37, 'cancelled', NULL, NULL, NULL, '2026-04-24 08:35:56', NULL, NULL, NULL),
-(11, 2, 38, 'completed', NULL, NULL, NULL, '2026-04-24 08:38:59', NULL, NULL, NULL),
-(12, 16, 38, 'declined', NULL, NULL, NULL, '2026-04-24 08:39:11', NULL, NULL, NULL),
-(13, 2, 39, 'declined', NULL, NULL, NULL, '2026-04-24 08:40:24', NULL, NULL, NULL),
-(14, 16, 39, 'accepted', NULL, NULL, NULL, '2026-04-24 08:40:28', NULL, NULL, NULL),
-(15, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-24 09:45:16', NULL, NULL, NULL),
-(16, 16, 40, 'completed', NULL, NULL, NULL, '2026-04-24 09:47:15', NULL, NULL, NULL);
+INSERT INTO `requests` (`request_id`, `requester_id`, `listing_id`, `status`, `message`, `requested_duration`, `swap_offer_description`, `requested_date`, `responded_date`, `completed_date`, `owner_notes`, `is_inquiry`) VALUES
+(3, 16, 1, 'declined', NULL, NULL, NULL, '2026-04-26 19:51:23', NULL, NULL, NULL, 0),
+(4, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-26 20:00:14', NULL, NULL, NULL, 0),
+(5, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-26 20:02:18', NULL, NULL, NULL, 0),
+(6, 16, 37, 'completed', NULL, NULL, NULL, '2026-04-26 20:03:51', NULL, NULL, NULL, 0),
+(7, 16, 41, 'completed', NULL, NULL, NULL, '2026-04-26 20:54:46', NULL, NULL, NULL, 0),
+(8, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-27 01:23:47', NULL, NULL, NULL, 0),
+(9, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:39:17', NULL, NULL, NULL, 0),
+(10, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:40:00', NULL, NULL, NULL, 0),
+(11, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:45:07', NULL, NULL, NULL, 0),
+(12, 16, 1, 'pending', NULL, NULL, NULL, '2026-04-27 01:45:48', NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -389,16 +438,22 @@ ALTER TABLE `listing_tags`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`message_id`),
-  ADD KEY `sender_id` (`sender_id`),
-  ADD KEY `receiver_id` (`receiver_id`),
   ADD KEY `request_id` (`request_id`),
-  ADD KEY `listing_id` (`listing_id`);
+  ADD KEY `sender_id` (`sender_id`),
+  ADD KEY `receiver_id` (`receiver_id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`notification_id`);
 
 --
 -- Indexes for table `ratings`
 --
 ALTER TABLE `ratings`
   ADD PRIMARY KEY (`rating_id`),
+  ADD UNIQUE KEY `request_id_2` (`request_id`,`rater_id`),
   ADD KEY `request_id` (`request_id`),
   ADD KEY `rater_id` (`rater_id`),
   ADD KEY `rated_id` (`rated_id`);
@@ -439,25 +494,31 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `listings`
 --
 ALTER TABLE `listings`
-  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `message_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `notification_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `rating_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -493,10 +554,9 @@ ALTER TABLE `listing_tags`
 -- Constraints for table `messages`
 --
 ALTER TABLE `messages`
-  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `messages_ibfk_3` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`),
-  ADD CONSTRAINT `messages_ibfk_4` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`);
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`),
+  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `messages_ibfk_3` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `ratings`

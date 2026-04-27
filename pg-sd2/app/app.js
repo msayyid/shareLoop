@@ -62,12 +62,22 @@ app.use(async (req, res, next) => {
         const notifications = await db.query(
             `select * from notifications
             where user_id = ?
+            and is_read = false
             order by created_at desc
             limit 5`,
             [req.session.uId]
         );
 
+        const unreadCount = await db.query(
+            `select count(*) as count
+            from notifications
+            where user_id = ?
+            and is_read = false`,
+            [req.session.uId]
+        );
+
         res.locals.notifications = notifications;
+        res.locals.unreadCount = unreadCount[0].count;
     } else {
         res.locals.notifications = [];
     }
@@ -838,6 +848,44 @@ app.get("/my-chats", requireLogin, async function (req, res) {
     const uId = req.session.uId;
     const chats = await Message.getUserChats(uId);
     res.render("my-chats", {chats});
+});
+
+// notifications read
+app.get("/notifications/:id/read", requireLogin, async function (req, res) {
+    const notificationId = req.params.id;
+    await Notification.markAsRead(notificationId);
+
+    const notification = await Notification.getById(notificationId);
+    if (!notification) {
+        return res.redirect("/dashboard");
+    }
+    res.redirect(notification.link);
+});
+
+// api route for notifications
+app.get("/api/notifications", requireLogin, async function (req, res)  {
+    const userId = req.session.uId;
+
+    const notifications = await db.query(
+        `select * from notifications
+         where user_id = ?
+         and is_read = false
+         order by created_at desc
+         limit 5`,
+        [userId]
+    );
+
+    const unreadCount = await db.query(
+        `select count(*) as count
+         from notifications
+         where user_id = ?
+         and is_read = false`,
+         [userId]
+    );
+    res.json({
+        unreadCount: unreadCount[0].count,
+        notifications: notifications
+    });
 });
 
 // Create a route for root - / home page

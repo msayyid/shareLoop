@@ -22,6 +22,21 @@ class Notification {
         const result = await db.query(sql, [userId, type, message, link]);
         return result.insertId;
     }
+
+    static async markAsRead(notificationId) {
+        const sql = `update notifications
+                     set is_read = true
+                     where notification_id = ?`;
+        await db.query(sql, [notificationId]);
+    }
+
+    static async getById(notificationId) {
+        const sql = `select * from notifications
+                     where notification_id = ?`;
+        
+        const result = await db.query(sql, [notificationId]);
+        return result[0];
+    }
 }
 
 module.exports = { Notification };
