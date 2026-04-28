@@ -1,0 +1,34 @@
+extends layout
+
+block content
+    .container.mt-5
+
+        .text-center.mb-4
+            h2 Contact Us
+            p.text-muted We’re here to help. Send us a message anytime.
+
+        .row.justify-content-center
+            .col-lg-6
+
+                .card.border-0.shadow-lg
+                    .card-body.p-4
+
+                        form
+                            .mb-3
+                                label.form-label Name
+                                input.form-control(type="text" placeholder="Your name")
+
+                            .mb-3
+                                label.form-label Email
+                                input.form-control(type="email" placeholder="Your email")
+
+                            .mb-3
+                                label.form-label Message
+                                textarea.form-control(rows="4" placeholder="Write your message...")
+
+                            button.btn.btn-dark.w-100(type="submit") Send Message
+
+                        .text-center.mt-4
+                            small.text-muted
+                                | Or email us at 
+                                strong support@shareloop.com
