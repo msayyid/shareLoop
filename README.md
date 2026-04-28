@@ -98,7 +98,7 @@ We propose a platform that enables users to:
 | Name                   | Role   | GitHub    |
 | ---------------------- | ------ | --------- |
 | Mukhammadsaiid Norbaev | [Role] | @username |
-| [Full Name]            | [Role] | @username |
+| Azlan Rashid           | [Role] | @azlanr1  |
 | [Full Name]            | [Role] | @username |
 | [Full Name]            | [Role] | @username |
 
