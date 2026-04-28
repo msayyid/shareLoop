@@ -1,0 +1,41 @@
+extends layout
+
+block content
+    .container.mt-4
+        h3.mb-4 Edit Profile
+
+        form(method="POST" action="/profile/edit" enctype="multipart/form-data")
+
+            // PROFILE IMAGE
+            .mb-3
+                label.form-label Profile Picture
+                input.form-control(type="file" name="image")
+
+            .mb-3
+                label.form-label First Name
+                input.form-control(type="text" name="first_name" value=user.first_name required)
+
+            .mb-3
+                label.form-label Last Name
+                input.form-control(type="text" name="last_name" value=user.last_name required)
+
+            .mb-3
+                label.form-label Bio
+                textarea.form-control(name="bio") #{user.bio}
+
+            .mb-3
+                label.form-label Location
+                input.form-control(type="text" name="location" value=user.location)
+
+            hr
+
+            h5 Change Password
+
+            .mb-3
+                input.form-control(
+                    type="password"
+                    name="password"
+                    placeholder="Leave empty to keep current password"
+                )
+
+            button.btn.btn-dark(type="submit") Save Changes

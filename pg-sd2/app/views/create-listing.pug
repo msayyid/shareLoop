@@ -1,34 +1,63 @@
-extends layout 
-block content 
+extends layout
+
+block content
     .container.mt-4
+        h2.mb-4 Create New Listing
 
-        h2 Create New Listing
+        form(action="/listings" method="POST" enctype="multipart/form-data")
 
-        form(action="/listings" method="POST")
-
+            // TITLE
             .mb-3
                 label.form-label Title
                 input.form-control(type="text" name="title" required)
 
+            // DESCRIPTION
             .mb-3
                 label.form-label Description
                 textarea.form-control(name="description" required)
 
+            // EXCHANGE TYPE
             .mb-3
                 label.form-label Exchange Type
                 select.form-select(name="exchange_type" required)
-                    option(value="") Select type
                     option(value="lending") Lending
                     option(value="swap") Swap
                     option(value="giveaway") Give Away
+
+            // CATEGORY
             .mb-3
                 label.form-label Category
                 select.form-select(name="category_id" required)
-                    option(value="") Select category
                     option(value="1") Books
                     option(value="2") Electronics
                     option(value="3") Kitchen
                     option(value="4") Sports
                     option(value="5") Furniture
+
+            // CONDITION
+            .mb-3
+                label.form-label Condition
+                select.form-select(name="condition_status")
+                    option(value="like_new") Like New
+                    option(value="good") Good
+                    option(value="fair") Fair
+                    option(value="well_used") Well Used
+
+            // CONDITION NOTES
+            .mb-3
+                label.form-label Condition Notes
+                textarea.form-control(name="condition_notes")
+
+            // AVAILABILITY
+            .mb-3
+                label.form-label Availability
+                select.form-select(name="is_available")
+                    option(value="1") Available
+                    option(value="0") Not Available
+
+            // IMAGE
+            .mb-3
+                label.form-label Upload Image
+                input.form-control(type="file" name="image" required)
 
             button.btn.btn-dark(type="submit") Create Listing

@@ -1,24 +1,35 @@
-extends layout 
-block content 
-    h1 Register
+extends layout
 
-    form(action="/register" method="POST")
+block content
+    .container.d-flex.justify-content-center.align-items-center(style="min-height:80vh;")
+        .card.p-4.shadow(style="width:100%; max-width:400px;")
 
-        div
-            label(for="first_name") First Name
-            input(type="text" name="first_name" id="first_name" required)
+            h3.text-center.mb-3 Register
 
-        div
-            label(for="last_name") Last Name
-            input(type="text" name="last_name" id="last_name" required)
+            if error
+                .alert.alert-danger #{error}
 
-        div
-            label(for="email") Email
-            input(type="email" name="email" id="email" required)
+            form(action="/register" method="POST")
 
-        div
-            label(for="password") Password
-            input(type="password" name="password" id="password" required)
+                .mb-3
+                    label.form-label First Name
+                    input.form-control(type="text" name="first_name" value=first_name || "" required)
 
-        div
-            button(type="submit") Register
+                .mb-3
+                    label.form-label Last Name
+                    input.form-control(type="text" name="last_name" value=last_name || "" required)
+
+                .mb-3
+                    label.form-label Email
+                    input.form-control(type="email" name="email" value=email || "" required)
+
+                .mb-3
+                    label.form-label Password
+                    input.form-control(type="password" name="password" required)
+
+                button.btn.btn-dark.w-100(type="submit") Register
+
+            .text-center.mt-3
+                small
+                    | Already have an account?
+                    a(href="/login") Login

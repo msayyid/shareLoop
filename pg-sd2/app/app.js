@@ -10,6 +10,36 @@ app.use(express.static("app/static"));
 // Get the functions in the db.js file to use
 const db = require('./services/db');
 
+// multer image uploading
+const multer = require("multer");
+const path = require("path");
+
+// storage config
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "app/static/images/listings");
+    },
+    filename: function (req, file, cb) {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+
+
+const profileUpload = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, "app/static/images/profiles");
+        },
+        filename: function (req, file, cb) {
+            cb(null, Date.now() + "-" + file.originalname);
+        }
+    })
+});
+
+const upload = multer({ storage: storage });
+
+
 // pug template engine
 app.set("view engine", "pug");
 app.set("views", "./app/views");
@@ -56,6 +86,20 @@ app.use((req, res, next) => {
     next(); // move to the next middleware
 });
 
+// profile pic middleware
+app.use(async (req, res, next) => {
+    if (req.session.uId) {
+        const user = new User(req.session.uId);
+        await user.getUser();
+        user.setProfileImagePath();
+
+        res.locals.currentUser = user;
+    } else {
+        res.locals.currentUser = null;
+    }
+    next();
+});
+
 // notification middleware
 app.use(async (req, res, next) => {
     if (req.session.uId) {
@@ -86,6 +130,8 @@ app.use(async (req, res, next) => {
 
 
 
+
+
 // make categories global
 app.use(async (req, res, next) => { // next - continue to the next middleware/route
     // request → middleware → middleware → route → response
@@ -102,70 +148,78 @@ app.use(async (req, res, next) => { // next - continue to the next middleware/ro
 
 // login route
 app.get("/login", function(req, res) {
-    res.render("login");
+    const success = req.query.success;
+
+    res.render("login", {
+        error: null,
+        success: success ? "Account created successfully. Please log in." : null,
+        hideCategories: true
+    });
 });
 
 app.post("/login", async function(req, res) {
-    let userData = await User.getUserByEmail(req.body.email);
-    const password = req.body.password;
-    if (!userData) {
-        
-        console.log("user data from /authenticate, userdata not defined");
-        return res.redirect("/login");
-    } else {
-        let match = await User.authenticate(password, userData.password_hash);
-        if(!match) {
-            console.log("passwords didn't match");
-            return res.redirect("/login");
-        } else {
-            req.session.uId = userData.user_id;
-            console.log("Successful login redirecting to home page");
-            return res.redirect("/dashboard");
+    const { email, password } = req.body;
 
-        }  
-        
+    const userData = await User.getUserByEmail(email);
+
+    if (!userData) {
+        return res.render("login", {
+            error: "Invalid email or password",
+            success: null,
+            email: email,
+            hideCategories: true
+        });
     }
-    
+
+    const match = await User.authenticate(password, userData.password_hash);
+
+    if (!match) {
+        return res.render("login", {
+            error: "Invalid email or password",
+            success: null,
+            email: email,
+            hideCategories: true
+        });
+    }
+
+    req.session.uId = userData.user_id;
+    return res.redirect("/dashboard");
 });
 
-
-// set passwords for the existing users (hashed password)
-// app.get("/set-passwords", async function(req, res) {
-//     let allUsers = await User.getAllUsers();
-//     // console.log(allUsers);
-//     // res.send(allUsers);
-//     for (let user of allUsers) {
-//         await User.updatePassword(user.user_id, "12345");
-//     }
-//     console.log(allUsers);
-//     res.send(allUsers);
-
-// });
 
 
 // register route
 app.get("/register", function(req, res) {
-    res.render("register");
+    res.render("register", { error: null, hideCategories: true });
 });
 
 app.post("/register", async function(req, res) {
-    const {first_name, last_name, email, password} = req.body;
+    const { first_name, last_name, email, password } = req.body;
+
     if (!email || !password || !first_name || !last_name) {
-        console.error("missing fields in register page");
-        return res.redirect("/register");
+        return res.render("register", {
+            error: "All fields are required",
+            email,
+            first_name,
+            last_name,
+            hideCategories: true
+        });
     }
 
     const password_hash = await bcrypt.hash(password, 10);
 
     try {
-        const user = await User.createUser(first_name, last_name, email, password_hash);
-        return res.redirect("/login");
+        await User.createUser(first_name, last_name, email, password_hash);
+        return res.redirect("/login?success=1");
     } catch (err) {
-        console.error(err);
-        res.send("error registering a user");
-
+        return res.render("register", {
+            error: "Email already exists",
+            email,
+            first_name,
+            last_name,
+            hideCategories: true
+        });
     }
-    
 });
 
 
@@ -209,17 +263,57 @@ app.get("/listings/new", requireLogin, (req, res) => {
     res.render("create-listing");
 });
 
-app.post("/listings", requireLogin, async function(req, res) {
+app.post("/listings", requireLogin, upload.single("image"), async function(req, res) {
     const uId = req.session.uId;
-    const { title, description, exchange_type, category_id } = req.body;
+
+    const {
+        title,
+        description,
+        exchange_type,
+        category_id,
+        condition_status,
+        condition_notes,
+        is_available
+    } = req.body;
+
+    // safe values
+    const safeTitle = title?.trim() || "";
+    const safeDescription = description?.trim() || null;
+    const safeType = exchange_type || "lending";
+    const safeCategory = parseInt(category_id) || 1;
+    const safeCondition = condition_status || "good";
+    const safeNotes = condition_notes?.trim() || null;
+    const safeAvailable = parseInt(is_available) === 1 ? 1 : 0;
+
+    if (!req.file) {
+        return res.send("image is required");
+    }
+
+    // image
+    let imagePath = null;
+    if (req.file) {
+        imagePath = `/images/listings/${req.file.filename}`;
+    }
+
     try {
-        await Listing.createListing(uId, title, description, exchange_type, category_id);
+        await Listing.createListingFull(
+            uId,
+            safeTitle,
+            safeDescription,
+            safeType,
+            safeCategory,
+            safeCondition,
+            safeNotes,
+            safeAvailable,
+            imagePath
+        );
+
         res.redirect("/dashboard");
+
     } catch(err) {
-        console.error(err)
+        console.error(err);
         res.send("Error creating listing");
     }
-    
 });
 
 // edit listing route get
@@ -230,7 +324,7 @@ app.get("/listings/:id/edit", requireLogin, async function(req, res) {
     if (!listing) {
         
         console.error("No listing found");
-        res.redirect("/");
+        res.redirect("/dashboard");
         return;
     }
 
@@ -241,16 +335,21 @@ app.get("/listings/:id/edit", requireLogin, async function(req, res) {
         return res.redirect("/dashboard");
     }
 
+    const categories = await Category.getAllCategories();
+
     res.render("edit", {
-        listing:listing
+        listing:listing,
+        categories:categories
     });
     }
 );
 
 // edit listing route POST
-app.post("/listings/:id/edit", requireLogin, async function(req, res) {
+app.post("/listings/:id/edit", requireLogin, upload.single("image"), async function(req, res) {
     const uId = req.session.uId;
     const listingId = req.params.id;
+
+    const { title, description, exchange_type, is_available, category_id, condition_status, condition_notes } = req.body;
     const listing = await Listing.getListingById(listingId);
 
     if (!listing) {
@@ -264,19 +363,47 @@ app.post("/listings/:id/edit", requireLogin, async function(req, res) {
     }
 
     // extract form data from the body
-    const {title, description, exchange_type, category_id} = req.body;
+    // const {title, description, exchange_type, category_id} = req.body;
+    // safe values
+    const safeTitle = title?.trim() || "";
+    const safeDescription = description?.trim() || null;
+    const safeType = exchange_type || "lending";
+    const safeAvailable = is_available !== undefined
+        ? (parseInt(is_available) === 1 ? 1 : 0)
+        : listing.is_available;
+    const safeCategory = parseInt(category_id) || listing.category_id;
+    const safeCondition = condition_status || listing.condition_status;
+    const safeNotes = condition_notes?.trim() || null;
+
+    // image logic
+    let imagePath = listing.photo_url_1;
+
+    if (req.file) {
+        imagePath = `/images/listings/${req.file.filename}`;
+    }
+
     try {
-        const result = await Listing.updateListing(listingId, title, description, exchange_type, category_id);
-        if (result.affectedRows >= 0) {
-            return res.redirect(`/listing-detail/${listingId}`); // redirect to the listing detail page with new data, does it get updated in there btw?
+        const result = await Listing.updateListingFull(
+            listingId, 
+            safeTitle, 
+            safeDescription, 
+            safeType,
+            safeAvailable, 
+            safeCategory,
+            safeCondition,
+            safeNotes,
+            imagePath
+        );
+        if (result.affectedRows > 0) {
+            return res.redirect(`/listing-detail/${listingId}`);
         } else {
             console.error("update failed");
             return res.redirect("/dashboard");
         }
     } catch(err) {
         console.error(err);
-        console.log("update failed going to back to edit page");
-        res.redirect(`/listings/${listingId}/edit`); // how do i send a message or do i need it
+        console.log("update failed going back to edit page");
+        res.redirect(`/listings/${listingId}/edit`);
         return;
 
     }
@@ -363,27 +490,9 @@ app.post("/listings/:id/request", async function (req, res) {
         listing.user_id,
         "request",
         "Someone requested your item",
-        `/requests/${requestId}/messages`
+        `/requests/received`
     );
-    // const activeRequest = await Request.findActiveRequest(uId, listingId);
 
-    // const existingRequest = await Request.findByUserAndListing(uId, listingId);
-
-    // if (activeRequest) {
-    //     // already has active request
-    //     console.error("already requested");
-    //     return res.redirect(`/listing-detail/${listingId}`);
-
-    // } else if (existingRequest && existingRequest.is_inquiry) {
-    //     // convert inquiry → real request
-    //     await Request.confirmRequest(existingRequest.request_id);
-    //     console.log("inquiry converted to real request");
-
-    // } else {
-    //     // create new request
-    //     await Request.createRequest(uId, listingId, false);
-    //     console.log("new request created");
-    // }
 
     return res.redirect(`/listing-detail/${listingId}`);
 });
@@ -482,7 +591,7 @@ app.post("/requests/:id/reject", requireLogin, async function(req, res) {
             request.requester_id,
             "request",
             "Your request was declined",
-            `/requests/${requestId}/messages`
+            `/my-requests`
         );
 
         return res.redirect("/dashboard");
@@ -888,6 +997,66 @@ app.get("/api/notifications", requireLogin, async function (req, res)  {
     });
 });
 
+// profile page routes
+app.get("/profile", requireLogin, async function(req, res) {
+    const uId = req.session.uId;
+
+    const user = new User(uId);
+    await user.getUser();
+    user.setProfileImagePath();
+
+    res.render("profile-view", {user});
+});
+
+app.post("/profile/edit", requireLogin, profileUpload.single("image"), async function(req, res) {
+    const uId = req.session.uId;
+    const { first_name, last_name, bio, location, password } = req.body;
+
+    const user = new User(uId);
+
+    const safeFirstName = first_name || "";
+    const safeLastName = last_name || "";
+    const safeBio = bio || null;
+    const safeLocation = location || null;
+
+    let imagePath = null;
+
+    if (req.file) {
+        imagePath = `/images/profiles/${req.file.filename}`;
+    }
+
+
+    // update basic info
+    await User.updateProfile(safeFirstName, safeLastName, safeBio, safeLocation, imagePath, uId);
+
+    // update password only if provided
+    if (password && password.trim() !== "") {
+        await user.updatePassword(password);
+    }
+
+    res.redirect("/profile");
+});
+
+
+// profile edit
+app.get("/profile/edit", requireLogin, async function (req, res) {
+    const uId = req.session.uId;
+    const user = new User(uId);
+
+    await user.getUser();
+    res.render("profile-edit", {user});
+});
+
+
+// requests on my items
+app.get("/requests/received", requireLogin, async function (req, res) {
+    const requests = await Request.getRequestsForOwner(req.session.uId);
+
+    res.render("requests-received", {
+        requests:requests
+    }); 
+});
+
 // Create a route for root - / home page
 app.get("/", async function(req, res) {
     const listings = await Listing.getRecentListings();
@@ -906,19 +1075,18 @@ app.get("/all-users-formatted", async function(req, res) {
     const results = await db.query(sql);
 
     // set the pictures path
-    results.forEach(user => {
-        if (user.profile_pic) {
-            user.image_path = `/images/users/${user.profile_pic}`;
-        } else {
-            user.image_path = `/images/users/default-avatar.jpg`;
-        }
+    results.forEach(u => {
+        const userObj = new User();
+        Object.assign(userObj, u);
+        userObj.setProfileImagePath();
+        Object.assign(u, userObj);
     });
     
     res.render("all-users-formatted", {
         results: results
     });
-    console.log("i can see all the users that will be formatted in here");
-    console.log(results);
+    // console.log("i can see all the users that will be formatted in here");
+    // console.log(results);
 
 });
 
@@ -926,7 +1094,7 @@ app.get("/single-user/:id", async function(req, res) {
     const profileUserId = req.params.id;
     let user = new User(profileUserId);
     await user.getUser();
-    user.setImagePath();
+    user.setProfileImagePath();
     let listings = await Listing.getListingsByUserId(profileUserId);
 
     // get average rating for the user
@@ -942,10 +1110,6 @@ app.get("/single-user/:id", async function(req, res) {
         ratingData:ratingData,
         reviews:reviews
     });
-    // console.log("now i need to be seeing a user with a givn id");
-    // console.log(user);
-    // console.log("these are the listings of the current user");
-    // console.log(listings);
 });
 
 // listings
@@ -956,11 +1120,10 @@ app.get("/all-listings-formatted", async function(req, res) {
                         join categories c on l.category_id = c.category_id`;
     const result = await db.query(sql);
     result.forEach(listing => {
-        if (listing.photo_url_1) {
-            listing.image_path = `/images/listings/${listing.photo_url_1}`;
-        } else {
-            listing.image_path = `/images/listings/default-listing-pic.jpg`;
-        }
+        const l = new Listing();
+        Object.assign(l, listing);
+        l.setImagePath();
+        Object.assign(listing, l);
     });
     const tags = await Listing.getAllTags();
     res.render("all-listings-formatted", {

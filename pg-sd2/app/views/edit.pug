@@ -3,9 +3,13 @@ extends layout
 block content
     .container.mt-4
 
-        h2 Edit Listing
+        h2.mb-4 Edit Listing
 
-        form(action=`/listings/${listing.listing_id}/edit` method="POST")
+        form(
+            action=`/listings/${listing.listing_id}/edit`
+            method="POST"
+            enctype="multipart/form-data"
+        )
 
             // TITLE
             .mb-3
@@ -30,7 +34,7 @@ block content
                     option(value="swap" selected=(listing.exchange_type === "swap")) Swap
                     option(value="giveaway" selected=(listing.exchange_type === "giveaway")) Give Away
 
-            // CATEGORY
+            // CATEGORY (you can later make dynamic)
             .mb-3
                 label.form-label Category
                 select.form-select(name="category_id" required)
@@ -39,6 +43,41 @@ block content
                     option(value="3" selected=(listing.category_id === 3)) Kitchen
                     option(value="4" selected=(listing.category_id === 4)) Sports
                     option(value="5" selected=(listing.category_id === 5)) Furniture
+
+            // CONDITION
+            .mb-3
+                label.form-label Condition
+                select.form-select(name="condition_status")
+                    option(value="like_new" selected=(listing.condition_status === "like_new")) Like New
+                    option(value="good" selected=(listing.condition_status === "good")) Good
+                    option(value="fair" selected=(listing.condition_status === "fair")) Fair
+                    option(value="well_used" selected=(listing.condition_status === "well_used")) Well Used
+
+            // CONDITION NOTES
+            .mb-3
+                label.form-label Condition Notes
+                textarea.form-control(name="condition_notes") #{listing.condition_notes}
+
+            // AVAILABILITY
+            .mb-3
+                label.form-label Availability
+                select.form-select(name="is_available")
+                    option(value="1" selected=(listing.is_available == 1)) Available
+                    option(value="0" selected=(listing.is_available == 0)) Not Available
+
+            // IMAGE UPLOAD
+            .mb-3
+                label.form-label Upload New Image
+                input.form-control(type="file" name="image")
+
+            // CURRENT IMAGE
+            if listing.photo_url_1
+                .mb-3
+                    p.text-muted Current Image:
+                    img(
+                        src=listing.photo_url_1
+                        style="max-width:200px; border-radius:8px;"
+                    )
 
             // SUBMIT
             button.btn.btn-dark(type="submit") Update Listing

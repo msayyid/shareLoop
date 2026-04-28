@@ -14,6 +14,7 @@ block content
 
             .col-md-4.text-end.d-flex.justify-content-end.gap-2
                 a.btn.btn-outline-dark(href="/my-requests") My Requests
+                a.btn.btn-outline-dark(href="/requests/received") Requests on My Items
                 a.btn.btn-dark(href="/listings/new") + Create Listing
 
         hr
@@ -70,57 +71,3 @@ block content
                                         onsubmit="return confirm('Are you sure you want to delete this listing?');"
                                     )
                                         button.btn.btn-danger(type="submit") Delete
-
-        // ===== INCOMING REQUESTS =====
-        h3.mb-3 Incoming Requests
-
-        if requests.length === 0
-            .alert.alert-light.border
-                p.mb-0 No one has requested your listings yet.
-
-        else
-            .list-group
-                each request in requests
-                    .list-group-item.d-flex.justify-content-between.align-items-center
-
-                        // LEFT
-                        .d-flex.flex-column
-                            strong #{request.first_name} requested "#{request.title}"
-
-                        // RIGHT
-                        .d-flex.gap-2.align-items-center
-
-                            // MESSAGE BUTTON (always available except declined)
-                            if request.status !== 'declined'
-                                a.btn.btn-outline-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/messages`
-                                ) Message
-
-                            if request.status === 'pending'
-                                form(action=`/requests/${request.request_id}/accept` method="POST")
-                                    button.btn.btn-success.btn-sm(type="submit") Accept
-                                form(action=`/requests/${request.request_id}/reject` method="POST")
-                                    button.btn.btn-outline-danger.btn-sm(type="submit") Reject
-
-                            else if request.status === 'accepted'
-                                form(
-                                    action=`/requests/${request.request_id}/complete`
-                                    method="POST"
-                                    onsubmit="return confirm('Mark this request as completed?');"
-                                )
-                                    button.btn.btn-primary.btn-sm(type="submit") Mark as Completed
-
-                            else if request.status === 'completed' && !request.hasRated
-                                a.btn.btn-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/rate`
-                                ) Rate
-
-                            // STATUS BADGE
-                            if request.status === 'pending'
-                                span.badge.bg-warning.text-dark Pending
-                            else if request.status === 'accepted'
-                                span.badge.bg-success Accepted
-                            else if request.status === 'declined'
-                                span.badge.bg-danger Declined
-                            else if request.status === 'completed'
-                                span.badge.bg-primary Completed

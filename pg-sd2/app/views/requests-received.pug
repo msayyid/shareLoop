@@ -1,0 +1,67 @@
+extends layout 
+
+block content
+    .container.mt-4
+
+        h3.mb-3 Incoming Requests
+
+        if requests.length === 0
+            .alert.alert-light.border
+                p.mb-0 No requests yet.
+                small.text-muted When someone requests your items, they’ll appear here.
+
+        else
+            .list-group
+                each request in requests
+                    .list-group-item.d-flex.justify-content-between.align-items-center
+
+                        // LEFT
+                        .d-flex.flex-column
+                            strong #{request.first_name} requested "#{request.title}"
+                            span.text-muted.small Status: #{request.status}
+
+                        // RIGHT
+                        .d-flex.gap-2.align-items-center
+
+                            if request.status === 'pending'
+                                form(action=`/requests/${request.request_id}/accept` method="POST")
+                                    button.btn.btn-success.btn-sm(type="submit") Accept
+                                form(action=`/requests/${request.request_id}/reject` method="POST")
+                                    button.btn.btn-outline-danger.btn-sm(type="submit") Reject
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
+                            else if request.status === 'accepted'
+                                form(
+                                    action=`/requests/${request.request_id}/complete`
+                                    method="POST"
+                                    onsubmit="return confirm('Mark this request as completed?');"
+                                )
+                                    button.btn.btn-primary.btn-sm(type="submit") Mark as Completed
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
+                            else if request.status === 'completed' && !request.hasRated
+                                a.btn.btn-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/rate`
+                                ) Rate
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
+                            else if request.status !== 'declined'
+                                a.btn.btn-outline-primary.btn-sm(
+                                    href=`/requests/${request.request_id}/messages`
+                                ) Message
+
+                            // STATUS BADGE
+                            if request.status === 'pending'
+                                span.badge.bg-warning.text-dark Pending
+                            else if request.status === 'accepted'
+                                span.badge.bg-success Accepted
+                            else if request.status === 'declined'
+                                span.badge.bg-danger Declined
+                            else if request.status === 'completed'
+                                span.badge.bg-primary Completed

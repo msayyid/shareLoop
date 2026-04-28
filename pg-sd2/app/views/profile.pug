@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    .container.mt-4
+        h2.mb-4 Edit Profile
+
+        form(method="POST" action="/profile")
+
+            .mb-3
+                label.form-label Name
+                input.form-control(
+                    type="text"
+                    name="first_name"
+                    value=user.first_name
+                    required
+                )
+
+            .mb-3
+                label.form-label Bio
+                textarea.form-control(
+                    name="bio"
+                ) #{user.bio}
+
+            hr
+
+            h5 Change Password
+
+            .mb-3
+                input.form-control(
+                    type="password"
+                    name="password"
+                    placeholder="New password (leave empty to keep current)"
+                )
+
+            button.btn.btn-dark(type="submit") Save Changes

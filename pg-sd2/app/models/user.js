@@ -104,13 +104,12 @@ class User {
         return allUsers;
     }
 
-    static async updatePassword(userId, password) {
+    async updatePassword(password) {
         const pw = await bcrypt.hash(password, 10);
         const sql = `update users 
-                            set password_hash =  ?
-                            where user_id = ?`;
-        await db.query(sql, [pw, userId]);
-        return true;
+                        set password_hash =  ?
+                        where user_id = ?`;
+        await db.query(sql, [pw, this.user_id]);
 
     }
 
@@ -124,6 +123,37 @@ class User {
                                 values (?, ?, ?, ?)`;
         const result = await db.query(sql, [first_name, last_name, email, password_hash]);
         return result;
+    }
+
+    static async updateProfile(firstName, lastName, bio, location, imagePath, userId) {
+        let sql = `
+            UPDATE users
+            SET first_name = ?, last_name = ?, bio = ?, location = ?
+        `;
+
+        const params = [firstName, lastName, bio, location];
+
+        if (imagePath) {
+            sql += `, profile_image = ?`;
+            params.push(imagePath);
+        }
+
+        sql += ` WHERE user_id = ?`;
+        params.push(userId);
+
+        await db.query(sql, params);
+    }
+
+    setProfileImagePath() {
+        if (this.profile_image) {
+            if (this.profile_image.startsWith("/images")) {
+                this.profile_image_path = this.profile_image;
+            } else {
+                this.profile_image_path = `/images/profiles/${this.profile_image}`;
+            }
+        } else {
+            this.profile_image_path = `/images/profiles/default-avatar.jpg`;
+        }
     }
 
 

@@ -87,6 +87,9 @@ block content
 
                         else if loggedIn && listing.user_id === uId
                             span.text-muted This is your listing
+                            a.btn.btn-outline-primary(
+                                href=`/listings/${listing.listing_id}/edit`
+                            ) Edit Listing
 
 //- extends layout 
 //- block content 

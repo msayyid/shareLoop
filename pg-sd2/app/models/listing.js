@@ -53,11 +53,10 @@ class Listing {
                             where l.category_id=? and l.is_active = 1`;
         const result = await db.query(sql, [category_id]);
         result.forEach(listing => {
-            if (listing.photo_url_1) {
-                listing.image_path = `/images/listings/${listing.photo_url_1}`;
-            } else {
-                listing.image_path = `/images/listings/default-listing-pic.jpg`;
-            }
+            const l = new Listing();
+            Object.assign(l, listing);
+            l.setImagePath();
+            Object.assign(listing, l);
         });
         
         return result;
@@ -79,11 +78,10 @@ class Listing {
         const result = await db.query(sql, [tag_id]);
         console.log("THIS IS A METHOD TO GET LISTINGS BY TAGS");
         result.forEach(listing => {
-            if (listing.photo_url_1) {
-                listing.image_path = `/images/listings/${listing.photo_url_1}`;
-            } else {
-                listing.image_path = `/images/listings/default-listing-pic.jpg`;
-            }
+            const l = new Listing();
+            Object.assign(l, listing);
+            l.setImagePath();
+            Object.assign(listing, l);
         });
         console.log(result);
         return result;
@@ -98,7 +96,11 @@ class Listing {
 
     setImagePath() {
         if (this.photo_url_1) {
-            this.image_path = `/images/listings/${this.photo_url_1}`;
+            if (this.photo_url_1.startsWith("/images")) {
+                this.image_path = this.photo_url_1;
+            } else {
+                this.image_path = `/images/listings/${this.photo_url_1}`;
+            }
         } else {
             this.image_path = `/images/listings/default-listing-pic.jpg`;
         }
@@ -108,11 +110,10 @@ class Listing {
         const sql = `select * from listings where user_id = ? and is_active = 1`;
         const result = await db.query(sql, [user_id]);
         result.forEach(listing => {
-            if (listing.photo_url_1) {
-                listing.image_path = `/images/listings/${listing.photo_url_1}`;
-            } else {
-                listing.image_path = `/images/listings/default-listing-pic.jpg`;
-            }
+            const l = new Listing();
+            Object.assign(l, listing);
+            l.setImagePath();
+            Object.assign(listing, l);
         });
         return result;
     }
@@ -128,11 +129,10 @@ class Listing {
                             `;
         const result = await db.query(sql);
         result.forEach(listing => {
-            if(listing.photo_url_1) {
-                listing.image_path = `/images/listings/${photo_url_1}`;
-            } else {
-                listing.image_path = `/images/listings/default-listing-pic.jpg`;
-            }
+            const l = new Listing();
+            Object.assign(l, listing);
+            l.setImagePath();
+            Object.assign(listing, l);
         });
         return result;
     }
@@ -149,6 +149,47 @@ class Listing {
                                 )
                     values (?, ?, ?, ?, ?, 1)`;
         const result = await db.query(sql, [userId, categoryId, title, description, exchangeType]);
+        return result;
+    }
+
+    static async createListingFull(
+        userId,
+        title,
+        description,
+        exchangeType,
+        categoryId,
+        conditionStatus,
+        conditionNotes,
+        isAvailable,
+        imagePath
+    ) {
+        const sql = `
+            INSERT INTO listings (
+                user_id,
+                category_id,
+                title,
+                description,
+                exchange_type,
+                condition_status,
+                condition_notes,
+                is_available,
+                photo_url_1
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const result = await db.query(sql, [
+            userId,
+            categoryId,
+            title,
+            description,
+            exchangeType,
+            conditionStatus,
+            conditionNotes,
+            isAvailable,
+            imagePath
+        ]);
+
         return result;
     }
 
@@ -193,6 +234,48 @@ class Listing {
         const result = await db.query(sql, [listingId]);
         return result;
     }
+
+    static async updateListingFull(
+        id,
+        title,
+        description,
+        type,
+        isAvailable,
+        category,
+        condition,
+        notes,
+        imagePath
+    ) {
+        const sql = `
+            update listings
+            set title = ?,
+                description = ?,
+                exchange_type = ?,
+                is_available = ?,
+                category_id = ?,
+                condition_status = ?,
+                condition_notes = ?,
+                photo_url_1 = ?
+            where listing_id = ?
+        `;
+
+        const result = await db.query(sql, [
+            title,
+            description,
+            type,
+            isAvailable,
+            category,
+            condition,
+            notes,
+            imagePath,
+            id
+        ]);
+
+        return result;
+
+    }
+
+
 }
 
 module.exports = {Listing}
