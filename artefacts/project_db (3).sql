@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 27, 2026 at 03:47 AM
+-- Generation Time: Apr 28, 2026 at 08:54 AM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -78,7 +78,7 @@ CREATE TABLE `listings` (
 --
 
 INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `description`, `exchange_type`, `condition_status`, `condition_notes`, `photo_url_1`, `photo_url_2`, `photo_url_3`, `swap_preferences`, `is_available`, `view_count`, `request_count`, `created_at`, `updated_at`, `is_active`) VALUES
-(1, 1, 1, 'Python Programming Book', 'Good for beginners', 'lending', 'good', NULL, 'listing_pic_1.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-27 01:38:49', 1),
+(1, 1, 1, 'Python Programming Book 2', 'Good for beginners. Edited version', 'lending', 'good', 'nice', 'listing_pic_1.jpg', NULL, NULL, NULL, 0, 0, 0, '2026-03-19 00:26:42', '2026-04-28 06:55:55', 1),
 (2, 2, 2, 'MacBook Charger', 'Works perfectly', 'giveaway', 'good', NULL, 'listing_pic_2.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:13', 1),
 (3, 3, 3, 'Rice Cooker', 'Small size', 'lending', 'fair', NULL, 'listing_pic_3.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-24 03:19:37', 1),
 (4, 4, 5, 'Yoga Mat number two', 'Barely used, and just got changed, still swap tho, but cateogry is furniture', 'swap', 'like_new', NULL, 'listing_pic_4.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-04-23 04:16:35', 0),
@@ -93,7 +93,7 @@ INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `descri
 (13, 13, 3, 'Air Fryer', 'Great condition', 'swap', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
 (14, 14, 4, 'Dumbbells Set', '5kg each', 'lending', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
 (15, 15, 5, 'Lamp', 'Desk lamp', 'giveaway', 'good', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-19 00:26:42', '2026-03-19 00:26:42', 1),
-(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:00:00', '2026-04-25 05:55:00', 1),
+(16, 1, 1, 'Discrete Mathematics Revision Guide', 'Useful for first-year and second-year revision. A few highlighted pages but still very clear.', 'lending', 'good', 'Some notes in pencil on a few pages.', NULL, NULL, NULL, NULL, 0, 0, 0, '2026-03-23 09:00:00', '2026-04-28 06:50:03', 1),
 (17, 2, 2, 'USB-C Hub', 'Small hub with HDMI and USB ports. Still works well and handy for library or home use.', 'giveaway', 'good', 'Minor scratches from normal use.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:05:00', '2026-03-23 09:05:00', 1),
 (18, 3, 3, 'Saucepan Set', 'Set of two saucepans suitable for a shared student kitchen. Clean and fully usable.', 'lending', 'good', 'Handles are slightly worn but sturdy.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 09:10:00', '2026-03-23 09:10:00', 1),
 (19, 4, 4, 'Skipping Rope', 'Lightweight skipping rope for quick workouts at home or outdoors.', 'swap', 'like_new', 'Used only a couple of times.', NULL, NULL, NULL, 'Open to swapping for a yoga block or resistance band.', 1, 0, 0, '2026-03-23 09:15:00', '2026-04-23 04:17:11', 0),
@@ -110,12 +110,15 @@ INSERT INTO `listings` (`listing_id`, `user_id`, `category_id`, `title`, `descri
 (30, 15, 5, 'Foldable Drying Rack', 'Useful foldable drying rack for small student rooms or shared flats.', 'lending', 'good', 'Folds flat and is easy to store.', NULL, NULL, NULL, NULL, 1, 0, 0, '2026-03-23 10:10:00', '2026-03-23 10:10:00', 1),
 (34, 4, 1, 'chingiz khan', 'a book about the conqueror of the world', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-08 17:05:49', '2026-04-08 17:05:49', 1),
 (35, 4, 2, 'laptop', 'my old laptop, i bough a new one', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-09 07:07:46', '2026-04-09 07:07:46', 1),
-(36, 16, 2, 'keyboard', 'giving away mac keyboard', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-23 05:01:25', 1),
-(37, 1, 5, 'testing 1', 'fawerqweruwqpoieur', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-24 08:34:11', '2026-04-27 01:38:46', 1),
-(38, 1, 5, 'tresting 2', 'ju2389ruiofsadjopi', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:25', '2026-04-24 08:39:41', 1),
+(36, 16, 2, 'keyboard just got changed', 'giving away mac keyboard, just got changed', 'giveaway', 'good', 'the thing is it got changed', '/images/listings/1777324188418.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-04-23 05:01:25', '2026-04-28 08:52:03', 0),
+(37, 1, 5, 'testing 1', 'fawerqweruwqpoieur', 'lending', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:11', '2026-04-28 06:50:50', 1),
+(38, 1, 5, 'tresting 2', 'ju2389ruiofsadjopi', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:25', '2026-04-28 06:50:52', 1),
 (39, 1, 5, 'testing 4', 'jaoiuf238oivpjaoip', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 08:34:37', '2026-04-24 08:40:36', 1),
-(40, 1, 1, 'nonlending testing', '23764y987hasfd98uh', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 09:47:05', '2026-04-24 09:47:24', 1),
-(41, 1, 1, 'new listing', '56798fsadkhfiljh', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-26 18:28:15', '2026-04-27 01:38:16', 1);
+(40, 1, 1, 'nonlending testing', 'some things do not change', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-24 09:47:05', '2026-04-28 06:02:16', 1),
+(41, 1, 1, 'new listing', '56798fsadkhfiljh', 'giveaway', 'like_new', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '2026-04-26 18:28:15', '2026-04-27 01:38:16', 1),
+(42, 16, 2, 'monitor', 'rog monitor 144 hz', 'giveaway', 'good', 'pretty good, well maintainted', '/images/listings/1777326912729.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-04-27 21:55:12', '2026-04-27 21:55:12', 1),
+(43, 16, 1, 'just nothing', 'hcekcing no photo update', 'swap', 'like_new', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, '2026-04-27 21:57:06', '2026-04-27 21:57:06', 1),
+(44, 16, 1, 'fasldjfl;ajk', '213846128', 'lending', 'like_new', NULL, '/images/listings/1777327283136.jpg', NULL, NULL, NULL, 1, 0, 0, '2026-04-27 22:01:23', '2026-04-28 02:10:49', 0);
 
 -- --------------------------------------------------------
 
@@ -200,25 +203,12 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`message_id`, `request_id`, `sender_id`, `receiver_id`, `message`, `is_read`, `created_at`) VALUES
-(4, 3, 16, 1, 'hello friend', 0, '2026-04-26 19:51:36'),
-(5, 3, 16, 1, 'hello friend', 0, '2026-04-26 19:56:18'),
-(6, 3, 16, 1, 'fasdasdfasdf', 0, '2026-04-26 19:58:15'),
-(7, 3, 16, 1, 'hello friend', 0, '2026-04-26 20:00:08'),
-(8, 6, 16, 1, 'hello', 0, '2026-04-26 20:03:53'),
-(9, 6, 1, 16, 'hello friend', 0, '2026-04-26 20:04:16'),
-(10, 3, 16, 1, 'hello friend', 0, '2026-04-26 20:21:22'),
-(11, 3, 16, 1, 'FIRST NOTIFICATION MY FRIEND', 0, '2026-04-26 20:31:33'),
-(12, 3, 16, 1, 'SECOND NOTIFCATION', 0, '2026-04-26 20:32:28'),
-(13, 6, 16, 1, 'THRID NOTIFICATION', 0, '2026-04-26 20:32:46'),
-(14, 3, 16, 1, 'hello', 0, '2026-04-27 01:22:51'),
-(15, 3, 16, 1, 'fasdfasdfa', 0, '2026-04-27 01:26:12'),
-(16, 3, 1, 16, 'wasdfasf', 0, '2026-04-27 01:34:47'),
-(17, 3, 16, 1, 'asdfsadfa', 0, '2026-04-27 01:35:03'),
-(18, 3, 16, 1, 'fasdfasdfaewsftadsfvasdfcv', 0, '2026-04-27 01:35:19'),
-(19, 3, 16, 1, 'fasdfasdfasdfcasd', 0, '2026-04-27 01:35:25'),
-(20, 3, 16, 1, 'saipdfhaposdujfhopiasdjfopiaj', 0, '2026-04-27 01:39:32'),
-(21, 3, 16, 1, 'fasdfasdfasdf', 0, '2026-04-27 01:39:38'),
-(22, 4, 16, 1, 'fasdfasdfasdfas', 0, '2026-04-27 01:39:50');
+(37, 20, 16, 1, 'hello friend', 1, '2026-04-28 06:39:08'),
+(38, 20, 1, 16, 'hello friend', 1, '2026-04-28 06:39:24'),
+(39, 20, 16, 1, 'fasdfasd', 1, '2026-04-28 08:22:50'),
+(40, 20, 1, 16, 'asdfsadfasd', 1, '2026-04-28 08:23:24'),
+(41, 20, 16, 1, 'asdfsdafasdsadf', 1, '2026-04-28 08:23:59'),
+(42, 20, 1, 16, 'asfsadfasd', 1, '2026-04-28 08:24:09');
 
 -- --------------------------------------------------------
 
@@ -241,30 +231,12 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `message`, `link`, `is_read`, `created_at`) VALUES
-(1, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:21:22'),
-(2, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:31:33'),
-(3, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-26 20:32:28'),
-(4, 1, 'message', 'You have a new message', '/requests/6/messages', 1, '2026-04-26 20:32:46'),
-(5, 1, 'request', 'Someone requested your item', '/requests/7/messages', 1, '2026-04-26 20:54:46'),
-(6, 16, 'request', 'Your request was accepted', '/requests/4/messages', 1, '2026-04-26 20:59:30'),
-(7, 16, 'request', 'Your request was declined', '/requests/5/messages', 1, '2026-04-26 20:59:44'),
-(8, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:22:51'),
-(9, 1, 'request', 'Someone requested your item', '/requests/8/messages', 1, '2026-04-27 01:23:47'),
-(10, 16, 'request', 'Your request was declined', '/requests/8/messages', 1, '2026-04-27 01:24:15'),
-(11, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:26:12'),
-(12, 16, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:34:47'),
-(13, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:03'),
-(14, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:19'),
-(15, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:35:25'),
-(16, 16, 'request', 'Your request was accepted', '/requests/6/messages', 1, '2026-04-27 01:38:06'),
-(17, 16, 'request', 'Your request was accepted', '/requests/7/messages', 1, '2026-04-27 01:38:16'),
-(18, 1, 'request', 'Someone requested your item', '/requests/9/messages', 1, '2026-04-27 01:39:17'),
-(19, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:39:32'),
-(20, 1, 'message', 'You have a new message', '/requests/3/messages', 1, '2026-04-27 01:39:38'),
-(21, 1, 'message', 'You have a new message', '/requests/4/messages', 1, '2026-04-27 01:39:50'),
-(22, 1, 'request', 'Someone requested your item', '/requests/10/messages', 1, '2026-04-27 01:40:00'),
-(23, 1, 'request', 'Someone requested your item', '/requests/11/messages', 1, '2026-04-27 01:45:07'),
-(24, 1, 'request', 'Someone requested your item', '/requests/12/messages', 1, '2026-04-27 01:45:48');
+(66, 1, 'request', 'Someone requested your item', '/requests/received', 1, '2026-04-28 06:55:50'),
+(67, 16, 'request', 'Your request was accepted', '/my-requests', 1, '2026-04-28 06:55:55'),
+(68, 1, 'message', 'You have a new message', '/requests/20/messages', 1, '2026-04-28 08:22:50'),
+(69, 16, 'message', 'You have a new message', '/requests/20/messages', 1, '2026-04-28 08:23:24'),
+(70, 1, 'message', 'You have a new message', '/requests/20/messages', 0, '2026-04-28 08:23:59'),
+(71, 16, 'message', 'You have a new message', '/requests/20/messages', 1, '2026-04-28 08:24:09');
 
 -- --------------------------------------------------------
 
@@ -290,7 +262,9 @@ CREATE TABLE `ratings` (
 INSERT INTO `ratings` (`rating_id`, `request_id`, `rater_id`, `rated_id`, `score`, `comment`, `rating_type`, `created_at`) VALUES
 (1, 7, 16, 1, 5, '', NULL, '2026-04-27 01:50:50'),
 (2, 4, 16, 1, 2, 'good', NULL, '2026-04-27 01:51:00'),
-(3, 6, 16, 1, 4, 'fsadfasfa', NULL, '2026-04-27 01:51:04');
+(3, 6, 16, 1, 4, 'fsadfasfa', NULL, '2026-04-27 01:51:04'),
+(4, 20, 1, 16, 5, '239472139084709fasdsaf', NULL, '2026-04-28 06:56:24'),
+(5, 27, 1, 16, 5, 'nice expericne', NULL, '2026-04-28 06:58:12');
 
 -- --------------------------------------------------------
 
@@ -318,16 +292,15 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`request_id`, `requester_id`, `listing_id`, `status`, `message`, `requested_duration`, `swap_offer_description`, `requested_date`, `responded_date`, `completed_date`, `owner_notes`, `is_inquiry`) VALUES
-(3, 16, 1, 'declined', NULL, NULL, NULL, '2026-04-26 19:51:23', NULL, NULL, NULL, 0),
-(4, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-26 20:00:14', NULL, NULL, NULL, 0),
-(5, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-26 20:02:18', NULL, NULL, NULL, 0),
-(6, 16, 37, 'completed', NULL, NULL, NULL, '2026-04-26 20:03:51', NULL, NULL, NULL, 0),
-(7, 16, 41, 'completed', NULL, NULL, NULL, '2026-04-26 20:54:46', NULL, NULL, NULL, 0),
-(8, 16, 16, 'declined', NULL, NULL, NULL, '2026-04-27 01:23:47', NULL, NULL, NULL, 0),
-(9, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:39:17', NULL, NULL, NULL, 0),
-(10, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:40:00', NULL, NULL, NULL, 0),
-(11, 16, 1, 'cancelled', NULL, NULL, NULL, '2026-04-27 01:45:07', NULL, NULL, NULL, 0),
-(12, 16, 1, 'pending', NULL, NULL, NULL, '2026-04-27 01:45:48', NULL, NULL, NULL, 0);
+(20, 16, 1, 'completed', NULL, NULL, NULL, '2026-04-28 06:39:05', NULL, NULL, NULL, 0),
+(21, 16, 23, 'pending', NULL, NULL, NULL, '2026-04-28 06:41:01', NULL, NULL, NULL, 0),
+(22, 16, 35, 'pending', NULL, NULL, NULL, '2026-04-28 06:41:19', NULL, NULL, NULL, 0),
+(23, 16, 21, 'cancelled', NULL, NULL, NULL, '2026-04-28 06:41:24', NULL, NULL, NULL, 0),
+(24, 16, 21, 'pending', NULL, NULL, NULL, '2026-04-28 06:44:05', NULL, NULL, NULL, 0),
+(25, 16, 16, 'accepted', NULL, NULL, NULL, '2026-04-28 06:46:59', NULL, NULL, NULL, 0),
+(26, 16, 37, 'accepted', NULL, NULL, NULL, '2026-04-28 06:47:04', NULL, NULL, NULL, 0),
+(27, 16, 38, 'completed', NULL, NULL, NULL, '2026-04-28 06:47:09', NULL, NULL, NULL, 0),
+(28, 16, 1, 'accepted', NULL, NULL, NULL, '2026-04-28 06:55:50', NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -373,7 +346,6 @@ CREATE TABLE `users` (
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `latitude` decimal(10,7) DEFAULT NULL,
   `longitude` decimal(10,7) DEFAULT NULL,
-  `profile_pic` varchar(255) DEFAULT 'default-avatar.png',
   `points` int DEFAULT '50',
   `average_rating` decimal(3,2) DEFAULT '0.00',
   `total_ratings` int DEFAULT '0',
@@ -382,30 +354,33 @@ CREATE TABLE `users` (
   `items_given` int DEFAULT '0',
   `is_active` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `profile_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_name`, `bio`, `location`, `latitude`, `longitude`, `profile_pic`, `points`, `average_rating`, `total_ratings`, `items_lent`, `items_borrowed`, `items_given`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'alex.turner@roehampton.ac.uk', '$2b$10$LfSszi8yuKSH3Q0xuacgVOfM0PSSta6x97YN685ROgM2n6nmMDZHe', 'Alex', 'Turner', 'Computer science student who likes sharing useful study items. Usually available around campus on weekdays.', 'Roehampton, London', NULL, NULL, 'profile_pic_1.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:46'),
-(2, 'sarah.khan@roehampton.ac.uk', '$2b$10$XS976wXNYqCjoJcASD7JqeJsNnrB35bJkG1i5qkSfx2vrMMEGsGr6', 'Sarah', 'Khan', 'Postgraduate student based in Putney. Happy to pass on items that are still useful to others.', 'Putney, London', NULL, NULL, 'profile_pic_2.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(3, 'james.wilson@roehampton.ac.uk', '$2b$10$b4lHyhYiliVJImduM1oUm.WBHDQVFoNl9YzI0qeV/A4tZ3pN9UjIa', 'James', 'Wilson', 'Enjoys cooking and keeping things practical. Usually responds in the evening.', 'Wandsworth, London', NULL, NULL, 'profile_pic_3.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(4, 'emma.clarke@roehampton.ac.uk', '$2b$10$2U3J0uaCrck/ZmRZg7fTg.T0w8K6pSb5Se1.AhkRzfpVQt8pTi9k2', 'Emma', 'Clarke', 'Keeps active and likes simple item swaps. Prefers clear communication and arranged pickup times.', 'Barnes, London', NULL, NULL, 'profile_pic_4.jpg', 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(5, 'daniel.lee@roehampton.ac.uk', '$2b$10$TxCde1B0UX570ghJWR9HCenPjAwKNwpUpC200Coi0HsK3Fjm1Nenm', 'Daniel', 'Lee', 'Final-year student clearing out spare home items. Mostly shares things that are still in solid condition.', 'Fulham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(6, 'olivia.brown@roehampton.ac.uk', '$2b$10$zYQGYEzdDoOwF1gVn8R4huq.vV7VEjjoW3NjClOLgC98Y.VpbV3yO', 'Olivia', 'Brown', 'Often lends books and revision materials to other students. Based near Clapham.', 'Clapham, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(7, 'noah.davis@roehampton.ac.uk', '$2b$10$vLP6lTp7E7dMrgxWNksWmuXfeF3jaF5mt/awWvA2DOs1ONXXQj5kW', 'Noah', 'Davis', 'Tech-friendly student with a few spare accessories and home items. Open to swaps for useful essentials.', 'Tooting, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(8, 'mia.evans@roehampton.ac.uk', '$2b$10$NopsGh9iRi55vH880mEnceQQhk9T2ZqQnFEUh83GTW4sQmPgufrdS', 'Mia', 'Evans', 'Likes keeping things tidy and passing on items instead of wasting them. Usually free on weekends.', 'Richmond, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(9, 'liam.taylor@roehampton.ac.uk', '$2b$10$S7qjz1d/tTuRzI0kDCct4.4Hs9t1e9QdWaFGaxTmoGoplLppBxhUC', 'Liam', 'Taylor', 'Sports enthusiast who shares equipment when it is not being used. Quick to reply when available.', 'Kingston, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(10, 'ava.moore@roehampton.ac.uk', '$2b$10$zM6Q2TN8zQ29XdIAZBS4k.4R80ZChj7feBdLda92MOdPRaBaNjMoW', 'Ava', 'Moore', 'Moving between student places and trying to keep things simple. Happy to give away practical items.', 'Hammersmith, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(11, 'ethan.white@roehampton.ac.uk', '$2b$10$e1FryKPnxtISeQ3LodzZg.ppMP3Vt8gHZywM0t/AUopi5RavQ54RG', 'Ethan', 'White', 'Second-year student interested in databases and systems. Usually lends books and desk items.', 'Chelsea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(12, 'sophia.martin@roehampton.ac.uk', '$2b$10$h2KYYw/X5zRppwbnv7ETq.iWtRMFj.yNA1GHNZ1c.DuiaMYmm8H9m', 'Sophia', 'Martin', 'Keeps spare accessories and kitchen items in good condition. Prefers local pickup.', 'Putney, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(13, 'lucas.hall@roehampton.ac.uk', '$2b$10$VSWt3Uox9g2LSLgPzxC35OFXBMtoZ.MDjTRgNWoSMmksyFknijDNa', 'Lucas', 'Hall', 'Enjoys cooking and sharing appliances that still have plenty of use left. Based in Wimbledon.', 'Wimbledon, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(14, 'amelia.young@roehampton.ac.uk', '$2b$10$LzVPVZMsM0Fg//fYLIgc5ejhCbtl3S3Q7wRNbA8iCrYmgVtLVWEV2', 'Amelia', 'Young', 'Fitness-focused student with a few sports items to lend or swap. Flexible with collection times.', 'Battersea, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(15, 'harry.king@roehampton.ac.uk', '$2b$10$Shn2umyt0PjnQ8qfrFkFBOVbBHIL18P/ulbP6H869WowT6Bwz6UIS', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47'),
-(16, 'mnorb@is.here', '$2b$10$Y09mbXD/Fcvt1zh4YJP0vunsnLcQAy2KXYm6kDEx5RX/bNcSuaEYi', 'Mukhammadsaiid', 'Norbaev', NULL, NULL, NULL, NULL, 'default-avatar.png', 50, 0.00, 0, 0, 0, 0, 1, '2026-04-23 05:00:24', '2026-04-23 05:00:24');
+INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_name`, `bio`, `location`, `latitude`, `longitude`, `points`, `average_rating`, `total_ratings`, `items_lent`, `items_borrowed`, `items_given`, `is_active`, `created_at`, `updated_at`, `profile_image`) VALUES
+(1, 'alex.turner@roehampton.ac.uk', '$2b$10$LfSszi8yuKSH3Q0xuacgVOfM0PSSta6x97YN685ROgM2n6nmMDZHe', 'Alex', 'Turner', 'Computer science student who likes sharing useful study items. Usually available around campus on weekdays.', 'Roehampton, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:46', NULL),
+(2, 'sarah.khan@roehampton.ac.uk', '$2b$10$XS976wXNYqCjoJcASD7JqeJsNnrB35bJkG1i5qkSfx2vrMMEGsGr6', 'Sarah', 'Khan', 'Postgraduate student based in Putney. Happy to pass on items that are still useful to others.', 'Putney, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(3, 'james.wilson@roehampton.ac.uk', '$2b$10$b4lHyhYiliVJImduM1oUm.WBHDQVFoNl9YzI0qeV/A4tZ3pN9UjIa', 'James', 'Wilson', 'Enjoys cooking and keeping things practical. Usually responds in the evening.', 'Wandsworth, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(4, 'emma.clarke@roehampton.ac.uk', '$2b$10$2U3J0uaCrck/ZmRZg7fTg.T0w8K6pSb5Se1.AhkRzfpVQt8pTi9k2', 'Emma', 'Clarke', 'Keeps active and likes simple item swaps. Prefers clear communication and arranged pickup times.', 'Barnes, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(5, 'daniel.lee@roehampton.ac.uk', '$2b$10$TxCde1B0UX570ghJWR9HCenPjAwKNwpUpC200Coi0HsK3Fjm1Nenm', 'Daniel', 'Lee', 'Final-year student clearing out spare home items. Mostly shares things that are still in solid condition.', 'Fulham, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(6, 'olivia.brown@roehampton.ac.uk', '$2b$10$zYQGYEzdDoOwF1gVn8R4huq.vV7VEjjoW3NjClOLgC98Y.VpbV3yO', 'Olivia', 'Brown', 'Often lends books and revision materials to other students. Based near Clapham.', 'Clapham, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(7, 'noah.davis@roehampton.ac.uk', '$2b$10$vLP6lTp7E7dMrgxWNksWmuXfeF3jaF5mt/awWvA2DOs1ONXXQj5kW', 'Noah', 'Davis', 'Tech-friendly student with a few spare accessories and home items. Open to swaps for useful essentials.', 'Tooting, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(8, 'mia.evans@roehampton.ac.uk', '$2b$10$NopsGh9iRi55vH880mEnceQQhk9T2ZqQnFEUh83GTW4sQmPgufrdS', 'Mia', 'Evans', 'Likes keeping things tidy and passing on items instead of wasting them. Usually free on weekends.', 'Richmond, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(9, 'liam.taylor@roehampton.ac.uk', '$2b$10$S7qjz1d/tTuRzI0kDCct4.4Hs9t1e9QdWaFGaxTmoGoplLppBxhUC', 'Liam', 'Taylor', 'Sports enthusiast who shares equipment when it is not being used. Quick to reply when available.', 'Kingston, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(10, 'ava.moore@roehampton.ac.uk', '$2b$10$zM6Q2TN8zQ29XdIAZBS4k.4R80ZChj7feBdLda92MOdPRaBaNjMoW', 'Ava', 'Moore', 'Moving between student places and trying to keep things simple. Happy to give away practical items.', 'Hammersmith, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(11, 'ethan.white@roehampton.ac.uk', '$2b$10$e1FryKPnxtISeQ3LodzZg.ppMP3Vt8gHZywM0t/AUopi5RavQ54RG', 'Ethan', 'White', 'Second-year student interested in databases and systems. Usually lends books and desk items.', 'Chelsea, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(12, 'sophia.martin@roehampton.ac.uk', '$2b$10$h2KYYw/X5zRppwbnv7ETq.iWtRMFj.yNA1GHNZ1c.DuiaMYmm8H9m', 'Sophia', 'Martin', 'Keeps spare accessories and kitchen items in good condition. Prefers local pickup.', 'Putney, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(13, 'lucas.hall@roehampton.ac.uk', '$2b$10$VSWt3Uox9g2LSLgPzxC35OFXBMtoZ.MDjTRgNWoSMmksyFknijDNa', 'Lucas', 'Hall', 'Enjoys cooking and sharing appliances that still have plenty of use left. Based in Wimbledon.', 'Wimbledon, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(14, 'amelia.young@roehampton.ac.uk', '$2b$10$LzVPVZMsM0Fg//fYLIgc5ejhCbtl3S3Q7wRNbA8iCrYmgVtLVWEV2', 'Amelia', 'Young', 'Fitness-focused student with a few sports items to lend or swap. Flexible with collection times.', 'Battersea, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(15, 'harry.king@roehampton.ac.uk', '$2b$10$Shn2umyt0PjnQ8qfrFkFBOVbBHIL18P/ulbP6H869WowT6Bwz6UIS', 'Harry', 'King', 'Trying to keep useful items in circulation instead of throwing them away. Mostly shares furniture and room essentials.', 'Southfields, London', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-03-19 00:25:51', '2026-04-07 17:39:47', NULL),
+(16, 'mnorb@is.here', '$2b$10$.3NT58vNSEe3NYUmdgV1tOHoI/xkYoMOFCfeuXSwlre6TDz45Cbhm', 'Mukhammadsaiid', 'Norbaev', 'i am changing my bio again now better looking', 'Roehampton', NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-04-23 05:00:24', '2026-04-28 07:55:24', '/images/profiles/1777328206358-photo_2023-05-15_19-11-31.jpg'),
+(17, 'mqueen@here.io', '$2b$10$a6ktfv2Wui.VMK9gcYWrkuXTiJXjvhsc0rzHEgM1xyHU.t5JkTSm.', 'McQueen', 'RedCar', NULL, NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-04-28 02:36:44', '2026-04-28 02:36:44', NULL),
+(19, 'another@one.com', '$2b$10$RHC5En9.QAPXWEur597x6uSdNHhdp1eiUm21Zr6Wvka/F7axTvetG', 'Mukhammadsaiid', 'Norbaev', NULL, NULL, NULL, NULL, 50, 0.00, 0, 0, 0, 0, 1, '2026-04-28 08:03:32', '2026-04-28 08:03:32', NULL);
 
 --
 -- Indexes for dumped tables
@@ -494,31 +469,31 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `listings`
 --
 ALTER TABLE `listings`
-  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `listing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `message_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `notification_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `rating_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -530,7 +505,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
