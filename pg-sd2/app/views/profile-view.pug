@@ -1,35 +1,45 @@
 extends layout
 
 block content
-    .container.mt-4
-        .card.shadow-sm
-            .card-body
+    .container.mt-5
+        .row.justify-content-center
+            .col-lg-6.col-md-8
 
-                // PROFILE IMAGE
-                if user.profile_image_path
-                    img(
-                        src=user.profile_image_path
-                        style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom:15px;"
-                    )
+                .card.border-0.shadow-sm
 
-                h3.mb-3 Profile
+                    .card-body.text-center
 
-                p
-                    strong Name:
-                    |  #{user.first_name} #{user.last_name}
+                        // ===== AVATAR =====
+                        img.rounded-circle.shadow-sm.mb-3(
+                            src=user.profile_image_path
+                            width="120"
+                            height="120"
+                            style="object-fit:cover;"
+                        )
 
-                p
-                    strong Email:
-                    |  #{user.email}
+                        // ===== NAME + EMAIL =====
+                        h4.mb-1 #{user.first_name} #{user.last_name}
+                        p.text-muted.small.mb-1 #{user.email}
 
-                p
-                    strong Bio:
-                    |  #{user.bio || "No bio"}
+                        p.text-muted.small.mb-3
+                            | Member since #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
 
-                p
-                    strong Location:
-                    |  #{user.location || "Not set"}
+                        hr
 
-                hr
+                        // ===== DETAILS =====
+                        .text-start.mt-3
 
-                a.btn.btn-dark(href="/profile/edit") Edit Profile
+                            p.mb-2
+                                strong Location:
+                                |  #{user.location || "Not set"}
+
+                            p.mb-2
+                                strong Bio:
+                                if user.bio
+                                    span.text-muted  #{user.bio}
+                                else
+                                    span.text-muted  No bio yet
+
+                        // ===== ACTION =====
+                        .mt-4
+                            a.btn.btn-dark.w-100(href="/profile/edit") Edit Profile

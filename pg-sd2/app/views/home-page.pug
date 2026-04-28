@@ -2,45 +2,72 @@ extends layout
 
 block content
 
-    // Hero Section
-    .text-center.py-5.mb-4.bg-light.rounded
-        h1.display-5.fw-bold.mb-3 Welcome to ShareLoop
-        p.lead.text-muted.mb-2 Share More. Waste Less. Connect Better.
-        p.text-muted.mb-0
-            | Lend, swap, or give away items with people nearby - completely free, no money ever changes hands.
+    // ===== HERO =====
+    .text-center.py-5.mb-5.bg-light.rounded
+        h1.display-5.fw-bold.mb-3 ShareLoop
+        p.lead.text-muted.mb-3 Share More. Waste Less. Connect Better.
 
-    // Navigation Cards
-    .row.g-4.justify-content-center
-        .col-md-6.col-lg-4
+        p.text-muted.mb-4
+            | Lend, swap, or give away items with people nearby - completely free.
+
+        .d-flex.justify-content-center.gap-3
+            a.btn.btn-dark(href="/all-listings-formatted") Browse Listings
+            if !loggedIn
+                a.btn.btn-outline-dark(href="/register") Join Now
+
+    // ===== HOW IT WORKS =====
+    .mb-5
+        h3.text-center.mb-4 How It Works
+
+        .row.text-center.g-4
+            .col-md-4
+                h5.mb-2 1. List an Item
+                p.text-muted Share something you don’t need
+
+            .col-md-4
+                h5.mb-2 2. Get Requests
+                p.text-muted Connect with people nearby
+
+            .col-md-4
+                h5.mb-2 3. Exchange
+                p.text-muted Lend, swap, or give away
+
+    // ===== ACTION CARDS =====
+    .row.g-4.justify-content-center.mb-5
+
+        .col-md-6.col-lg-5
             .card.h-100.shadow-sm.border-0.text-center
                 .card-body.d-flex.flex-column
                     .display-5.mb-3 📦
-                    h4.card-title Listings
-                    p.card-text.text-muted.mb-4 Browse all available items
+                    h4.card-title Browse Items
+                    p.card-text.text-muted.mb-4 Find things you need nearby
                     .mt-auto
-                        a.btn.btn-dark.w-100(href="/all-listings-formatted") View Listings
+                        a.btn.btn-dark.w-100(href="/all-listings-formatted") Browse Listings
 
-        .col-md-6.col-lg-4
+        .col-md-6.col-lg-5
             .card.h-100.shadow-sm.border-0.text-center
                 .card-body.d-flex.flex-column
-                    .display-5.mb-3 👥
-                    h4.card-title Users
-                    p.card-text.text-muted.mb-4 View community members
+                    .display-5.mb-3 ➕
+                    h4.card-title Share Something
+                    p.card-text.text-muted.mb-4 List an item to lend, swap, or give away
                     .mt-auto
-                        a.btn.btn-dark.w-100(href="/all-users-formatted") View Users
+                        if loggedIn
+                            a.btn.btn-dark.w-100(href="/listings/new") Create Listing
+                        else
+                            a.btn.btn-outline-dark.w-100(href="/login") Login to Start
 
-        .col-md-6.col-lg-4
-            .card.h-100.shadow-sm.border-0.text-center
-                .card-body.d-flex.flex-column
-                    .display-5.mb-3 🗂️
-                    h4.card-title Categories
-                    p.card-text.text-muted.mb-4 Explore listings by category
-                    .mt-auto
-                        a.btn.btn-dark.w-100(href="/all-categories") View Categories
+        //- .col-md-6.col-lg-4
+        //-     .card.h-100.shadow-sm.border-0.text-center
+        //-         .card-body.d-flex.flex-column
+        //-             .display-5.mb-3 🗂️
+        //-             h4.card-title Categories
+        //-             p.card-text.text-muted.mb-4 Explore listings by category
+        //-             .mt-auto
+        //-                 a.btn.btn-dark.w-100(href="/all-categories") View Categories
 
-    // Recent Listings Section
+    // ===== RECENT LISTINGS =====
     .mt-5
-        h3.mb-3 Recent Listings
+        h3.mb-3 Latest Listings
 
         if listings && listings.length > 0
             .row.g-4
@@ -71,17 +98,22 @@ block content
                                         href=`/listing-detail/${listing.listing_id}`
                                     ) View Details
         else
-            p.text-muted No listings available yet.
+            .alert.alert-light.border
+                p.mb-0 No listings available yet.
+
 
 //- extends layout
 
 //- block content
-//-     .text-center.py-5.mb-4
+
+//-     // Hero Section
+//-     .text-center.py-5.mb-4.bg-light.rounded
 //-         h1.display-5.fw-bold.mb-3 Welcome to ShareLoop
 //-         p.lead.text-muted.mb-2 Share More. Waste Less. Connect Better.
 //-         p.text-muted.mb-0
 //-             | Lend, swap, or give away items with people nearby - completely free, no money ever changes hands.
 
+//-     // Navigation Cards
 //-     .row.g-4.justify-content-center
 //-         .col-md-6.col-lg-4
 //-             .card.h-100.shadow-sm.border-0.text-center
@@ -110,25 +142,37 @@ block content
 //-                     .mt-auto
 //-                         a.btn.btn-dark.w-100(href="/all-categories") View Categories
 
+//-     // Recent Listings Section
+//-     .mt-5
+//-         h3.mb-3 Recent Listings
 
-//- extends layout 
-//- block content 
-//-     .main-content 
-//-         .hero
-//-             h1 Welcome to ShareLoop
-//-             p.tagline Share More. Waste Less. Connect Better.
-//-             p.description Lend, swap, or give away items with people nearby — completely free, no money ever changes hands.
+//-         if listings && listings.length > 0
+//-             .row.g-4
+//-                 each listing in listings
+//-                     .col-md-6.col-lg-4
+//-                         .card.h-100.shadow-sm.border-0
+//-                             img.card-img-top(
+//-                                 src=listing.image_path
+//-                                 alt="Listing image"
+//-                                 style="height:250px; object-fit:cover;"
+//-                             )
 
-//-         .nav-grid 
-//-             .nav-card
-//-                 h3 Listings 
-//-                 p Browse all available items
-//-                 a(href=`/all-listings-formatted`) Go
-//-             .nav-card
-//-                 h3 Users 
-//-                 p View Community Members
-//-                 a(href=`/all-users-formatted`) Go
-//-             .nav-card
-//-                 h3 Categories 
-//-                 p Explore by category
-//-                 a(href=`/all-categories`) Go
+//-                             .card-body.d-flex.flex-column
+//-                                 h5.card-title
+//-                                     a.text-decoration-none.text-dark(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) #{listing.title}
+
+//-                                 p.text-muted.mb-2
+//-                                     strong Category:
+//-                                     |  #{listing.category_name}
+
+//-                                 p.text-muted.small.mb-3
+//-                                     | #{listing.exchange_type || "Unknown"}
+
+//-                                 .mt-auto
+//-                                     a.btn.btn-dark.w-100(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) View Details
+//-         else
+//-             p.text-muted No listings available yet.

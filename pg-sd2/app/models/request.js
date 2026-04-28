@@ -162,6 +162,68 @@ class Request {
         const result = await db.query(sql, [userId, listingId]);
         return result[0];
     }
+
+
+    // static async getUserChats(userId) {
+    //     const sql = `
+    //         SELECT 
+    //             r.request_id,
+    //             l.title,
+    //             l.photo_url_1,
+    //             u.first_name,
+
+    //             MAX(m.created_at) AS last_message_time,
+
+    //             SUBSTRING_INDEX(
+    //                 GROUP_CONCAT(m.message ORDER BY m.created_at DESC),
+    //                 ',', 1
+    //             ) AS last_message,
+
+    //             SUM(
+    //                 CASE 
+    //                     WHEN m.is_read = 0 AND m.sender_id != ? THEN 1
+    //                     ELSE 0
+    //                 END
+    //             ) AS unread_count
+
+    //         FROM requests r
+
+    //         JOIN listings l ON r.listing_id = l.listing_id
+
+    //         JOIN users u 
+    //             ON (u.user_id = l.user_id AND r.requester_id = ?)
+    //             OR (u.user_id = r.requester_id AND l.user_id = ?)
+
+    //         LEFT JOIN messages m ON m.request_id = r.request_id
+
+    //         WHERE r.requester_id = ? OR l.user_id = ?
+
+    //         GROUP BY r.request_id
+
+    //         ORDER BY last_message_time DESC
+    //     `;
+
+    //     const params = [
+    //         userId,
+    //         userId,
+    //         userId,
+    //         userId,
+    //         userId
+    //     ];
+
+    //     const chats = await db.query(sql, params);
+
+    //     // set image path
+    //     chats.forEach(c => {
+    //         if (c.photo_url_1) {
+    //             c.image_path = `/images/listings/${c.photo_url_1}`;
+    //         } else {
+    //             c.image_path = `/images/listings/default-listing-pic.jpg`;
+    //         }
+    //     });
+
+    //     return chats;
+    // }
 }
 
 module.exports = { Request };

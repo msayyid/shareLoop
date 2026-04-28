@@ -3,7 +3,7 @@ extends layout
 block content
     .container.mt-4
 
-        h3.mb-3 Incoming Requests
+        h3.mb-4 Incoming Requests
 
         if requests.length === 0
             .alert.alert-light.border
@@ -11,57 +11,82 @@ block content
                 small.text-muted When someone requests your items, they’ll appear here.
 
         else
-            .list-group
+            .row.g-4
+
                 each request in requests
-                    .list-group-item.d-flex.justify-content-between.align-items-center
+                    .col-md-6.col-lg-4
+                        .card.h-100.shadow-sm.border-0
 
-                        // LEFT
-                        .d-flex.flex-column
-                            strong #{request.first_name} requested "#{request.title}"
-                            span.text-muted.small Status: #{request.status}
-
-                        // RIGHT
-                        .d-flex.gap-2.align-items-center
-
-                            if request.status === 'pending'
-                                form(action=`/requests/${request.request_id}/accept` method="POST")
-                                    button.btn.btn-success.btn-sm(type="submit") Accept
-                                form(action=`/requests/${request.request_id}/reject` method="POST")
-                                    button.btn.btn-outline-danger.btn-sm(type="submit") Reject
-                                a.btn.btn-outline-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/messages`
-                                ) Message
-
-                            else if request.status === 'accepted'
-                                form(
-                                    action=`/requests/${request.request_id}/complete`
-                                    method="POST"
-                                    onsubmit="return confirm('Mark this request as completed?');"
+                            // ===== IMAGE =====
+                            if request.image_path
+                                img.card-img-top(
+                                    src=request.image_path
+                                    style="height:150px; object-fit:cover;"
                                 )
-                                    button.btn.btn-primary.btn-sm(type="submit") Mark as Completed
-                                a.btn.btn-outline-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/messages`
-                                ) Message
+                            else
+                                img.card-img-top(
+                                    src="/images/listings/default-listing-pic.jpg"
+                                    style="height:150px; object-fit:cover;"
+                                )
 
-                            else if request.status === 'completed' && !request.hasRated
-                                a.btn.btn-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/rate`
-                                ) Rate
-                                a.btn.btn-outline-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/messages`
-                                ) Message
+                            .card-body.d-flex.flex-column
 
-                            else if request.status !== 'declined'
-                                a.btn.btn-outline-primary.btn-sm(
-                                    href=`/requests/${request.request_id}/messages`
-                                ) Message
+                                // ===== TITLE =====
+                                h6.card-title.mb-1
+                                    span.fw-bold #{request.first_name}
+                                    |  requested:
+                                    br
+                                    span.text-dark "#{request.title}"
 
-                            // STATUS BADGE
-                            if request.status === 'pending'
-                                span.badge.bg-warning.text-dark Pending
-                            else if request.status === 'accepted'
-                                span.badge.bg-success Accepted
-                            else if request.status === 'declined'
-                                span.badge.bg-danger Declined
-                            else if request.status === 'completed'
-                                span.badge.bg-primary Completed
+                                // ===== DATE =====
+                                small.text-muted.mb-2
+                                    | #{new Date(request.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+                                // ===== STATUS =====
+                                .mb-3
+                                    if request.status === 'pending'
+                                        span.badge.bg-warning.text-dark Pending
+                                    else if request.status === 'accepted'
+                                        span.badge.bg-success Accepted
+                                    else if request.status === 'declined'
+                                        span.badge.bg-danger Declined
+                                    else if request.status === 'completed'
+                                        span.badge.bg-primary Completed
+
+                                // ===== ACTIONS =====
+                                .mt-auto.d-flex.flex-column.gap-2
+
+                                    // MESSAGE
+                                    if request.status !== 'declined'
+                                        a.btn.btn-outline-primary.btn-sm.w-100(
+                                            href=`/requests/${request.request_id}/messages`
+                                        ) 💬 Message
+
+                                    // PENDING
+                                    if request.status === 'pending'
+                                        form(
+                                            action=`/requests/${request.request_id}/accept`
+                                            method="POST"
+                                        )
+                                            button.btn.btn-success.btn-sm.w-100(type="submit") ✔ Accept
+
+                                        form(
+                                            action=`/requests/${request.request_id}/reject`
+                                            method="POST"
+                                        )
+                                            button.btn.btn-outline-danger.btn-sm.w-100(type="submit") ✖ Reject
+
+                                    // ACCEPTED
+                                    if request.status === 'accepted'
+                                        form(
+                                            action=`/requests/${request.request_id}/complete`
+                                            method="POST"
+                                            onsubmit="return confirm('Mark this request as completed?');"
+                                        )
+                                            button.btn.btn-dark.btn-sm.w-100(type="submit") Mark as Completed
+
+                                    // COMPLETED
+                                    if request.status === 'completed' && !request.hasRated
+                                        a.btn.btn-dark.btn-sm.w-100(
+                                            href=`/requests/${request.request_id}/rate`
+                                        ) ⭐ Rate User

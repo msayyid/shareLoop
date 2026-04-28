@@ -1,196 +1,227 @@
 extends layout
 
 block content
-    .row.justify-content-center
-        .col-lg-8
-            .card.shadow-sm.border-0
-                img.card-img-top(
+    .container.mt-4
+
+        // ===== BACK BUTTON (GLOBAL - FIXES ALIGNMENT) =====
+        .mb-3
+            a.btn.btn-outline-dark.btn-sm(
+                href="/all-listings-formatted"
+            ) ← Back to listings
+
+        // ===== MAIN SECTION =====
+        .row.g-5.align-items-start
+
+            // ===== LEFT =====
+            .col-lg-6
+
+                // IMAGE
+                img.w-100.rounded.shadow-sm(
                     src=listing.image_path
-                    alt="Listing image"
-                    style="object-fit:cover;"
+                    style="height:420px; object-fit:cover;"
                 )
 
-                .card-body
-                    h1.card-title.mb-2= listing.title
-                    p.text-muted.mb-4 View full details for this community listing
+                // DESCRIPTION UNDER IMAGE
+                .mt-4
+                    h5.mb-2 Description
+                    p.text-muted #{listing.description || "No description provided."}
 
-                    .d-flex.flex-wrap.gap-2.mb-3
-                        span.badge.text-bg-secondary= listing.category_name
-                        span.badge.text-bg-info= listing.exchange_type
-                        if listing.is_available
-                            span.badge.text-bg-success Available
-                        else
-                            span.badge.text-bg-danger Not Available
+            // ===== RIGHT =====
+            .col-lg-6
 
-                    p.text-muted.mb-1
-                        strong Owner:
-                        |  
-                        if listing.user_id
-                            a.link-dark.text-decoration-none(href=`/single-user/${listing.user_id}`) #{listing.first_name}
-                        else
-                            | #{listing.first_name}
+                h2.fw-bold.mb-2 #{listing.title}
 
-                    h5.mb-2.mt-4 Description
-                    p.mb-4= listing.description || "No description available."
+                // OWNER
+                p.text-muted.mb-2
+                    | by 
+                    a.text-decoration-none.text-dark(
+                        href=`/single-user/${listing.user_id}`
+                    ) #{listing.first_name}
 
-                    .row.g-3
-                        .col-md-6
-                            .card.h-100.bg-light
-                                .card-body
-                                    h6.card-subtitle.mb-3.text-muted Condition
-                                    p.mb-2
-                                        strong Status:
-                                        |  #{listing.condition_status || "Unknown"}
-                                    p.mb-0
-                                        strong Notes:
-                                        |  #{listing.condition_notes || "None"}
+                // BADGES (BIGGER)
+                .d-flex.gap-2.mb-3.flex-wrap
+                    span.badge.fs-6.bg-secondary #{listing.category_name}
+                    span.badge.fs-6.bg-info #{listing.exchange_type}
 
-                        .col-md-6
-                            .card.h-100.bg-light
-                                .card-body
-                                    h6.card-subtitle.mb-3.text-muted Dates
-                                    p.mb-2
-                                        strong Created:
-                                        |  #{listing.formatted_created_at || "Unknown"}
-                                    p.mb-0
-                                        strong Updated:
-                                        |  #{listing.formatted_updated_at || "Unknown"}
+                    if listing.is_available
+                        span.badge.fs-6.bg-success Available
+                    else
+                        span.badge.fs-6.bg-secondary Unavailable
 
-                .card-footer.bg-white.border-0.pt-0.pb-4.px-4
-                    .d-flex.flex-wrap.gap-2
-                        a.btn.btn-dark(href="/all-listings-formatted") Back to Listings
+                // CONDITION
+                .card.bg-light.border-0.mb-3
+                    .card-body
+                        h6.text-muted.mb-2 Condition
+                        p.mb-1
+                            strong Status:
+                            |  #{listing.condition_status || "Unknown"}
+                        p.mb-0
+                            strong Notes:
+                            |  #{listing.condition_notes || "None"}
 
-                        if listing.category_id
-                            a.btn.btn-outline-secondary(href=`/all-categories/${listing.category_id}`) More in this Category
+                // DATES
+                p.text-muted.small.mb-4
+                    | Created: #{listing.formatted_created_at} • Updated: #{listing.formatted_updated_at}
 
-                        // ASK QUESTION (chat entry point)
-                        if loggedIn && listing.user_id !== uId
-                            a.btn.btn-outline-primary(
-                                href=`/requests/${listing.listing_id}/start-chat`
-                            ) Ask Question
+                // ===== ACTIONS =====
+                .card.border-0.shadow-sm.mt-4
+                    .card-body.d-flex.flex-column.gap-2
 
-                        // REQUEST LOGIC
-                        if loggedIn && listing.user_id !== uId
-
-                            if !listing.is_available
-                                span.text-danger This item is no longer available
-
-                            else if hasRequested
-                                span.text-warning You have already requested this item
-
-                            else
-                                form(
-                                    action=`/listings/${listing.listing_id}/request`
-                                    method="POST"
-                                )
-                                    button.btn.btn-success(type="submit") Request Item
-
-                        else if loggedIn && listing.user_id === uId
+                        if listing.user_id === uId
                             span.text-muted This is your listing
-                            a.btn.btn-outline-primary(
+                            a.btn.btn-outline-dark.w-100(
                                 href=`/listings/${listing.listing_id}/edit`
                             ) Edit Listing
 
-//- extends layout 
-//- block content 
-//-     .main-content 
-//-         .detail-card 
-//-             img.detail-image(src="http.//via.placeholder.com/800x300")
+                        else
+                            if loggedIn
+                                a.btn.btn-outline-primary.w-100(
+                                    href=`/requests/${listing.listing_id}/start-chat`
+                                ) Ask Question
+                            else
+                                a.btn.btn-outline-primary.w-100(href="/login") Ask Question
 
-//-             h1= listing.title 
-//-             p.detail-meta Category: #{listing.category_name}
-//-             p.detail-meta Owner:  #{listing.first_name} 
-//-             p.detail-meta Available: #{listing.is_available ? "Yes" : "No"}
+                            if !listing.is_available
+                                span.text-danger Item not available
 
-//-             .detail-section 
-//-                 h3 Description 
-//-                 p= listing.description 
+                            else if hasRequested
+                                span.text-warning You already requested this item
 
-//-             .detail-section 
-//-                 h3 Exchange Details 
-//-                 p Exchange Type: #{listing.exchange_type} 
-//-                 p Condition: #{listing.condition_status} 
-//-                 p Notes: #{listing.condition_notes || "None"}
+                            else
+                                if loggedIn
+                                    form(
+                                        action=`/listings/${listing.listing_id}/request`
+                                        method="POST"
+                                    )
+                                        button.btn.btn-success.w-100(type="submit") Request Item
+                                else
+                                    a.btn.btn-success.w-100(href="/login") Request Item
 
-//-             .detail-section 
-//-                 h3 Dates 
-//-                 p Created: #{listing.formatted_created_at} 
-//-                 p Updated: #{listing.formatted_updated_at}
+
+        // ===== RELATED SECTION =====
+        if relatedListings && relatedListings.length > 0
+            .mt-5.pt-4.border-top
+
+                .d-flex.justify-content-between.align-items-center.mb-3
+                    h5.mb-0 More from this category
+
+                .row.g-4
+                    each item in relatedListings
+                        .col-md-6.col-lg-4
+                            .card.listing-card.h-100.border-0.shadow-sm
+
+                                .position-relative
+                                    img.card-img-top(
+                                        src=item.image_path
+                                        style="height:200px; object-fit:cover;"
+                                    )
+                                    .listing-overlay
+
+                                .card-body.d-flex.flex-column
+                                    h6.card-title
+                                        a.text-decoration-none.text-dark(
+                                            href=`/listing-detail/${item.listing_id}`
+                                        ) #{item.title}
+
+                                    p.text-muted.small.mb-2 #{item.exchange_type}
+
+                                    .mt-auto
+                                        a.btn.btn-outline-dark.btn-sm.w-100(
+                                            href=`/listing-detail/${item.listing_id}`
+                                        ) View
+
+
+
 
 //- extends layout
 
 //- block content
-//-     .main-content
-//-         h2 The Detail Page for the Listing
-//-         h2 Full Detail Page For: #{listing.title}
+//-     .row.justify-content-center
+//-         .col-lg-8
+//-             .card.shadow-sm.border-0
+//-                 img.card-img-top(
+//-                     src=listing.image_path
+//-                     alt="Listing image"
+//-                     style="object-fit:cover;"
+//-                 )
 
-//-         table(border=1)
-//-             tr
-//-                 th Field
-//-                 th Value
+//-                 .card-body
+//-                     h1.card-title.mb-2= listing.title
+//-                     p.text-muted.mb-4 View full details for this community listing
 
-//-             tr
-//-                 td Listing ID
-//-                 td= listing.listing_id
+//-                     .d-flex.flex-wrap.gap-2.mb-3
+//-                         span.badge.text-bg-secondary= listing.category_name
+//-                         span.badge.text-bg-info= listing.exchange_type
+//-                         if listing.is_available
+//-                             span.badge.text-bg-success Available
+//-                         else
+//-                             span.badge.text-bg-danger Not Available
 
-//-             tr
-//-                 td Title
-//-                 td= listing.title
+//-                     p.text-muted.mb-1
+//-                         strong Owner:
+//-                         |  
+//-                         if listing.user_id
+//-                             a.link-dark.text-decoration-none(href=`/single-user/${listing.user_id}`) #{listing.first_name}
+//-                         else
+//-                             | #{listing.first_name}
 
-//-             tr
-//-                 td Owner
-//-                 td= listing.first_name
+//-                     h5.mb-2.mt-4 Description
+//-                     p.mb-4= listing.description || "No description available."
 
-//-             tr
-//-                 td Category
-//-                 td= listing.category_name
+//-                     .row.g-3
+//-                         .col-md-6
+//-                             .card.h-100.bg-light
+//-                                 .card-body
+//-                                     h6.card-subtitle.mb-3.text-muted Condition
+//-                                     p.mb-2
+//-                                         strong Status:
+//-                                         |  #{listing.condition_status || "Unknown"}
+//-                                     p.mb-0
+//-                                         strong Notes:
+//-                                         |  #{listing.condition_notes || "None"}
 
-//-             tr
-//-                 td Description
-//-                 td= listing.description
+//-                         .col-md-6
+//-                             .card.h-100.bg-light
+//-                                 .card-body
+//-                                     h6.card-subtitle.mb-3.text-muted Dates
+//-                                     p.mb-2
+//-                                         strong Created:
+//-                                         |  #{listing.formatted_created_at || "Unknown"}
+//-                                     p.mb-0
+//-                                         strong Updated:
+//-                                         |  #{listing.formatted_updated_at || "Unknown"}
 
-//-             tr
-//-                 td Exchange Type
-//-                 td= listing.exchange_type
+//-                 .card-footer.bg-white.border-0.pt-0.pb-4.px-4
+//-                     .d-flex.flex-wrap.gap-2
+//-                         a.btn.btn-dark(href="/all-listings-formatted") Back to Listings
 
-//-             tr
-//-                 td Condition Status
-//-                 td= listing.condition_status
+//-                         if listing.category_id
+//-                             a.btn.btn-outline-secondary(href=`/all-categories/${listing.category_id}`) More in this Category
 
-//-             tr
-//-                 td Condition Notes
-//-                 td= listing.condition_notes || "None"
+//-                         // ASK QUESTION (chat entry point)
+//-                         if loggedIn && listing.user_id !== uId
+//-                             a.btn.btn-outline-primary(
+//-                                 href=`/requests/${listing.listing_id}/start-chat`
+//-                             ) Ask Question
 
-//-             tr
-//-                 td Available
-//-                 td= listing.is_available ? "Yes" : "No"
+//-                         // REQUEST LOGIC
+//-                         if loggedIn && listing.user_id !== uId
 
-//-             tr
-//-                 td Created At
-//-                 td= listing.formatted_created_at
+//-                             if !listing.is_available
+//-                                 span.text-danger This item is no longer available
 
-//-             tr
-//-                 td Updated At
-//-                 td= listing.formatted_updated_at
-        //- table(border=1)
-        //-     tr 
-        //-         th Listing ID
-        //-         th Name 
-        //-         th Owner
-        //-         th Category 
-        //-         th Description 
-        //-         th Exchange Type 
-        //-         th Condition Status 
-        //-         th Condition Notes 
-        //-         th Available
-        //-         th Created at 
-        //-     tr 
-        //-         td #{listing.listing_id}
-        //-         td #{listing.name}
-        //-         td #{listing.user_id} 
-        //-         td #{listing.category_name} 
-        //-         td #{listing.description} 
-        //-         td #{listing.exchange_type} 
-        //-         td #{listing.condition_status} 
-        //-         td #{listing.is_available ? "Yes" : "No"} 
-        //-         td #{listing.created_at} 
+//-                             else if hasRequested
+//-                                 span.text-warning You have already requested this item
+
+//-                             else
+//-                                 form(
+//-                                     action=`/listings/${listing.listing_id}/request`
+//-                                     method="POST"
+//-                                 )
+//-                                     button.btn.btn-success(type="submit") Request Item
+
+//-                         else if loggedIn && listing.user_id === uId
+//-                             span.text-muted This is your listing
+//-                             a.btn.btn-outline-primary(
+//-                                 href=`/listings/${listing.listing_id}/edit`
+//-                             ) Edit Listing

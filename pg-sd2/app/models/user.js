@@ -156,6 +156,58 @@ class User {
         }
     }
 
+    // filtered users
+    static async getFilteredUsers({ page = 1, limit = 6, search, sort, hasRating }) {
+        const offset = (page - 1) * limit;
+
+        let sql = `
+            SELECT 
+                u.*,
+                AVG(r.score) as avg_rating_calc,
+                COUNT(r.rating_id) as total_ratings_calc
+            FROM users u
+            LEFT JOIN ratings r ON r.rated_id = u.user_id
+            WHERE u.is_active = 1
+        `;
+
+        const params = [];
+
+        // search
+        if (search) {
+            sql += ` AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.email LIKE ?)`;
+            params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+        }
+
+        sql += ` GROUP BY u.user_id`;
+
+        // filter (must use HAVING, not WHERE!)
+        if (hasRating === "1") {
+            sql += ` HAVING total_ratings_calc > 0`;
+        }
+
+        // sorting
+        if (sort === "rating") {
+            sql += ` ORDER BY avg_rating_calc DESC`;
+        } else if (sort === "points") {
+            sql += ` ORDER BY u.points DESC`;
+        } else {
+            sql += ` ORDER BY u.created_at DESC`;
+        }
+
+        // count
+        const countSql = `SELECT COUNT(*) as count FROM (${sql}) as sub`;
+        const countResult = await db.query(countSql, params);
+        const total = countResult[0].count;
+        const totalPages = Math.ceil(total / limit);
+
+        // pagination
+        sql += ` LIMIT ${limit} OFFSET ${offset}`;
+
+        const users = await db.query(sql, params);
+
+        return { users, totalPages };
+    }
+
 
 
 

@@ -32,18 +32,84 @@ class Message {
 
     static async getUserChats(userId) {
         const sql = `
-                select DISTINCT r.request_id, l.title, u.first_name
-                from messages m
-                join requests r on m.request_id = r.request_id
-                join listings l on r.listing_id = l.listing_id
-                join users u on u.user_id = 
-                    case
-                        when m.sender_id = ? then m.receiver_id
-                        else m.sender_id
-                    end
-                where m.sender_id = ? or m.receiver_id = ?`;
-        const result = await db.query(sql, [userId, userId, userId]);
-        return result;
+            SELECT 
+                r.request_id,
+                l.title,
+                l.photo_url_1,
+                u.first_name,
+
+                MAX(m.created_at) AS last_message_time,
+
+                SUBSTRING_INDEX(
+                    GROUP_CONCAT(m.message ORDER BY m.created_at DESC),
+                    ',', 1
+                ) AS last_message,
+
+                SUM(
+                    CASE 
+                        WHEN m.is_read = 0 AND m.sender_id != ? THEN 1
+                        ELSE 0
+                    END
+                ) AS unread_count
+
+            FROM requests r
+
+            JOIN listings l ON r.listing_id = l.listing_id
+
+            JOIN users u 
+                ON (u.user_id = l.user_id AND r.requester_id = ?)
+                OR (u.user_id = r.requester_id AND l.user_id = ?)
+
+            LEFT JOIN messages m ON m.request_id = r.request_id
+
+            WHERE r.requester_id = ? OR l.user_id = ?
+
+            GROUP BY 
+                r.request_id,
+                l.title,
+                l.photo_url_1,
+                u.first_name
+
+            ORDER BY last_message_time DESC
+        `;
+
+        const params = [
+            userId, // unread calculation
+            userId,
+            userId,
+            userId,
+            userId
+        ];
+
+        const chats = await db.query(sql, params);
+
+        // ✅ Fix image path
+        chats.forEach(c => {
+            if (c.photo_url_1) {
+                if (c.photo_url_1.startsWith("/images")) {
+                    c.image_path = c.photo_url_1;
+                } else {
+                    c.image_path = `/images/listings/${c.photo_url_1}`;
+                }
+            } else {
+                c.image_path = `/images/listings/default-listing-pic.jpg`;
+            }
+
+            // ✅ Safety (avoid null issues)
+            c.unread_count = c.unread_count || 0;
+        });
+
+        return chats;
+    }
+
+    static async markAsRead(requestId, userId) {
+        const sql = `
+            UPDATE messages
+            SET is_read = 1
+            WHERE request_id = ?
+            AND sender_id != ?
+        `;
+        await db.query(sql, [requestId, userId]);
     }
 }
 

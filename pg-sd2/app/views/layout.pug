@@ -14,7 +14,7 @@ html(lang="en")
 
         link(rel="stylesheet", href="/css/style.css")
 
-    body.bg-light(data-logged-in=loggedIn ? "true" : "false")
+    body.bg-light.d-flex.flex-column.min-vh-100(data-logged-in=loggedIn ? "true" : "false")
         // MAIN NAVBAR (ROW 1)
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
             .container
@@ -38,6 +38,8 @@ html(lang="en")
                             a.nav-link(href="/all-users-formatted") Users
                         li.nav-item
                             a.nav-link(href="/all-listings-formatted") Listings
+                        li.nav-item
+                            a.nav-link(href="/about") About
 
                         if loggedIn
                             //- li.nav-item
@@ -114,8 +116,30 @@ html(lang="en")
                                 href=`/all-categories/${category.category_id}`
                             ) #{category.category_name}
 
-        main.container.py-4
+        main.container.py-4.flex-grow-1
             block content
+
+        footer.bg-dark.text-light.mt-5.py-4
+            .container
+                .row
+
+                    // LEFT
+                    .col-md-6
+                        h5.mb-2 ShareLoop
+                        p.text-muted.small.mb-0
+                            | Share More. Waste Less. Connect Better.
+
+                    // RIGHT
+                    .col-md-6.text-md-end.mt-3.mt-md-0
+                        a.text-light.me-3(href="/about") About
+                        a.text-light.me-3(href="/contact") Contact
+                        a.text-light.me-3(href="/privacy") Privacy
+                        a.text-light(href="/terms") Terms
+
+                hr.border-secondary.my-3
+
+                .text-center.small.text-muted
+                    | © #{new Date().getFullYear()} ShareLoop. All rights reserved.
 
         script.
             const isLoggedIn = document.body.dataset.loggedIn === "true";
@@ -187,7 +211,7 @@ html(lang="en")
 
                 // 🔥 IMPORTANT: run immediately + poll
                 refreshNotifications();
-                setInterval(refreshNotifications, 1000);
+                setInterval(refreshNotifications, 5000);
             });
 
         script(

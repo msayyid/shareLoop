@@ -146,6 +146,13 @@ app.use(async (req, res, next) => { // next - continue to the next middleware/ro
     }
 });
 
+
+
+// app.use((req, res, next) => {
+//     console.log("REQUEST HIT:", req.method, req.url);
+//     next();
+// });
+
 // login route
 app.get("/login", function(req, res) {
     const success = req.query.success;
@@ -234,25 +241,26 @@ app.get("/logout", requireLogin, async function(req, res) {
     });
 });
 
-// dashboard
+/// dashboard
 app.get("/dashboard", requireLogin, async function (req, res) {
     const uId = req.session.uId;
 
     const user = new User(uId);
     await user.getUser();
-    const listings = await Listing.getListingsByUserId(uId);
-    const requests = await Request.getRequestsForOwner(uId);
+    user.setProfileImagePath();
 
-    for (let req of requests) {
-        req.hasRated = await Rating.hasUserRated(req.request_id, uId);
+    const listings = await Listing.getListingsByUserId(uId) || [];
+    const requests = await Request.getRequestsForOwner(uId) || [];
+
+    for (let reqItem of requests) {
+        reqItem.hasRated = await Rating.hasUserRated(reqItem.request_id, uId);
     }
-    console.log(user);
-    console.log("AND HERE WE HAVE GOT USER'S LISTINGS");
-    console.log(listings);
+
     res.render("dashboard", {
         user: user,
         listings: listings,
-        requests:requests
+        requests: requests,   // ✅ ALWAYS defined now
+        hideCategories: true
     });
 });
 
@@ -260,7 +268,7 @@ app.get("/dashboard", requireLogin, async function (req, res) {
 
 // create listing route
 app.get("/listings/new", requireLogin, (req, res) => {
-    res.render("create-listing");
+    res.render("create-listing", { hideCategories: true });
 });
 
 app.post("/listings", requireLogin, upload.single("image"), async function(req, res) {
@@ -339,7 +347,8 @@ app.get("/listings/:id/edit", requireLogin, async function(req, res) {
 
     res.render("edit", {
         listing:listing,
-        categories:categories
+        categories:categories,
+        hideCategories: true
     });
     }
 );
@@ -542,10 +551,10 @@ app.post("/requests/:id/accept", requireLogin, async function(req, res) {
             request.requester_id,
             "request",
             "Your request was accepted",
-            `/requests/${requestId}/messages`
+            `/my-requests`
         );
 
-        return res.redirect("/dashboard");
+        return res.redirect("/requests/received");
     }
 });
 
@@ -609,7 +618,8 @@ app.get("/my-requests", requireLogin, async function(req, res) {
     }
     console.log(requests);
     res.render("my-requests", {
-        requests:requests
+        requests:requests,
+        hideCategories: true
     });
 
 });
@@ -704,7 +714,7 @@ app.post("/requests/:id/rate", requireLogin, async function (req, res) {
     }
 
     const isRequester = uId === request.requester_id;
-    const redirectUrl = isRequester ? "/my-requests" : "/dashboard";
+    const redirectUrl = isRequester ? "/my-requests" : "/requests/received";
 
     // check user is a part of request
     // user is NOT requester AND NOT owner
@@ -791,7 +801,8 @@ app.get("/requests/:id/rate", requireLogin, async function (req, res) {
 
     return res.render("rate", {
         request,
-        listing
+        listing,
+        hideCategories: true
     });
 
 });
@@ -804,7 +815,7 @@ app.get("/requests/:id/messages", requireLogin, async function (req, res) {
     const request = await Request.getRequestById(requestId);
     if (!request) {
         console.error("no request found");
-        return res.redirect("/dashboard"); // dashboard for now
+        return res.redirect("/dashboard");
     }
 
     const listing = await Listing.getListingById(request.listing_id);
@@ -814,21 +825,23 @@ app.get("/requests/:id/messages", requireLogin, async function (req, res) {
     }
 
     // permission check
-    // i m not sure about this check
-    // i need to check if the user that want to message is either a requester or an owner? wait i don' tknow in here
-
     if (parseInt(uId) !== listing.user_id && parseInt(uId) !== request.requester_id) {
-        console.error("permission errror");
+        console.error("permission error");
         return res.redirect("/dashboard");
     }
 
+    // MARK MESSAGES AS READ (PUT IT HERE)
+    await Message.markAsRead(requestId, uId);
+
+    // then fetch messages
     const messages = await Message.getMessagesByRequestId(requestId);
 
     res.render("messages", {
-        messages:messages,
-        request:request,
-        listing:listing,
-        uId:uId
+        messages: messages,
+        request: request,
+        listing: listing,
+        uId: uId,
+        hideCategories: true
     });
 });
 
@@ -956,7 +969,12 @@ app.post("/requests/:id/confirm", requireLogin, async function (req, res) {
 app.get("/my-chats", requireLogin, async function (req, res) {
     const uId = req.session.uId;
     const chats = await Message.getUserChats(uId);
-    res.render("my-chats", {chats});
+
+    console.log(chats);
+    res.render("my-chats", {
+        chats:chats,
+        hideCategories:true
+    });
 });
 
 // notifications read
@@ -999,13 +1017,22 @@ app.get("/api/notifications", requireLogin, async function (req, res)  {
 
 // profile page routes
 app.get("/profile", requireLogin, async function(req, res) {
-    const uId = req.session.uId;
+    try {
+        const uId = req.session.uId;
 
-    const user = new User(uId);
-    await user.getUser();
-    user.setProfileImagePath();
+        const user = new User(uId);
+        await user.getUser();
+        user.setProfileImagePath();
 
-    res.render("profile-view", {user});
+        res.render("profile-view", {
+            user: user,
+            hideCategories: true
+        });
+
+    } catch (err) {
+        console.error("Profile load error:", err);
+        res.redirect("/dashboard"); // fallback
+    }
 });
 
 app.post("/profile/edit", requireLogin, profileUpload.single("image"), async function(req, res) {
@@ -1044,7 +1071,7 @@ app.get("/profile/edit", requireLogin, async function (req, res) {
     const user = new User(uId);
 
     await user.getUser();
-    res.render("profile-edit", {user});
+    res.render("profile-edit", {user:user, hideCategories:true});
 });
 
 
@@ -1053,9 +1080,24 @@ app.get("/requests/received", requireLogin, async function (req, res) {
     const requests = await Request.getRequestsForOwner(req.session.uId);
 
     res.render("requests-received", {
-        requests:requests
+        requests:requests,
+        hideCategories:true
     }); 
 });
+
+
+// new chats
+// app.get("/chats", requireLogin, async function (req, res) {
+//     const uId = req.session.uId;
+
+//     const chats = await Request.getUserChats(uId); // same as before
+
+//     res.render("chats", {
+//         chats,
+//         uId,
+//         hideCategories: true
+//     });
+// });
 
 // Create a route for root - / home page
 app.get("/", async function(req, res) {
@@ -1063,32 +1105,126 @@ app.get("/", async function(req, res) {
     res.render("home-page", {
         listings:listings
     });
-
-    console.log("THIS IS THE HOME PAGE RETURNED OBJECTS");
-    console.log(listings);
 });
 
 // users
 
-app.get("/all-users-formatted", async function(req, res) {
-    const sql = `select * from users`;
-    const results = await db.query(sql);
+// app.get("/all-users-formatted", async function(req, res) {
+//     const sql = `select * from users`;
+//     const results = await db.query(sql);
 
-    // set the pictures path
-    results.forEach(u => {
+//     // set the pictures path
+//     results.forEach(u => {
+//         const userObj = new User();
+//         Object.assign(userObj, u);
+//         userObj.setProfileImagePath();
+//         Object.assign(u, userObj);
+//     });
+    
+//     res.render("all-users-formatted", {
+//         results: results,
+//         hideCategories: true
+//     });
+//     // console.log("i can see all the users that will be formatted in here");
+//     // console.log(results);
+
+// });
+
+app.get("/all-users-formatted", async function(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const offset = (page - 1) * limit;
+
+    // 🔥 MAIN QUERY (WITH REAL RATINGS)
+    const users = await db.query(`
+        SELECT 
+            u.*,
+            AVG(r.score) as avg_rating,
+            COUNT(r.rating_id) as total_ratings
+        FROM users u
+        LEFT JOIN ratings r ON r.rated_id = u.user_id
+        WHERE u.is_active = 1
+        GROUP BY u.user_id
+        ORDER BY u.created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+    `);
+
+    users.forEach(u => {
+        u.avg_rating = u.avg_rating ? parseFloat(u.avg_rating) : null;
+    });
+
+    // COUNT QUERY
+    const totalResult = await db.query(`
+        SELECT COUNT(*) as count 
+        FROM users 
+        WHERE is_active = 1
+    `);
+
+    const total = totalResult[0].count;
+    const totalPages = Math.ceil(total / limit);
+
+    // IMAGE FIX (keep your logic)
+    users.forEach(u => {
         const userObj = new User();
         Object.assign(userObj, u);
         userObj.setProfileImagePath();
         Object.assign(u, userObj);
     });
-    
-    res.render("all-users-formatted", {
-        results: results
-    });
-    // console.log("i can see all the users that will be formatted in here");
-    // console.log(results);
 
+    res.render("all-users-formatted", {
+        results: users,
+        currentPage: page,
+        totalPages: totalPages,
+        hideCategories: true,
+
+        // ✅ ADD THIS
+        filters: {
+            search: req.query.search || "",
+            sort: req.query.sort || "newest",
+            hasRating: req.query.hasRating || ""
+        }
+    });
 });
+
+// app.get("/all-users-formatted", async function(req, res) {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = 9;
+//     const offset = (page - 1) * limit;
+
+//     // pagination query
+//     const users = await db.query(
+//         `SELECT * FROM users
+//          ORDER BY created_at DESC
+//          LIMIT ${limit} OFFSET ${offset}`
+//     );
+
+//     // total users
+//     const totalResult = await db.query(`SELECT COUNT(*) as count FROM users`);
+//     const total = totalResult[0].count;
+//     const totalPages = Math.ceil(total / limit);
+
+//     // enrich users
+//     for (let u of users) {
+//         // image
+//         const userObj = new User();
+//         Object.assign(userObj, u);
+//         userObj.setProfileImagePath();
+//         Object.assign(u, userObj);
+
+//         // rating 
+//         const ratingData = await Rating.getAverageRating(u.user_id);
+//         u.average_rating = ratingData.avg_rating;
+//         u.total_ratings = ratingData.total_ratings;
+//     }
+
+//     res.render("all-users-formatted", {
+//         results: users,
+//         currentPage: page,
+//         totalPages: totalPages,
+//         hideCategories: true
+//     });
+//     // console.log(results);
+// });
 
 app.get("/single-user/:id", async function(req, res) {
     const profileUserId = req.params.id;
@@ -1108,33 +1244,56 @@ app.get("/single-user/:id", async function(req, res) {
         user:user,
         listings:listings,
         ratingData:ratingData,
-        reviews:reviews
+        reviews:reviews,
+        hideCategories: true
     });
 });
+
+
 
 // listings
 
 app.get("/all-listings-formatted", async function(req, res) {
-    const sql = `select l.*, c.category_name
-                        from listings l
-                        join categories c on l.category_id = c.category_id`;
-    const result = await db.query(sql);
-    result.forEach(listing => {
-        const l = new Listing();
-        Object.assign(l, listing);
-        l.setImagePath();
-        Object.assign(listing, l);
-    });
-    const tags = await Listing.getAllTags();
-    res.render("all-listings-formatted", {
-        listings:result,
-        tags:tags
-    });
-    console.log(result);
-    console.log("these are the tags only");
-    console.log(tags);
 
+    const page = parseInt(req.query.page) || 1;
+
+    const { listings, totalPages } = await Listing.getFilteredListings({
+        page,
+        exchange: req.query.exchange,
+        condition: req.query.condition,
+        available: req.query.available,
+        search: req.query.search,
+        sort: req.query.sort
+    });
+
+    res.render("all-listings-formatted", {
+        listings,
+        currentPage: page,
+        totalPages,
+        filters: req.query
+    });
 });
+// app.get("/all-listings-formatted", async function(req, res) {
+//     const sql = `select l.*, c.category_name
+//                         from listings l
+//                         join categories c on l.category_id = c.category_id`;
+//     const result = await db.query(sql);
+//     result.forEach(listing => {
+//         const l = new Listing();
+//         Object.assign(l, listing);
+//         l.setImagePath();
+//         Object.assign(listing, l);
+//     });
+//     const tags = await Listing.getAllTags();
+//     res.render("all-listings-formatted", {
+//         listings:result,
+//         tags:tags
+//     });
+//     console.log(result);
+//     console.log("these are the tags only");
+//     console.log(tags);
+
+// });
 
 app.get("/listing-detail/:listing_id", async function (req, res){
     const uId = req.session.uId;
@@ -1151,13 +1310,43 @@ app.get("/listing-detail/:listing_id", async function (req, res){
     }
 
     listing.setImagePath();
+
+
+    let relatedListings = await Listing.getListingsByCategoryId(listing.category_id);
+
+    // remove current listing
+    relatedListings = relatedListings.filter(l => l.listing_id != listing_id);
+
+    // limit to 3
+    relatedListings = relatedListings.slice(0, 3);
+
     res.render("listing-detail", {
         listing:listing,
         hasRequested:hasRequested,
-        uId:uId
+        uId:uId,
+        relatedListings:relatedListings,
+        hideCategories:true
     });
     console.log(listing);
 });
+
+
+app.get("/about", (req, res) => {
+    res.render("about", { hideCategories: true });
+});
+
+app.get("/contact", (req, res) => {
+    res.render("contact", { hideCategories: true });
+});
+
+app.get("/privacy", (req, res) => {
+    res.render("privacy", { hideCategories: true });
+});
+
+app.get("/terms", (req, res) => {
+    res.render("terms", { hideCategories: true });
+});
+
 
 // categories
 // app.get("/all-categories", async function(req, res) {

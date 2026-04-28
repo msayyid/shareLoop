@@ -1,106 +1,177 @@
 extends layout
 
 block content
-    .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
-        div
-            h1.mb-1 Community Members
-            p.text-muted.mb-0 Meet the people sharing items on ShareLoop
+    .container.mt-4
 
-    .row.g-4
-        each user in results
-            .col-md-6.col-lg-4
-                .card.h-100.shadow-sm.border-0
-                    .card-body.d-flex.flex-column.text-center
-                        .mb-3
-                            img.rounded-circle.mx-auto.d-block.shadow-sm(
-                                src=user.profile_image_path
-                                alt="User avatar"
-                                width="100"
-                                height="100"
-                                style="object-fit: cover;"
-                            )
+        // ===== HEADER =====
+        .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+            div
+                h2.mb-1 Community Members
+                p.text-muted.mb-0 Meet people sharing items on ShareLoop
 
-                        h5.card-title.mb-2 #{user.first_name} #{user.last_name}
+        // ===== FILTERS =====
+        form(method="GET").mb-4
+            .row.g-3.align-items-end
 
-                        if user.bio
-                            p.card-text.text-muted.mb-3 #{user.bio}
-                        else
-                            p.card-text.text-muted.mb-3 No bio available.
+                // SEARCH
+                .col-md-4
+                    label.form-label.small.text-muted Search
+                    input.form-control.form-control-sm(
+                        type="text"
+                        name="search"
+                        value=(filters && filters.search) || ""
+                        placeholder="Search users..."
+                    )
 
-                        p.mb-1
-                            strong Location:
-                            |  #{user.location || "Unknown"}
+                // SORT
+                .col-md-3
+                    label.form-label.small.text-muted Sort
+                    select.form-select.form-select-sm(name="sort")
+                        option(value="newest" selected=(filters && filters.sort==="newest")) Newest
+                        option(value="rating" selected=(filters && filters.sort==="rating")) Highest Rated
+                        option(value="points" selected=(filters && filters.sort==="points")) Most Points
 
-                        p.mb-1
-                            strong Rating:
-                            |  #{user.average_rating || "N/A"}
+                // FILTER
+                .col-md-3
+                    label.form-label.small.text-muted Filter
+                    select.form-select.form-select-sm(name="hasRating")
+                        option(value="") All users
+                        option(value="1" selected=(filters && filters.hasRating==="1")) With ratings only
 
-                        p.mb-1
-                            strong Points:
-                            |  #{user.points || 0}
+                // BUTTONS
+                .col-md-2.d-flex.gap-2
+                    button.btn.btn-dark.btn-sm.flex-fill(type="submit") Apply
+                    a.btn.btn-outline-secondary.btn-sm.flex-fill(
+                        href="/all-users-formatted"
+                    ) Reset
 
-                        p.text-muted.small.mt-2.mb-0
-                            strong Joined:
-                            |  #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+        // ===== USERS GRID =====
+        .row.g-4
+            each user in results
+                .col-md-6.col-lg-4
+                    .card.user-card.h-100.border-0.shadow-sm
 
-                        .mt-auto.pt-3
-                            a.btn.btn-dark.w-100(href=`/single-user/${user.user_id}`) View Profile
+                        .card-body.text-center.d-flex.flex-column
+
+                            // AVATAR
+                            .position-relative.mb-3
+                                img.rounded-circle.shadow(
+                                    src=user.profile_image_path
+                                    width="90"
+                                    height="90"
+                                    style="object-fit:cover;"
+                                )
+
+                                // TOP USER BADGE
+                                if user.points >= 200
+                                    span.badge.bg-warning.text-dark.position-absolute.top-0.start-100.translate-middle
+                                        | ⭐ Top
+
+                            // NAME
+                            h5.mb-1 #{user.first_name} #{user.last_name}
+
+                            // LOCATION
+                            p.text-muted.small.mb-2 #{user.location || "Unknown location"}
+
+                            // ⭐ RATING
+                            if user.total_ratings > 0 && user.avg_rating
+                                - const fullStars = Math.floor(user.avg_rating)
+                                - const emptyStars = 5 - fullStars
+                                p.mb-1(style="color:#ffc107;")
+                                    | #{'★'.repeat(fullStars)}#{'☆'.repeat(emptyStars)}
+
+                                p.text-muted.small.mb-2
+                                    | #{user.avg_rating.toFixed(1)} (#{user.total_ratings} reviews)
+                            else
+                                p.text-muted.small.mb-2 No ratings yet
+
+                            // POINTS
+                            p.small.mb-3
+                                strong #{user.points}
+                                |  points
+
+                            // BIO
+                            if user.bio
+                                p.text-muted.small.mb-3.text-truncate #{user.bio}
+
+                            // ACTION
+                            .mt-auto
+                                a.btn.btn-outline-dark.w-100(
+                                    href=`/single-user/${user.user_id}`
+                                ) View Profile
+
+        // ===== EMPTY STATE =====
+        if results.length === 0
+            .alert.alert-light.border.mt-4
+                p.mb-0 No users found.
+
+        // ===== PAGINATION =====
+        if totalPages > 1
+            nav.mt-5
+                ul.pagination.justify-content-center
+
+                    // PREVIOUS
+                    if currentPage > 1
+                        li.page-item
+                            a.page-link(href=`?page=${currentPage - 1}`) Previous
+
+                    // PAGE NUMBERS
+                    each pageNum in [...Array(totalPages).keys()].map(n => n + 1)
+                        li.page-item(class=pageNum === currentPage ? "active" : "")
+                            a.page-link(href=`?page=${pageNum}`) #{pageNum}
+
+                    // NEXT
+                    if currentPage < totalPages
+                        li.page-item
+                            a.page-link(href=`?page=${currentPage + 1}`) Next
 
 
-//- extends layout 
-//- block content 
-//-     .main-content
-//-         h1 Community Members
-
-//-         .nav-grid
-//-             each user in results
-//-                 a.nav-card(href=`/single-user/${user.user_id}`)
-
-//-                     // Avatar (placeholder)
-//-                     .user-avatar
-//-                         span 👤
-
-//-                     // Name
-//-                     h3 #{user.first_name} #{user.last_name}
-
-//-                     // Bio (only if exists)
-//-                     if user.bio
-//-                         p.user-bio #{user.bio} 
-//-                     //- p i am bio
-
-//-                     // Info
-//-                     p.user-meta 📍 #{user.location || "Unknown"}
-//-                     p.user-meta ⭐ #{user.average_rating || "N/A"}
-//-                     p.user-meta 🔁 #{user.points} points
-
-//-                     // Date
-//-                     p.user-date Joined #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
 
 
+//- extends layout
 
-//- extends layout 
-//- block content 
-//-     .main-content
-//-         h1 All Users Formatted Page 
-//-         table(border=1)
-//-             tr 
-//-                 th user_id 
-//-                 th user_name 
-//-                 th bio
-//-                 th email 
-//-                 th location 
-//-                 th Loop Points
-//-                 th rating 
-//-                 th Joined on
+//- block content
+//-     .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+//-         div
+//-             h1.mb-1 Community Members
+//-             p.text-muted.mb-0 Meet the people sharing items on ShareLoop
 
-//-             for user in results 
-//-                 tr 
-//-                     td #{user.user_id}
-//-                     td 
-//-                         a(href=`./single-user/${user.user_id}`) #{user.first_name} #{user.last_name}
-//-                     td #{user.bio}
-//-                     td #{user.email} 
-//-                     td #{user.location}
-//-                     td #{user.points}
-//-                     td #{user.average_rating}
-//-                     td #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+//-     .row.g-4
+//-         each user in results
+//-             .col-md-6.col-lg-4
+//-                 .card.h-100.shadow-sm.border-0
+//-                     .card-body.d-flex.flex-column.text-center
+//-                         .mb-3
+//-                             img.rounded-circle.mx-auto.d-block.shadow-sm(
+//-                                 src=user.profile_image_path
+//-                                 alt="User avatar"
+//-                                 width="100"
+//-                                 height="100"
+//-                                 style="object-fit: cover;"
+//-                             )
+
+//-                         h5.card-title.mb-2 #{user.first_name} #{user.last_name}
+
+//-                         if user.bio
+//-                             p.card-text.text-muted.mb-3 #{user.bio}
+//-                         else
+//-                             p.card-text.text-muted.mb-3 No bio available.
+
+//-                         p.mb-1
+//-                             strong Location:
+//-                             |  #{user.location || "Unknown"}
+
+//-                         p.mb-1
+//-                             strong Rating:
+//-                             |  #{user.average_rating || "N/A"}
+
+//-                         p.mb-1
+//-                             strong Points:
+//-                             |  #{user.points || 0}
+
+//-                         p.text-muted.small.mt-2.mb-0
+//-                             strong Joined:
+//-                             |  #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+//-                         .mt-auto.pt-3
+//-                             a.btn.btn-dark.w-100(href=`/single-user/${user.user_id}`) View Profile

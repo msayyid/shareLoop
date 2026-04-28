@@ -1,84 +1,192 @@
 extends layout
 
 block content
-    .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
-        div
-            h1.mb-1 All Listings
-            p.text-muted.mb-0 Browse items available in the ShareLoop community
+    .container.mt-4
 
-    .card.shadow-sm.border-0.mb-4
-        .card-body
-            h5.card-title.mb-3 Filter by Tags
-            .d-flex.flex-wrap.gap-2
-                each tag in tags
-                    a.btn.btn-outline-secondary.btn-sm(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
+        // ===== HEADER =====
+        .text-center.mb-5
+            h2.fw-bold.mb-2 All Listings
+            p.text-muted.mb-0 Discover items shared by the community
 
-    .row.g-4
-        each listing in listings
-            .col-md-6.col-lg-4
-                .card.h-100.shadow-sm.border-0
-                    img.card-img-top(
-                        src=listing.image_path
-                        alt="Listing image"
-                        style="height:400px; object-fit:cover;"
-                    )
+        // ===== FILTER BAR (clean + compact) =====
+        .card.border-0.shadow-sm.mb-4
+            .card-body
+                form(method="GET")
+                    .row.g-3.align-items-end
 
-                    .card-body.d-flex.flex-column
-                        h5.card-title
-                            a.text-decoration-none.text-dark(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+                        .col-md-3
+                            label.form-label.small.text-muted Search
+                            input.form-control.form-control-sm(
+                                type="text"
+                                name="search"
+                                value=filters.search || ""
+                                placeholder="Search listings..."
+                            )
 
-                        p.text-muted.mb-2
-                            strong Category:
-                            |  #{listing.category_name}
+                        .col-md-2
+                            label.form-label.small.text-muted Exchange
+                            select.form-select.form-select-sm(name="exchange")
+                                option(value="") All
+                                option(value="lending" selected=filters.exchange==="lending") Lending
+                                option(value="swap" selected=filters.exchange==="swap") Swap
+                                option(value="giveaway" selected=filters.exchange==="giveaway") Giveaway
 
-                        p.card-text.mb-2
-                            strong Description:
-                            |  #{listing.description}
+                        .col-md-2
+                            label.form-label.small.text-muted Condition
+                            select.form-select.form-select-sm(name="condition")
+                                option(value="") All
+                                option(value="like_new" selected=filters.condition==="like_new") Like New
+                                option(value="good" selected=filters.condition==="good") Good
+                                option(value="fair" selected=filters.condition==="fair") Fair
+                                option(value="well_used" selected=filters.condition==="well_used") Well Used
 
-                        p.mb-1
-                            strong Exchange Type:
-                            |  #{listing.exchange_type}
+                        .col-md-2
+                            label.form-label.small.text-muted Sort
+                            select.form-select.form-select-sm(name="sort")
+                                option(value="newest" selected=filters.sort==="newest") Newest
+                                option(value="popular" selected=filters.sort==="popular") Popular
 
-                        p.mb-1
-                            strong Condition:
-                            |  #{listing.condition_status}
+                        .col-md-2
+                            label.form-label.small.text-muted Availability
+                            select.form-select.form-select-sm(name="available")
+                                option(value="") All
+                                option(value="1" selected=filters.available==="1") Available
 
-                        p.mb-1
-                            strong Available:
-                            if listing.is_available
-                                span.badge.text-bg-success.ms-1 Yes
-                            else
-                                span.badge.text-bg-danger.ms-1 No
+                        .col-md-2.d-flex.align-items-end.gap-2
+                            button.btn.btn-dark.btn-sm.flex-fill(type="submit") Apply
+                            a.btn.btn-dark.btn-sm.flex-fill.opacity-75(
+                                href="/all-listings-formatted"
+                            ) Reset
 
-                        p.text-muted.small.mt-2.mb-0
-                            strong Created:
-                            |  #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+        // ===== LISTINGS GRID =====
+        if listings.length > 0
+            .row.g-4
+                each listing in listings
+                    .col-md-6.col-lg-4
+                        .card.listing-card.h-100.border-0.shadow-sm
 
-                        .mt-auto.pt-3
-                            a.btn.btn-dark.w-100(href=`/listing-detail/${listing.listing_id}`) View Details
+                            // IMAGE WRAPPER
+                            .position-relative
 
+                                img.card-img-top(
+                                    src=listing.image_path
+                                    style="height:230px; object-fit:cover;"
+                                )
 
+                                // GRADIENT OVERLAY
+                                .listing-overlay
+
+                                // STATUS BADGE (TOP RIGHT)
+                                if listing.is_available
+                                    span.badge.bg-success.position-absolute.top-0.end-0.m-2 Available
+                                else
+                                    span.badge.bg-dark.position-absolute.top-0.end-0.m-2 Unavailable
+
+                            .card-body.d-flex.flex-column
+
+                                // TITLE
+                                h6.card-title.mb-1
+                                    a.text-decoration-none.text-dark(
+                                        href=`/listing-detail/${listing.listing_id}`
+                                    ) #{listing.title}
+
+                                // OWNER
+                                p.text-muted.small.mb-1
+                                    | by #{listing.first_name}
+
+                                // RATING
+                                if listing.total_ratings > 0
+                                    p.text-muted.small.mb-2
+                                        | ⭐ #{parseFloat(listing.avg_rating).toFixed(1)} (#{listing.total_ratings})
+                                else
+                                    p.text-muted.small.mb-2 No ratings
+
+                                // META
+                                p.text-muted.small.mb-2
+                                    | #{listing.exchange_type} • #{listing.condition_status}
+
+                                .mt-auto
+                                    a.btn.btn-outline-dark.btn-sm.w-100(
+                                        href=`/listing-detail/${listing.listing_id}`
+                                    ) View
+
+        else
+            .text-center.mt-5
+                h5.text-muted No listings found
+                p.text-muted.small Try adjusting filters
+
+        // ===== PAGINATION =====
+        if totalPages > 1
+            nav.mt-5
+                ul.pagination.justify-content-center.pagination-sm
+
+                    if currentPage > 1
+                        li.page-item
+                            a.page-link(href=`?page=${currentPage - 1}`) ←
+
+                    each pageNum in [...Array(totalPages).keys()].map(n => n + 1)
+                        li.page-item(class=pageNum === currentPage ? "active" : "")
+                            a.page-link(href=`?page=${pageNum}`) #{pageNum}
+
+                    if currentPage < totalPages
+                        li.page-item
+                            a.page-link(href=`?page=${currentPage + 1}`) →
 
 //- extends layout
-//- block content 
-//-     .main-content 
-//-         h1 All Listings 
 
-//-         .tag-container
-//-             h3 Tags:
-//-             .tag-list
+//- block content
+//-     .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+//-         div
+//-             h1.mb-1 All Listings
+//-             p.text-muted.mb-0 Browse items available in the ShareLoop community
+
+//-     .card.shadow-sm.border-0.mb-4
+//-         .card-body
+//-             h5.card-title.mb-3 Filter by Tags
+//-             .d-flex.flex-wrap.gap-2
 //-                 each tag in tags
-//-                     a.tag(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
+//-                     a.btn.btn-outline-secondary.btn-sm(href=`/tags/${tag.tag_id}`) #{tag.tag_name}
 
-//-         .nav-grid 
-//-             each listing in listings 
-//-                 .nav-card
-//-                     img(src="https://via.placeholder.com/300x150")
-//-                     h3
-//-                         a(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
-//-                     p Category: #{listing.category_name}
-//-                     p Description: #{listing.description}
-//-                     p Exchange Type: #{listing.exchange_type} 
-//-                     p Condition: #{listing.condition_status} 
-//-                     p Available: #{listing.is_available ? "Yes" : "No"}
-//-                     p Created: #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+//-     .row.g-4
+//-         each listing in listings
+//-             .col-md-6.col-lg-4
+//-                 .card.h-100.shadow-sm.border-0
+//-                     img.card-img-top(
+//-                         src=listing.image_path
+//-                         alt="Listing image"
+//-                         style="height:400px; object-fit:cover;"
+//-                     )
+
+//-                     .card-body.d-flex.flex-column
+//-                         h5.card-title
+//-                             a.text-decoration-none.text-dark(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+
+//-                         p.text-muted.mb-2
+//-                             strong Category:
+//-                             |  #{listing.category_name}
+
+//-                         p.card-text.mb-2
+//-                             strong Description:
+//-                             |  #{listing.description}
+
+//-                         p.mb-1
+//-                             strong Exchange Type:
+//-                             |  #{listing.exchange_type}
+
+//-                         p.mb-1
+//-                             strong Condition:
+//-                             |  #{listing.condition_status}
+
+//-                         p.mb-1
+//-                             strong Available:
+//-                             if listing.is_available
+//-                                 span.badge.text-bg-success.ms-1 Yes
+//-                             else
+//-                                 span.badge.text-bg-danger.ms-1 No
+
+//-                         p.text-muted.small.mt-2.mb-0
+//-                             strong Created:
+//-                             |  #{listing.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+//-                         .mt-auto.pt-3
+//-                             a.btn.btn-dark.w-100(href=`/listing-detail/${listing.listing_id}`) View Details

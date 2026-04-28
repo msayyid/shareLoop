@@ -275,6 +275,89 @@ class Listing {
 
     }
 
+    // filtered listings
+    static async getFilteredListings({ 
+        page = 1, 
+        limit = 9, 
+        exchange, 
+        condition, 
+        available,
+        search,
+        sort
+    }) {
+        const offset = (page - 1) * limit;
+
+        let sql = `
+            SELECT 
+                l.*, 
+                c.category_name,
+                u.first_name,
+                AVG(r.score) as avg_rating,
+                COUNT(r.rating_id) as total_ratings
+            FROM listings l
+            JOIN categories c ON l.category_id = c.category_id
+            JOIN users u ON u.user_id = l.user_id
+            LEFT JOIN ratings r ON r.rated_id = l.user_id
+            WHERE l.is_active = 1
+        `;
+
+        const params = [];
+
+        // filters
+        if (exchange) {
+            sql += " AND l.exchange_type = ?";
+            params.push(exchange);
+        }
+
+        if (condition) {
+            sql += " AND l.condition_status = ?";
+            params.push(condition);
+        }
+
+        if (available === "1") {
+            sql += " AND l.is_available = 1";
+        }
+
+        // 🔍 search
+        if (search) {
+            sql += " AND (l.title LIKE ? OR l.description LIKE ?)";
+            params.push(`%${search}%`, `%${search}%`);
+        }
+
+        sql += " GROUP BY l.listing_id";
+
+        // ↕️ sorting
+        if (sort === "popular") {
+            sql += " ORDER BY l.request_count DESC";
+        } else {
+            sql += " ORDER BY l.created_at DESC";
+        }
+
+        // count query
+        const countSql = `
+            SELECT COUNT(*) as count
+            FROM (${sql}) as sub
+        `;
+
+        const countResult = await db.query(countSql, params);
+        const total = countResult[0].count;
+        const totalPages = Math.ceil(total / limit);
+
+        // pagination
+        sql += ` LIMIT ${limit} OFFSET ${offset}`;
+
+        const listings = await db.query(sql, params);
+
+        listings.forEach(listing => {
+            const l = new Listing();
+            Object.assign(l, listing);
+            l.setImagePath();
+            Object.assign(listing, l);
+        });
+
+        return { listings, totalPages };
+    }
+
 
 }
 
