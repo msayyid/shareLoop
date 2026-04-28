@@ -1,92 +1,213 @@
-extends layout 
+extends layout
 
 block content
-    .container.mt-4
+    style.
+        .request-card {
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 1px solid #f1f5f9 !important;
+        }
+        .request-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+        }
+        .item-preview-img {
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .status-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .requester-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e2e8f0;
+        }
 
-        h3.mb-4 Incoming Requests
+    .container.mt-5.mb-5
+        //- ===== PAGE HEADER =====
+        .d-flex.justify-content-between.align-items-center.mb-4
+            div
+                h2.fw-bold.mb-1 Incoming Requests
+                p.text-muted.small Manage people who want to borrow your items.
+            span.badge.bg-dark.rounded-pill.px-3 #{requests.length} Total
 
         if requests.length === 0
-            .alert.alert-light.border
-                p.mb-0 No requests yet.
-                small.text-muted When someone requests your items, they’ll appear here.
-
+            .card.border-0.shadow-sm.rounded-4.text-center.p-5
+                .mb-3(style="font-size: 3rem;") 📥
+                h5.fw-bold No requests yet
+                p.text-muted.mx-auto(style="max-width: 400px;") 
+                    | When neighbors are interested in your listings, their requests will pop up here. Keep an eye out!
+                .mt-3
+                    a.btn.btn-outline-dark.rounded-pill.px-4.btn-sm(href="/dashboard") Back to Dashboard
         else
             .row.g-4
-
                 each request in requests
                     .col-md-6.col-lg-4
-                        .card.h-100.shadow-sm.border-0
-
-                            // ===== IMAGE =====
-                            if request.image_path
-                                img.card-img-top(
-                                    src=request.image_path
-                                    style="height:150px; object-fit:cover;"
-                                )
-                            else
-                                img.card-img-top(
-                                    src="/images/listings/default-listing-pic.jpg"
-                                    style="height:150px; object-fit:cover;"
-                                )
-
-                            .card-body.d-flex.flex-column
-
-                                // ===== TITLE =====
-                                h6.card-title.mb-1
-                                    span.fw-bold #{request.first_name}
-                                    |  requested:
-                                    br
-                                    span.text-dark "#{request.title}"
-
-                                // ===== DATE =====
-                                small.text-muted.mb-2
-                                    | #{new Date(request.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
-
-                                // ===== STATUS =====
-                                .mb-3
+                        .card.request-card.shadow-sm.h-100
+                            .card-body.p-4
+                                //- ITEM & STATUS HEADER
+                                .d-flex.justify-content-between.align-items-start.mb-3
                                     if request.status === 'pending'
-                                        span.badge.bg-warning.text-dark Pending
+                                        span.status-badge.bg-warning.bg-opacity-10.text-dark.fw-bold ⏳ Pending
                                     else if request.status === 'accepted'
-                                        span.badge.bg-success Accepted
+                                        span.status-badge.bg-success.bg-opacity-10.text-success.fw-bold ✅ Accepted
                                     else if request.status === 'declined'
-                                        span.badge.bg-danger Declined
+                                        span.status-badge.bg-danger.bg-opacity-10.text-danger.fw-bold ✖ Declined
                                     else if request.status === 'completed'
-                                        span.badge.bg-primary Completed
+                                        span.status-badge.bg-primary.bg-opacity-10.text-primary.fw-bold ✨ Completed
+                                    
+                                    small.text-muted.fw-medium
+                                        | #{new Date(request.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short"})}
 
-                                // ===== ACTIONS =====
-                                .mt-auto.d-flex.flex-column.gap-2
+                                //- ITEM PREVIEW
+                                .d-flex.gap-3.mb-4
+                                    img.item-preview-img(
+                                        src=request.image_path || "/images/listings/default-listing-pic.jpg"
+                                        style="width: 100px;"
+                                    )
+                                    div
+                                        h6.fw-bold.mb-1.text-dark #{request.title}
+                                        .d-flex.align-items-center.gap-2.mt-2
+                                            img.requester-avatar(src=`https://ui-avatars.com/api/?name=${request.first_name}&background=random`)
+                                            small.text-muted 
+                                                span.text-dark.fw-semibold #{request.first_name} 
+                                                | wants this
 
-                                    // MESSAGE
+                                hr.my-3.opacity-10
+
+                                //- ACTION BUTTONS
+                                .d-flex.flex-column.gap-2
                                     if request.status !== 'declined'
-                                        a.btn.btn-outline-primary.btn-sm.w-100(
+                                        a.btn.btn-light.btn-sm.w-100.rounded-pill.fw-bold(
                                             href=`/requests/${request.request_id}/messages`
-                                        ) 💬 Message
+                                        ) 💬 Chat with #{request.first_name}
 
-                                    // PENDING
                                     if request.status === 'pending'
-                                        form(
-                                            action=`/requests/${request.request_id}/accept`
-                                            method="POST"
-                                        )
-                                            button.btn.btn-success.btn-sm.w-100(type="submit") ✔ Accept
+                                        .row.g-2
+                                            .col-6
+                                                form(action=`/requests/${request.request_id}/accept` method="POST")
+                                                    button.btn.btn-dark.btn-sm.w-100.rounded-pill.fw-bold(type="submit") Accept
+                                            .col-6
+                                                form(action=`/requests/${request.request_id}/reject` method="POST")
+                                                    button.btn.btn-outline-danger.btn-sm.w-100.rounded-pill.fw-bold(type="submit") Decline
 
-                                        form(
-                                            action=`/requests/${request.request_id}/reject`
-                                            method="POST"
-                                        )
-                                            button.btn.btn-outline-danger.btn-sm.w-100(type="submit") ✖ Reject
-
-                                    // ACCEPTED
                                     if request.status === 'accepted'
                                         form(
                                             action=`/requests/${request.request_id}/complete`
                                             method="POST"
-                                            onsubmit="return confirm('Mark this request as completed?');"
+                                            onsubmit="return confirm('Mark as finished?');"
                                         )
-                                            button.btn.btn-dark.btn-sm.w-100(type="submit") Mark as Completed
+                                            button.btn.btn-success.btn-sm.w-100.rounded-pill.fw-bold(type="submit") Finish Exchange
 
-                                    // COMPLETED
                                     if request.status === 'completed' && !request.hasRated
-                                        a.btn.btn-dark.btn-sm.w-100(
+                                        a.btn.btn-warning.btn-sm.w-100.rounded-pill.fw-bold(
                                             href=`/requests/${request.request_id}/rate`
-                                        ) ⭐ Rate User
+                                        ) ⭐ Rate Experience
+
+
+
+
+
+
+
+//- extends layout 
+
+//- block content
+//-     .container.mt-4
+
+//-         h3.mb-4 Incoming Requests
+
+//-         if requests.length === 0
+//-             .alert.alert-light.border
+//-                 p.mb-0 No requests yet.
+//-                 small.text-muted When someone requests your items, they’ll appear here.
+
+//-         else
+//-             .row.g-4
+
+//-                 each request in requests
+//-                     .col-md-6.col-lg-4
+//-                         .card.h-100.shadow-sm.border-0
+
+//-                             // ===== IMAGE =====
+//-                             if request.image_path
+//-                                 img.card-img-top(
+//-                                     src=request.image_path
+//-                                     style="height:150px; object-fit:cover;"
+//-                                 )
+//-                             else
+//-                                 img.card-img-top(
+//-                                     src="/images/listings/default-listing-pic.jpg"
+//-                                     style="height:150px; object-fit:cover;"
+//-                                 )
+
+//-                             .card-body.d-flex.flex-column
+
+//-                                 // ===== TITLE =====
+//-                                 h6.card-title.mb-1
+//-                                     span.fw-bold #{request.first_name}
+//-                                     |  requested:
+//-                                     br
+//-                                     span.text-dark "#{request.title}"
+
+//-                                 // ===== DATE =====
+//-                                 small.text-muted.mb-2
+//-                                     | #{new Date(request.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+//-                                 // ===== STATUS =====
+//-                                 .mb-3
+//-                                     if request.status === 'pending'
+//-                                         span.badge.bg-warning.text-dark Pending
+//-                                     else if request.status === 'accepted'
+//-                                         span.badge.bg-success Accepted
+//-                                     else if request.status === 'declined'
+//-                                         span.badge.bg-danger Declined
+//-                                     else if request.status === 'completed'
+//-                                         span.badge.bg-primary Completed
+
+//-                                 // ===== ACTIONS =====
+//-                                 .mt-auto.d-flex.flex-column.gap-2
+
+//-                                     // MESSAGE
+//-                                     if request.status !== 'declined'
+//-                                         a.btn.btn-outline-primary.btn-sm.w-100(
+//-                                             href=`/requests/${request.request_id}/messages`
+//-                                         ) 💬 Message
+
+//-                                     // PENDING
+//-                                     if request.status === 'pending'
+//-                                         form(
+//-                                             action=`/requests/${request.request_id}/accept`
+//-                                             method="POST"
+//-                                         )
+//-                                             button.btn.btn-success.btn-sm.w-100(type="submit") ✔ Accept
+
+//-                                         form(
+//-                                             action=`/requests/${request.request_id}/reject`
+//-                                             method="POST"
+//-                                         )
+//-                                             button.btn.btn-outline-danger.btn-sm.w-100(type="submit") ✖ Reject
+
+//-                                     // ACCEPTED
+//-                                     if request.status === 'accepted'
+//-                                         form(
+//-                                             action=`/requests/${request.request_id}/complete`
+//-                                             method="POST"
+//-                                             onsubmit="return confirm('Mark this request as completed?');"
+//-                                         )
+//-                                             button.btn.btn-dark.btn-sm.w-100(type="submit") Mark as Completed
+
+//-                                     // COMPLETED
+//-                                     if request.status === 'completed' && !request.hasRated
+//-                                         a.btn.btn-dark.btn-sm.w-100(
+//-                                             href=`/requests/${request.request_id}/rate`
+//-                                         ) ⭐ Rate User

@@ -1,45 +1,119 @@
 extends layout
 
 block content
-    .container.mt-5
+    style.
+        .profile-card {
+            border-radius: 24px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .profile-cover {
+            height: 120px;
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        }
+        .avatar-wrapper {
+            margin-top: -60px;
+        }
+        .profile-avatar {
+            border: 5px solid #ffffff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+    .container.mt-5.mb-5
         .row.justify-content-center
-            .col-lg-6.col-md-8
+            .col-lg-5.col-md-7
+                .card.profile-card.border-0.shadow-lg
+                    .profile-cover
+                    .card-body.text-center.pt-0
+                        //- AVATAR
+                        .avatar-wrapper.mb-3
+                            img.rounded-circle.profile-avatar(
+                                src=user.profile_image_path || '/images/default-avatar.png'
+                                width="120"
+                                height="120"
+                            )
 
-                .card.border-0.shadow-sm
+                        //- NAME & IDENTITY
+                        h3.fw-bold.mb-1 #{user.first_name} #{user.last_name}
+                        p.text-muted.small.mb-3 Member since #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+                        
+                        .d-flex.justify-content-center.gap-2.mb-4
+                            span.badge.bg-dark.bg-opacity-10.text-dark.rounded-pill.px-3 🤝 Community Member
+                            if user.location
+                                span.badge.bg-primary.bg-opacity-10.text-primary.rounded-pill.px-3 📍 #{user.location}
 
-                    .card-body.text-center
+                        hr.opacity-10
 
-                        // ===== AVATAR =====
-                        img.rounded-circle.shadow-sm.mb-3(
-                            src=user.profile_image_path
-                            width="120"
-                            height="120"
-                            style="object-fit:cover;"
-                        )
+                        //- DETAILS
+                        .text-start.px-md-3.mt-4
+                            .mb-4
+                                label.info-label Bio
+                                p.text-dark.mt-1 #{user.bio || "This user hasn't written a bio yet."}
+                            
+                            .mb-4
+                                label.info-label Contact Email
+                                p.text-dark.mt-1 #{user.email}
 
-                        // ===== NAME + EMAIL =====
-                        h4.mb-1 #{user.first_name} #{user.last_name}
-                        p.text-muted.small.mb-1 #{user.email}
-
-                        p.text-muted.small.mb-3
-                            | Member since #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
-
-                        hr
-
-                        // ===== DETAILS =====
-                        .text-start.mt-3
-
-                            p.mb-2
-                                strong Location:
-                                |  #{user.location || "Not set"}
-
-                            p.mb-2
-                                strong Bio:
-                                if user.bio
-                                    span.text-muted  #{user.bio}
-                                else
-                                    span.text-muted  No bio yet
-
-                        // ===== ACTION =====
+                        //- ACTION
                         .mt-4
-                            a.btn.btn-dark.w-100(href="/profile/edit") Edit Profile
+                            a.btn.btn-dark.btn-lg.w-100.rounded-pill.fw-bold(href="/profile/edit") Edit Profile
+                            a.btn.btn-link.btn-sm.w-100.text-muted.mt-2.text-decoration-none(href="/dashboard") Back to Dashboard
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-5
+//-         .row.justify-content-center
+//-             .col-lg-6.col-md-8
+
+//-                 .card.border-0.shadow-sm
+
+//-                     .card-body.text-center
+
+//-                         // ===== AVATAR =====
+//-                         img.rounded-circle.shadow-sm.mb-3(
+//-                             src=user.profile_image_path
+//-                             width="120"
+//-                             height="120"
+//-                             style="object-fit:cover;"
+//-                         )
+
+//-                         // ===== NAME + EMAIL =====
+//-                         h4.mb-1 #{user.first_name} #{user.last_name}
+//-                         p.text-muted.small.mb-1 #{user.email}
+
+//-                         p.text-muted.small.mb-3
+//-                             | Member since #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+//-                         hr
+
+//-                         // ===== DETAILS =====
+//-                         .text-start.mt-3
+
+//-                             p.mb-2
+//-                                 strong Location:
+//-                                 |  #{user.location || "Not set"}
+
+//-                             p.mb-2
+//-                                 strong Bio:
+//-                                 if user.bio
+//-                                     span.text-muted  #{user.bio}
+//-                                 else
+//-                                     span.text-muted  No bio yet
+
+//-                         // ===== ACTION =====
+//-                         .mt-4
+//-                             a.btn.btn-dark.w-100(href="/profile/edit") Edit Profile

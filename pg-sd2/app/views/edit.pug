@@ -1,83 +1,238 @@
 extends layout
 
 block content
-    .container.mt-4
+    style.
+        .form-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+        .form-control, .form-select {
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .current-image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 4px solid #f1f5f9;
+        }
+        .upload-area {
+            border: 2px dashed #e2e8f0;
+            padding: 20px;
+            border-radius: 16px;
+            background: #f8fafc;
+        }
 
-        h2.mb-4 Edit Listing
+    .container.mt-5.mb-5
+        .row.justify-content-center
+            .col-lg-8
+                .form-card.shadow-lg.p-4.p-md-5
+                    header.d-flex.justify-content-between.align-items-start.mb-5
+                        div
+                            h2.fw-bold.mb-1 Edit Your Listing
+                            p.text-muted.small Update the details for "#{listing.title}"
+                        a.btn-close(href=`/listing-detail/${listing.listing_id}`)
 
-        form(
-            action=`/listings/${listing.listing_id}/edit`
-            method="POST"
-            enctype="multipart/form-data"
-        )
-
-            // TITLE
-            .mb-3
-                label.form-label Title
-                input.form-control(
-                    type="text"
-                    name="title"
-                    value=listing.title
-                    required
-                )
-
-            // DESCRIPTION
-            .mb-3
-                label.form-label Description
-                textarea.form-control(name="description" required)= listing.description
-
-            // EXCHANGE TYPE
-            .mb-3
-                label.form-label Exchange Type
-                select.form-select(name="exchange_type" required)
-                    option(value="lending" selected=(listing.exchange_type === "lending")) Lending
-                    option(value="swap" selected=(listing.exchange_type === "swap")) Swap
-                    option(value="giveaway" selected=(listing.exchange_type === "giveaway")) Give Away
-
-            // CATEGORY (you can later make dynamic)
-            .mb-3
-                label.form-label Category
-                select.form-select(name="category_id" required)
-                    option(value="1" selected=(listing.category_id === 1)) Books
-                    option(value="2" selected=(listing.category_id === 2)) Electronics
-                    option(value="3" selected=(listing.category_id === 3)) Kitchen
-                    option(value="4" selected=(listing.category_id === 4)) Sports
-                    option(value="5" selected=(listing.category_id === 5)) Furniture
-
-            // CONDITION
-            .mb-3
-                label.form-label Condition
-                select.form-select(name="condition_status")
-                    option(value="like_new" selected=(listing.condition_status === "like_new")) Like New
-                    option(value="good" selected=(listing.condition_status === "good")) Good
-                    option(value="fair" selected=(listing.condition_status === "fair")) Fair
-                    option(value="well_used" selected=(listing.condition_status === "well_used")) Well Used
-
-            // CONDITION NOTES
-            .mb-3
-                label.form-label Condition Notes
-                textarea.form-control(name="condition_notes") #{listing.condition_notes}
-
-            // AVAILABILITY
-            .mb-3
-                label.form-label Availability
-                select.form-select(name="is_available")
-                    option(value="1" selected=(listing.is_available == 1)) Available
-                    option(value="0" selected=(listing.is_available == 0)) Not Available
-
-            // IMAGE UPLOAD
-            .mb-3
-                label.form-label Upload New Image
-                input.form-control(type="file" name="image")
-
-            // CURRENT IMAGE
-            if listing.photo_url_1
-                .mb-3
-                    p.text-muted Current Image:
-                    img(
-                        src=listing.photo_url_1
-                        style="max-width:200px; border-radius:8px;"
+                    form(
+                        action=`/listings/${listing.listing_id}/edit`
+                        method="POST"
+                        enctype="multipart/form-data"
                     )
+                        
+                        //- SECTION 1: DETAILS
+                        .section-header 
+                            i.bi.bi-pencil-square.me-2.text-primary
+                            | Item Details
+                        
+                        .mb-4
+                            label.form-label Title
+                            input.form-control(type="text" name="title" value=listing.title required)
+                        
+                        .mb-4
+                            label.form-label Description
+                            textarea.form-control(name="description" rows="4" required)= listing.description
 
-            // SUBMIT
-            button.btn.btn-dark(type="submit") Update Listing
+                        .row.g-3.mb-5
+                            .col-md-6
+                                label.form-label Exchange Type
+                                select.form-select(name="exchange_type" required)
+                                    option(value="lending" selected=(listing.exchange_type === "lending")) 🤝 Lending
+                                    option(value="swap" selected=(listing.exchange_type === "swap")) 🔄 Swap
+                                    option(value="giveaway" selected=(listing.exchange_type === "giveaway")) 🎁 Give Away
+                            .col-md-6
+                                label.form-label Category
+                                select.form-select(name="category_id" required)
+                                    option(value="1" selected=(listing.category_id === 1)) Books
+                                    option(value="2" selected=(listing.category_id === 2)) Electronics
+                                    option(value="3" selected=(listing.category_id === 3)) Kitchen
+                                    option(value="4" selected=(listing.category_id === 4)) Sports
+                                    option(value="5" selected=(listing.category_id === 5)) Furniture
+
+                        //- SECTION 2: STATUS
+                        .section-header.mt-5
+                            i.bi.bi-check2-circle.me-2.text-primary
+                            | Status & Condition
+                        
+                        .row.g-3.mb-4
+                            .col-md-6
+                                label.form-label Condition
+                                select.form-select(name="condition_status")
+                                    option(value="like_new" selected=(listing.condition_status === "like_new")) Like New
+                                    option(value="good" selected=(listing.condition_status === "good")) Good
+                                    option(value="fair" selected=(listing.condition_status === "fair")) Fair
+                                    option(value="well_used" selected=(listing.condition_status === "well_used")) Well Used
+                            .col-md-6
+                                label.form-label Listing Visibility
+                                select.form-select(name="is_available")
+                                    option(value="1" selected=(listing.is_available == 1)) ✅ Available
+                                    option(value="0" selected=(listing.is_available == 0)) ❌ Hidden / In Use
+
+                        .mb-5
+                            label.form-label Condition Notes
+                            textarea.form-control(name="condition_notes" rows="2") #{listing.condition_notes}
+
+                        //- SECTION 3: MEDIA
+                        .section-header.mt-5
+                            i.bi.bi-image.me-2.text-primary
+                            | Listing Image
+                        
+                        .upload-area.d-flex.align-items-center.gap-4
+                            if listing.photo_url_1
+                                .text-center
+                                    img.current-image-preview.shadow-sm(src=listing.photo_url_1)
+                                    p.text-muted.mt-1(style="font-size:0.7rem;") Current Photo
+                            
+                            .flex-grow-1
+                                label.form-label.mb-1 Replace Image
+                                input.form-control.form-control-sm(type="file" name="image")
+                                p.text-muted.small.mt-2 Leave empty to keep the current photo.
+
+                        //- ACTIONS
+                        .d-flex.justify-content-between.align-items-center.pt-5.mt-5.border-top
+                            button.btn.btn-link.text-danger.text-decoration-none.fw-bold.small(type="button")
+                                i.bi.bi-trash3.me-1
+                                | Delete Listing
+                            
+                            .d-flex.gap-2
+                                a.btn.btn-light.rounded-pill.px-4.fw-bold(href=`/listing-detail/${listing.listing_id}`) Cancel
+                                button.btn.btn-dark.rounded-pill.px-5.fw-bold(type="submit") Save Changes
+
+
+
+
+
+
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+
+//-         h2.mb-4 Edit Listing
+
+//-         form(
+//-             action=`/listings/${listing.listing_id}/edit`
+//-             method="POST"
+//-             enctype="multipart/form-data"
+//-         )
+
+//-             // TITLE
+//-             .mb-3
+//-                 label.form-label Title
+//-                 input.form-control(
+//-                     type="text"
+//-                     name="title"
+//-                     value=listing.title
+//-                     required
+//-                 )
+
+//-             // DESCRIPTION
+//-             .mb-3
+//-                 label.form-label Description
+//-                 textarea.form-control(name="description" required)= listing.description
+
+//-             // EXCHANGE TYPE
+//-             .mb-3
+//-                 label.form-label Exchange Type
+//-                 select.form-select(name="exchange_type" required)
+//-                     option(value="lending" selected=(listing.exchange_type === "lending")) Lending
+//-                     option(value="swap" selected=(listing.exchange_type === "swap")) Swap
+//-                     option(value="giveaway" selected=(listing.exchange_type === "giveaway")) Give Away
+
+//-             // CATEGORY (you can later make dynamic)
+//-             .mb-3
+//-                 label.form-label Category
+//-                 select.form-select(name="category_id" required)
+//-                     option(value="1" selected=(listing.category_id === 1)) Books
+//-                     option(value="2" selected=(listing.category_id === 2)) Electronics
+//-                     option(value="3" selected=(listing.category_id === 3)) Kitchen
+//-                     option(value="4" selected=(listing.category_id === 4)) Sports
+//-                     option(value="5" selected=(listing.category_id === 5)) Furniture
+
+//-             // CONDITION
+//-             .mb-3
+//-                 label.form-label Condition
+//-                 select.form-select(name="condition_status")
+//-                     option(value="like_new" selected=(listing.condition_status === "like_new")) Like New
+//-                     option(value="good" selected=(listing.condition_status === "good")) Good
+//-                     option(value="fair" selected=(listing.condition_status === "fair")) Fair
+//-                     option(value="well_used" selected=(listing.condition_status === "well_used")) Well Used
+
+//-             // CONDITION NOTES
+//-             .mb-3
+//-                 label.form-label Condition Notes
+//-                 textarea.form-control(name="condition_notes") #{listing.condition_notes}
+
+//-             // AVAILABILITY
+//-             .mb-3
+//-                 label.form-label Availability
+//-                 select.form-select(name="is_available")
+//-                     option(value="1" selected=(listing.is_available == 1)) Available
+//-                     option(value="0" selected=(listing.is_available == 0)) Not Available
+
+//-             // IMAGE UPLOAD
+//-             .mb-3
+//-                 label.form-label Upload New Image
+//-                 input.form-control(type="file" name="image")
+
+//-             // CURRENT IMAGE
+//-             if listing.photo_url_1
+//-                 .mb-3
+//-                     p.text-muted Current Image:
+//-                     img(
+//-                         src=listing.photo_url_1
+//-                         style="max-width:200px; border-radius:8px;"
+//-                     )
+
+//-             // SUBMIT
+//-             button.btn.btn-dark(type="submit") Update Listing

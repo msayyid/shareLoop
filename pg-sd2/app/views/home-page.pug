@@ -1,107 +1,244 @@
 extends layout
 
 block content
+    //- Custom Inline Styles for that "Premium" feel
+    style.
+        .hero-gradient {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        .listing-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .listing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+        }
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            transition: background 0.3s ease;
+        }
+        .btn-primary-custom {
+            background-color: #0f172a;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .badge-floating {
+            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #0f172a !important;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
 
-    // ===== HERO =====
-    .text-center.py-5.mb-5.bg-light.rounded
-        h1.display-5.fw-bold.mb-3 ShareLoop
-        p.lead.text-muted.mb-3 Share More. Waste Less. Connect Better.
+    //- ===== HERO SECTION =====
+    section.hero-gradient.py-5.mb-5
+        .container.py-5
+            .row.align-items-center
+                .col-lg-6.text-center.text-lg-start
+                    h1.display-4.fw-bold.text-dark.mb-3 ShareLoop
+                    p.lead.text-secondary.mb-4.pe-lg-5
+                        | The community-driven marketplace to lend, swap, or give away items. 
+                        span.text-dark.fw-semibold Share more, waste less.
+                    .d-flex.justify-content-center.justify-content-lg-start.gap-3
+                        a.btn.btn-primary-custom.shadow-sm(href="/all-listings-formatted") 
+                            | Browse Listings
+                        if !loggedIn
+                            a.btn.btn-outline-dark.px-4.py-2.fw-semibold(href="/register") 
+                                | Join Community
+                .col-lg-6.d-none.d-lg-block
+                    //- Placeholder for a professional illustration or high-res image
+                    img.img-fluid.rounded-4.shadow-lg(src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80" alt="Community Sharing")
 
-        p.text-muted.mb-4
-            | Lend, swap, or give away items with people nearby - completely free.
-
-        .d-flex.justify-content-center.gap-3
-            a.btn.btn-dark(href="/all-listings-formatted") Browse Listings
-            if !loggedIn
-                a.btn.btn-outline-dark(href="/register") Join Now
-
-    // ===== HOW IT WORKS =====
-    .mb-5
-        h3.text-center.mb-4 How It Works
+    //- ===== HOW IT WORKS =====
+    .container.mb-5.pb-5
+        .text-center.mb-5
+            span.text-uppercase.tracking-wider.small.fw-bold.text-muted Ecosystem
+            h2.fw-bold Modern Way to Share
 
         .row.text-center.g-4
             .col-md-4
-                h5.mb-2 1. List an Item
-                p.text-muted Share something you don’t need
+                .p-4.h-100
+                    .icon-box
+                        span.fs-2 📦
+                    h5.fw-bold List an Item
+                    p.text-muted Snap a photo and list items you aren't using in seconds.
 
             .col-md-4
-                h5.mb-2 2. Get Requests
-                p.text-muted Connect with people nearby
+                .p-4.h-100
+                    .icon-box
+                        span.fs-2 🤝
+                    h5.fw-bold Connect
+                    p.text-muted Securely chat with verified neighbors in your local loop.
 
             .col-md-4
-                h5.mb-2 3. Exchange
-                p.text-muted Lend, swap, or give away
+                .p-4.h-100
+                    .icon-box
+                        span.fs-2 🔄
+                    h5.fw-bold Exchange
+                    p.text-muted Complete the swap, lend it for a week, or give it for good.
 
-    // ===== ACTION CARDS =====
-    .row.g-4.justify-content-center.mb-5
+    //- ===== ACTION BAR =====
+    if loggedIn
+        .container.mb-5
+            .p-4.bg-dark.rounded-4.text-white.d-flex.justify-content-between.align-items-center
+                h5.mb-0 ready to declutter?
+                a.btn.btn-light.px-4.fw-bold(href="/listings/new") + Post Listing
 
-        .col-md-6.col-lg-5
-            .card.h-100.shadow-sm.border-0.text-center
-                .card-body.d-flex.flex-column
-                    .display-5.mb-3 📦
-                    h4.card-title Browse Items
-                    p.card-text.text-muted.mb-4 Find things you need nearby
-                    .mt-auto
-                        a.btn.btn-dark.w-100(href="/all-listings-formatted") Browse Listings
-
-        .col-md-6.col-lg-5
-            .card.h-100.shadow-sm.border-0.text-center
-                .card-body.d-flex.flex-column
-                    .display-5.mb-3 ➕
-                    h4.card-title Share Something
-                    p.card-text.text-muted.mb-4 List an item to lend, swap, or give away
-                    .mt-auto
-                        if loggedIn
-                            a.btn.btn-dark.w-100(href="/listings/new") Create Listing
-                        else
-                            a.btn.btn-outline-dark.w-100(href="/login") Login to Start
-
-        //- .col-md-6.col-lg-4
-        //-     .card.h-100.shadow-sm.border-0.text-center
-        //-         .card-body.d-flex.flex-column
-        //-             .display-5.mb-3 🗂️
-        //-             h4.card-title Categories
-        //-             p.card-text.text-muted.mb-4 Explore listings by category
-        //-             .mt-auto
-        //-                 a.btn.btn-dark.w-100(href="/all-categories") View Categories
-
-    // ===== RECENT LISTINGS =====
-    .mt-5
-        h3.mb-3 Latest Listings
+    //- ===== LATEST LISTINGS =====
+    .container.mt-5.mb-5
+        .d-flex.justify-content-between.align-items-end.mb-4
+            div
+                h3.fw-bold.mb-1 Latest Listings
+                p.text-muted.mb-0 Freshly added by your neighbors
+            a.btn.btn-link.text-dark.fw-bold.text-decoration-none(href="/all-listings-formatted") 
+                | View All →
 
         if listings && listings.length > 0
             .row.g-4
                 each listing in listings
                     .col-md-6.col-lg-4
-                        .card.h-100.shadow-sm.border-0
-                            img.card-img-top(
-                                src=listing.image_path
-                                alt="Listing image"
-                                style="height:250px; object-fit:cover;"
-                            )
+                        .card.h-100.border-0.shadow-sm.listing-card
+                            .position-relative
+                                img.card-img-top(
+                                    src=listing.image_path
+                                    alt=listing.title
+                                    style="height:260px; object-fit:cover;"
+                                )
+                                //- Status Badge
+                                div.position-absolute.top-0.end-0.m-3
+                                    if listing.is_available
+                                        span.badge.rounded-pill.bg-success Available
+                                    else
+                                        span.badge.rounded-pill.bg-secondary Reserved
 
-                            .card-body.d-flex.flex-column
-                                h5.card-title
-                                    a.text-decoration-none.text-dark(
-                                        href=`/listing-detail/${listing.listing_id}`
-                                    ) #{listing.title}
+                                //- Category Badge Over Image
+                                div.position-absolute.bottom-0.start-0.m-3
+                                    span.badge.badge-floating.rounded-pill #{listing.category_name}
 
-                                p.text-muted.mb-2
-                                    strong Category:
-                                    |  #{listing.category_name}
+                            .card-body.p-4.d-flex.flex-column
+                                h5.card-title.fw-bold.mb-2
+                                    a.text-decoration-none.text-dark(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+                                
+                                p.text-primary.small.fw-bold.text-uppercase.mb-3
+                                    i.bi.bi-arrow-repeat.me-1
+                                    | #{listing.exchange_type || "General Exchange"}
 
-                                p.text-muted.small.mb-3
-                                    | #{listing.exchange_type || "Unknown"}
-
-                                .mt-auto
-                                    a.btn.btn-dark.w-100(
-                                        href=`/listing-detail/${listing.listing_id}`
-                                    ) View Details
+                                .mt-auto.pt-3.border-top
+                                    a.btn.btn-outline-dark.w-100.fw-bold(href=`/listing-detail/${listing.listing_id}`) 
+                                        | View Details
         else
-            .alert.alert-light.border
-                p.mb-0 No listings available yet.
+            .text-center.py-5.bg-light.rounded-4
+                p.text-muted.mb-0 The loop is quiet... for now. Be the first to share!
 
 
+
+
+//- extends layout
+
+//- block content
+
+//-     // ===== HERO =====
+//-     .container.mt-4
+//-         .text-center.py-5.mb-5.bg-white.rounded.shadow-sm
+
+//-             h1.fw-bold.mb-3 ShareLoop
+//-             p.lead.text-muted.mb-3 Share More. Waste Less. Connect Better.
+
+//-             p.text-muted.mb-4
+//-                 | Lend, swap, or give away items with people nearby - completely free.
+
+//-             .d-flex.justify-content-center.gap-3
+//-                 a.btn.btn-dark.px-4(href="/all-listings-formatted") Browse Listings
+//-                 if !loggedIn
+//-                     a.btn.btn-outline-dark.px-4(href="/register") Join Now
+
+
+//-     // ===== HOW IT WORKS =====
+//-     .container.mb-5
+//-         h3.text-center.mb-4 How It Works
+
+//-         .row.text-center.g-4
+//-             .col-md-4
+//-                 .p-3
+//-                     .fs-3.mb-2 📦
+//-                     h5.mb-2 List an Item
+//-                     p.text-muted.small Share something you don’t need
+
+//-             .col-md-4
+//-                 .p-3
+//-                     .fs-3.mb-2 🤝
+//-                     h5.mb-2 Get Requests
+//-                     p.text-muted.small Connect with people nearby
+
+//-             .col-md-4
+//-                 .p-3
+//-                     .fs-3.mb-2 🔄
+//-                     h5.mb-2 Exchange
+//-                     p.text-muted.small Lend, swap, or give away
+
+
+//-     // ===== SECONDARY ACTION (ONLY ONE, NO DUPLICATES) =====
+//-     if loggedIn
+//-         .container.mb-5.text-center
+//-             a.btn.btn-outline-dark.px-4(href="/listings/new") + Create Listing
+
+
+//-     // ===== RECENT LISTINGS =====
+//-     .container.mt-5
+//-         .d-flex.justify-content-between.align-items-center.mb-3
+//-             h3.mb-0 Latest Listings
+//-             a.btn.btn-sm.btn-outline-dark(href="/all-listings-formatted") View All
+
+//-         if listings && listings.length > 0
+//-             .row.g-4
+//-                 each listing in listings
+//-                     .col-md-6.col-lg-4
+//-                         .card.h-100.border-0.shadow-sm.listing-card
+
+//-                             .position-relative
+//-                                 img.card-img-top(
+//-                                     src=listing.image_path
+//-                                     alt="Listing image"
+//-                                     style="height:220px; object-fit:cover;"
+//-                                 )
+
+//-                                 // ===== FIXED BADGES =====
+//-                                 if listing.is_available
+//-                                     span.badge.bg-success.position-absolute.top-0.end-0.m-2 Available
+//-                                 else
+//-                                     span.badge.bg-secondary.position-absolute.top-0.end-0.m-2 Unavailable
+
+//-                             .card-body.d-flex.flex-column
+
+//-                                 h6.card-title.mb-1
+//-                                     a.text-decoration-none.text-dark(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) #{listing.title}
+
+//-                                 p.text-muted.small.mb-1 #{listing.category_name}
+
+//-                                 p.text-muted.small.mb-3 #{listing.exchange_type || "Unknown"}
+
+//-                                 .mt-auto
+//-                                     a.btn.btn-outline-dark.btn-sm.w-100(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) View
+//-         else
+//-             .alert.alert-light.border
+//-                 p.mb-0 No listings available yet.
+
+
+//- ------------------------------------------------------------------
 //- extends layout
 
 //- block content

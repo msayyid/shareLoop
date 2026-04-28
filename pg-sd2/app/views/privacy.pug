@@ -1,38 +1,94 @@
 extends layout
 
 block content
-    .container.mt-5
+    style.
+        .policy-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .policy-section {
+            padding-left: 20px;
+            border-left: 3px solid #f1f5f9;
+            transition: border-color 0.3s ease;
+        }
+        .policy-section:hover {
+            border-left-color: #0f172a;
+        }
+        .icon-circle-small {
+            width: 32px;
+            height: 32px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+        .sticky-toc {
+            position: sticky;
+            top: 100px;
+        }
+
+    .container.mt-5.mb-5
+        //- ===== HEADER =====
+        .text-center.mb-5
+            span.badge.bg-secondary.bg-opacity-10.text-secondary.px-3.py-2.rounded-pill.mb-3.small.fw-bold Trust & Safety
+            h1.fw-bold Privacy Policy
+            p.text-muted Last Updated: October 2026
 
         .row.justify-content-center
             .col-lg-9
+                .card.policy-card.border-0.shadow-lg
+                    .card-body.p-4.p-md-5
+                        
+                        //- INTRODUCTION
+                        .mb-5
+                            p.lead.text-dark.fw-medium
+                                | Your privacy matters to us. This policy explains how we collect, use, and protect your information when you use the ShareLoop platform.
 
-                .card.border-0.shadow-lg
-                    .card-body.p-5
+                        hr.my-5.opacity-10
 
-                        h2.mb-4 Privacy Policy
+                        //- SECTION: Collection
+                        .policy-section.mb-5
+                            h5.fw-bold.d-flex.align-items-center
+                                span.icon-circle-small 📋
+                                | Information We Collect
+                            p.text-muted.lh-base
+                                | We collect basic account details such as your **name and email address** when you sign up. We also keep track of your community activity, including the items you list, your exchange history, and interactions with other neighbors to ensure a smooth experience.
 
-                        p.text-muted
-                            | Your privacy matters to us. This policy explains how we collect, use, and protect your information.
+                        //- SECTION: Usage
+                        .policy-section.mb-5
+                            h5.fw-bold.d-flex.align-items-center
+                                span.icon-circle-small ⚙️
+                                | How We Use Your Data
+                            p.text-muted.lh-base
+                                | Your data is used exclusively to provide our services—connecting you with borrowers and lenders. We analyze usage patterns to improve the platform interface and maintain a secure environment by preventing fraudulent activity.
 
-                        hr
+                        //- SECTION: Protection
+                        .policy-section.mb-5
+                            h5.fw-bold.d-flex.align-items-center
+                                span.icon-circle-small 🛡️
+                                | Data Protection
+                            p.text-muted.lh-base
+                                | **We do not sell your personal data.** We believe your information is yours. All data is stored using industry-standard encryption, and access is strictly limited to necessary service operations.
 
-                        h5.mt-4 Information We Collect
-                        p.text-muted
-                            | We collect basic account details such as your name and email, as well as activity data like listings, requests, and interactions.
+                        //- SECTION: Rights
+                        .policy-section.mb-5
+                            h5.fw-bold.d-flex.align-items-center
+                                span.icon-circle-small ⚖️
+                                | Your Rights
+                            p.text-muted.lh-base
+                                | You have full control over your information. You may access, update, or request the permanent deletion of your data at any time via your account settings or by contacting our privacy team.
 
-                        h5.mt-4 How We Use Your Data
-                        p.text-muted
-                            | Your data is used to provide our services, connect users, improve the platform, and maintain security.
+                        //- SECTION: Contact
+                        .bg-light.rounded-4.p-4.mt-5
+                            h6.fw-bold.mb-2 Questions?
+                            p.text-muted.small.mb-0
+                                | For any privacy-related concerns or data requests, please reach out to our dedicated team at 
+                                a.text-dark.fw-bold(href="mailto:privacy@shareloop.com") privacy@shareloop.com
 
-                        h5.mt-4 Data Protection
-                        p.text-muted
-                            | We do not sell your personal data. All information is handled securely and responsibly.
-
-                        h5.mt-4 Your Rights
-                        p.text-muted
-                            | You have the right to access, update, or request deletion of your data at any time.
-
-                        h5.mt-4 Contact
-                        p.text-muted.mb-0
-                            | For any privacy-related concerns, contact us at 
-                            | strong privacy@shareloop.com
+        //- FOOTER-LINK
+        .text-center.mt-4
+            a.text-muted.small.text-decoration-none(href="/terms") 
+                | View Terms of Service →

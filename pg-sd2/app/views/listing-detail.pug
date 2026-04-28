@@ -1,134 +1,286 @@
 extends layout
 
 block content
-    .container.mt-4
+    style.
+        .detail-img {
+            border-radius: 24px;
+            object-fit: cover;
+            width: 100%;
+            height: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+        .action-card {
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            position: sticky;
+            top: 100px;
+        }
+        .condition-pill {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .related-card {
+            border-radius: 20px;
+            transition: transform 0.2s ease;
+        }
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+        .user-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            background: #0f172a;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
 
-        // ===== BACK BUTTON (GLOBAL - FIXES ALIGNMENT) =====
-        .mb-3
-            a.btn.btn-outline-dark.btn-sm(
-                href="/all-listings-formatted"
-            ) ← Back to listings
+    .container.mt-5.mb-5
+        //- Back Navigation
+        nav.mb-4
+            a.text-muted.text-decoration-none.small.fw-bold(href="/all-listings-formatted")
+                i.bi.bi-arrow-left.me-2
+                | BACK TO EXPLORE
 
-        // ===== MAIN SECTION =====
-        .row.g-5.align-items-start
+        .row.g-5
+            //- LEFT COLUMN: MEDIA & INFO
+            .col-lg-7
+                img.detail-img.mb-4(src=listing.image_path alt=listing.title)
+                
+                .d-flex.justify-content-between.align-items-center.mb-3
+                    h2.fw-bold.mb-0 #{listing.title}
+                    span.badge.rounded-pill.bg-light.text-dark.border.px-3.py-2 #{listing.category_name}
 
-            // ===== LEFT =====
-            .col-lg-6
-
-                // IMAGE
-                img.w-100.rounded.shadow-sm(
-                    src=listing.image_path
-                    style="height:420px; object-fit:cover;"
-                )
-
-                // DESCRIPTION UNDER IMAGE
                 .mt-4
-                    h5.mb-2 Description
-                    p.text-muted #{listing.description || "No description provided."}
+                    h5.fw-bold Description
+                    p.text-muted.lh-lg #{listing.description || "The owner hasn't provided a detailed description yet."}
+                
+                hr.my-4.opacity-25
 
-            // ===== RIGHT =====
-            .col-lg-6
+                .mt-4
+                    h5.fw-bold.mb-3 Condition Details
+                    .condition-pill
+                        .row
+                            .col-6
+                                small.text-uppercase.text-muted.fw-bold.ls-sm Quality
+                                p.mb-0.fw-bold #{listing.condition_status || "Standard"}
+                            .col-6
+                                small.text-uppercase.text-muted.fw-bold.ls-sm Notes
+                                p.mb-0 #{listing.condition_notes || "No extra notes."}
 
-                h2.fw-bold.mb-2 #{listing.title}
-
-                // OWNER
-                p.text-muted.mb-2
-                    | by 
-                    a.text-decoration-none.text-dark(
-                        href=`/single-user/${listing.user_id}`
-                    ) #{listing.first_name}
-
-                // BADGES (BIGGER)
-                .d-flex.gap-2.mb-3.flex-wrap
-                    span.badge.fs-6.bg-secondary #{listing.category_name}
-                    span.badge.fs-6.bg-info #{listing.exchange_type}
-
-                    if listing.is_available
-                        span.badge.fs-6.bg-success Available
-                    else
-                        span.badge.fs-6.bg-secondary Unavailable
-
-                // CONDITION
-                .card.bg-light.border-0.mb-3
-                    .card-body
-                        h6.text-muted.mb-2 Condition
-                        p.mb-1
-                            strong Status:
-                            |  #{listing.condition_status || "Unknown"}
-                        p.mb-0
-                            strong Notes:
-                            |  #{listing.condition_notes || "None"}
-
-                // DATES
-                p.text-muted.small.mb-4
-                    | Created: #{listing.formatted_created_at} • Updated: #{listing.formatted_updated_at}
-
-                // ===== ACTIONS =====
-                .card.border-0.shadow-sm.mt-4
-                    .card-body.d-flex.flex-column.gap-2
-
-                        if listing.user_id === uId
-                            span.text-muted This is your listing
-                            a.btn.btn-outline-dark.w-100(
-                                href=`/listings/${listing.listing_id}/edit`
-                            ) Edit Listing
-
-                        else
-                            if loggedIn
-                                a.btn.btn-outline-primary.w-100(
-                                    href=`/requests/${listing.listing_id}/start-chat`
-                                ) Ask Question
+            //- RIGHT COLUMN: ACTION SIDEBAR
+            .col-lg-5
+                .card.action-card.shadow-sm.p-4
+                    //- Seller Info
+                    .d-flex.align-items-center.gap-3.mb-4
+                        .user-avatar-placeholder #{listing.first_name.charAt(0)}
+                        div
+                            small.text-muted Shared by
+                            h6.mb-0.fw-bold 
+                                a.text-dark.text-decoration-none(href=`/single-user/${listing.user_id}`) #{listing.first_name}
+                    
+                    .mb-4
+                        .d-flex.justify-content-between.mb-2
+                            span.text-muted Exchange Type
+                            span.fw-bold.text-primary #{listing.exchange_type.toUpperCase()}
+                        .d-flex.justify-content-between
+                            span.text-muted Status
+                            if listing.is_available
+                                span.text-success.fw-bold ● Available
                             else
-                                a.btn.btn-outline-primary.w-100(href="/login") Ask Question
+                                span.text-danger.fw-bold ● Unavailable
 
+                    //- Buttons
+                    .d-grid.gap-2
+                        if listing.user_id === uId
+                            .alert.alert-secondary.small.text-center.rounded-3 This is your listing
+                            a.btn.btn-dark.btn-lg.rounded-pill.fw-bold(href=`/listings/${listing.listing_id}/edit`) 
+                                i.bi.bi-pencil.me-2
+                                | Edit Listing
+                        
+                        else
                             if !listing.is_available
-                                span.text-danger Item not available
-
+                                button.btn.btn-secondary.btn-lg.rounded-pill.disabled Item Not Available
+                            
                             else if hasRequested
-                                span.text-warning You already requested this item
-
+                                button.btn.btn-warning.btn-lg.rounded-pill.disabled.fw-bold
+                                    i.bi.bi-check-circle-fill.me-2
+                                    | Request Sent
+                            
                             else
                                 if loggedIn
-                                    form(
-                                        action=`/listings/${listing.listing_id}/request`
-                                        method="POST"
-                                    )
-                                        button.btn.btn-success.w-100(type="submit") Request Item
+                                    form(action=`/listings/${listing.listing_id}/request` method="POST")
+                                        button.btn.btn-success.btn-lg.w-100.rounded-pill.fw-bold(type="submit") Request This Item
                                 else
-                                    a.btn.btn-success.w-100(href="/login") Request Item
+                                    a.btn.btn-success.btn-lg.rounded-pill.fw-bold(href="/login") Request This Item
 
+                                //- Ask Question Button
+                                if loggedIn
+                                    a.btn.btn-outline-dark.rounded-pill.fw-bold(href=`/requests/${listing.listing_id}/start-chat`) Ask a Question
+                                else
+                                    a.btn.btn-outline-dark.rounded-pill.fw-bold(href="/login") Ask a Question
 
-        // ===== RELATED SECTION =====
+                    p.text-center.text-muted.small.mt-4
+                        | Posted on #{listing.formatted_created_at}
+
+        //- RELATED SECTION
         if relatedListings && relatedListings.length > 0
-            .mt-5.pt-4.border-top
-
-                .d-flex.justify-content-between.align-items-center.mb-3
-                    h5.mb-0 More from this category
-
+            .mt-5.pt-5
+                h4.fw-bold.mb-4 You might also like
                 .row.g-4
                     each item in relatedListings
                         .col-md-6.col-lg-4
-                            .card.listing-card.h-100.border-0.shadow-sm
-
+                            .card.related-card.h-100.border-0.shadow-sm
                                 .position-relative
-                                    img.card-img-top(
-                                        src=item.image_path
-                                        style="height:200px; object-fit:cover;"
-                                    )
-                                    .listing-overlay
+                                    img.card-img-top(src=item.image_path style="height:220px; object-fit:cover; border-radius: 20px 20px 0 0;")
+                                    span.badge.bg-white.text-dark.position-absolute.bottom-0.start-0.m-3.shadow-sm #{item.exchange_type}
+                                
+                                .card-body
+                                    h6.fw-bold.mb-1
+                                        a.text-dark.text-decoration-none(href=`/listing-detail/${item.listing_id}`) #{item.title}
+                                    a.btn.btn-link.text-dark.p-0.small.fw-bold.text-decoration-none(href=`/listing-detail/${item.listing_id}`)
+                                        | View Details 
+                                        i.bi.bi-chevron-right.small
 
-                                .card-body.d-flex.flex-column
-                                    h6.card-title
-                                        a.text-decoration-none.text-dark(
-                                            href=`/listing-detail/${item.listing_id}`
-                                        ) #{item.title}
 
-                                    p.text-muted.small.mb-2 #{item.exchange_type}
 
-                                    .mt-auto
-                                        a.btn.btn-outline-dark.btn-sm.w-100(
-                                            href=`/listing-detail/${item.listing_id}`
-                                        ) View
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+
+//-         // ===== BACK BUTTON (GLOBAL - FIXES ALIGNMENT) =====
+//-         .mb-3
+//-             a.btn.btn-outline-dark.btn-sm(
+//-                 href="/all-listings-formatted"
+//-             ) ← Back to listings
+
+//-         // ===== MAIN SECTION =====
+//-         .row.g-5.align-items-start
+
+//-             // ===== LEFT =====
+//-             .col-lg-6
+
+//-                 // IMAGE
+//-                 img.w-100.rounded.shadow-sm(
+//-                     src=listing.image_path
+//-                     style="height:420px; object-fit:cover;"
+//-                 )
+
+//-                 // DESCRIPTION UNDER IMAGE
+//-                 .mt-4
+//-                     h5.mb-2 Description
+//-                     p.text-muted #{listing.description || "No description provided."}
+
+//-             // ===== RIGHT =====
+//-             .col-lg-6
+
+//-                 h2.fw-bold.mb-2 #{listing.title}
+
+//-                 // OWNER
+//-                 p.text-muted.mb-2
+//-                     | by 
+//-                     a.text-decoration-none.text-dark(
+//-                         href=`/single-user/${listing.user_id}`
+//-                     ) #{listing.first_name}
+
+//-                 // BADGES (BIGGER)
+//-                 .d-flex.gap-2.mb-3.flex-wrap
+//-                     span.badge.fs-6.bg-secondary #{listing.category_name}
+//-                     span.badge.fs-6.bg-info #{listing.exchange_type}
+
+//-                     if listing.is_available
+//-                         span.badge.fs-6.bg-success Available
+//-                     else
+//-                         span.badge.fs-6.bg-secondary Unavailable
+
+//-                 // CONDITION
+//-                 .card.bg-light.border-0.mb-3
+//-                     .card-body
+//-                         h6.text-muted.mb-2 Condition
+//-                         p.mb-1
+//-                             strong Status:
+//-                             |  #{listing.condition_status || "Unknown"}
+//-                         p.mb-0
+//-                             strong Notes:
+//-                             |  #{listing.condition_notes || "None"}
+
+//-                 // DATES
+//-                 p.text-muted.small.mb-4
+//-                     | Created: #{listing.formatted_created_at} • Updated: #{listing.formatted_updated_at}
+
+//-                 // ===== ACTIONS =====
+//-                 .card.border-0.shadow-sm.mt-4
+//-                     .card-body.d-flex.flex-column.gap-2
+
+//-                         if listing.user_id === uId
+//-                             span.text-muted This is your listing
+//-                             a.btn.btn-outline-dark.w-100(
+//-                                 href=`/listings/${listing.listing_id}/edit`
+//-                             ) Edit Listing
+
+//-                         else
+//-                             if loggedIn
+//-                                 a.btn.btn-outline-primary.w-100(
+//-                                     href=`/requests/${listing.listing_id}/start-chat`
+//-                                 ) Ask Question
+//-                             else
+//-                                 a.btn.btn-outline-primary.w-100(href="/login") Ask Question
+
+//-                             if !listing.is_available
+//-                                 span.text-danger Item not available
+
+//-                             else if hasRequested
+//-                                 span.text-warning You already requested this item
+
+//-                             else
+//-                                 if loggedIn
+//-                                     form(
+//-                                         action=`/listings/${listing.listing_id}/request`
+//-                                         method="POST"
+//-                                     )
+//-                                         button.btn.btn-success.w-100(type="submit") Request Item
+//-                                 else
+//-                                     a.btn.btn-success.w-100(href="/login") Request Item
+
+
+//-         // ===== RELATED SECTION =====
+//-         if relatedListings && relatedListings.length > 0
+//-             .mt-5.pt-4.border-top
+
+//-                 .d-flex.justify-content-between.align-items-center.mb-3
+//-                     h5.mb-0 More from this category
+
+//-                 .row.g-4
+//-                     each item in relatedListings
+//-                         .col-md-6.col-lg-4
+//-                             .card.listing-card.h-100.border-0.shadow-sm
+
+//-                                 .position-relative
+//-                                     img.card-img-top(
+//-                                         src=item.image_path
+//-                                         style="height:200px; object-fit:cover;"
+//-                                     )
+//-                                     .listing-overlay
+
+//-                                 .card-body.d-flex.flex-column
+//-                                     h6.card-title
+//-                                         a.text-decoration-none.text-dark(
+//-                                             href=`/listing-detail/${item.listing_id}`
+//-                                         ) #{item.title}
+
+//-                                     p.text-muted.small.mb-2 #{item.exchange_type}
+
+//-                                     .mt-auto
+//-                                         a.btn.btn-outline-dark.btn-sm.w-100(
+//-                                             href=`/listing-detail/${item.listing_id}`
+//-                                         ) View
 
 
 

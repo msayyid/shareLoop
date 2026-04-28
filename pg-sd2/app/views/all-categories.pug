@@ -1,35 +1,147 @@
 extends layout
 
 block content
-    .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
-        div
-            h1.mb-1 Categories
-            p.text-muted.mb-0 Explore items by category
+    style.
+        .category-card {
+            border-radius: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #f1f5f9 !important;
+        }
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+            border-color: #0f172a !important;
+        }
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            transition: transform 0.3s ease;
+        }
+        .category-card:hover .icon-circle {
+            transform: scale(1.1) rotate(5deg);
+        }
+        /* Specific Category Tints */
+        .bg-books { background-color: #fef3c7; } /* Yellow */
+        .bg-electronics { background-color: #dbeafe; } /* Blue */
+        .bg-sports { background-color: #dcfce7; } /* Green */
+        .bg-default { background-color: #f1f5f9; } /* Gray */
 
-    .row.g-4
-        each category in categories
-            .col-md-6.col-lg-4
-                .card.h-100.shadow-sm.border-0.text-center
-                    .card-body.d-flex.flex-column
-                        .display-5.mb-3
-                            if category.category_name == "Books"
-                                | 📚
-                            else if category.category_name == "Electronics"
-                                | 💻
-                            else if category.category_name == "Sports"
-                                | ⚽
-                            else
-                                | 📦
+    .container.mt-5.mb-5
+        //- ===== HEADER =====
+        .d-flex.justify-content-between.align-items-end.mb-5.flex-wrap.gap-3
+            div
+                span.badge.bg-dark.rounded-pill.px-3.py-2.mb-3.small.fw-bold Discovery
+                h1.fw-bold.mb-1 Browse Categories
+                p.text-muted.mb-0 Find exactly what you need in your neighborhood.
+            .text-end
+                p.text-muted.small.mb-0 
+                    strong #{categories.length} 
+                    | Departments Available
 
-                        h4.card-title.mb-2 #{category.category_name}
+        //- ===== GRID =====
+        .row.g-4
+            each category in categories
+                .col-md-6.col-lg-4
+                    a.text-decoration-none(href=`/all-categories/${category.category_id}`)
+                        .card.category-card.h-100.shadow-sm.text-center.p-4
+                            .card-body.d-flex.flex-column
+                                
+                                //- ICON LOGIC
+                                if category.category_name == "Books"
+                                    .icon-circle.bg-books 📚
+                                else if category.category_name == "Electronics"
+                                    .icon-circle.bg-electronics 💻
+                                else if category.category_name == "Sports"
+                                    .icon-circle.bg-sports ⚽
+                                else
+                                    .icon-circle.bg-default 📦
 
-                        if category.description
-                            p.card-text.text-muted.mb-3 #{category.description}
+                                h4.fw-bold.text-dark.mb-2 #{category.category_name}
 
-                        p.text-muted.small.mb-3 #{category.listing_count} listings
+                                if category.description
+                                    p.text-muted.small.mb-3.lh-base #{category.description}
 
-                        .mt-auto
-                            a.btn.btn-dark.w-100(href=`/all-categories/${category.category_id}`) View Category
+                                //- LISTING COUNT BADGE
+                                .mt-auto
+                                    span.badge.bg-light.text-dark.rounded-pill.px-3.py-2.border
+                                        | #{category.listing_count} Items
+                                    
+                                    .mt-4.fw-bold.text-dark.small.view-link 
+                                        | Browse Collection 
+                                        i.bi.bi-arrow-right.ms-1
+
+        //- ===== PROMO FOOTER =====
+        .mt-5.pt-5
+            .card.border-0.rounded-4.bg-dark.text-white.p-5.text-center
+                h3.fw-bold Can't find a category?
+                p.text-secondary Suggest a new category or start by listing an item.
+                .d-flex.justify-content-center.gap-3.mt-3
+                    a.btn.btn-light.rounded-pill.px-4.fw-bold(href="/contact") Suggest
+                    a.btn.btn-outline-light.rounded-pill.px-4.fw-bold(href="/listings/new") List Item
+
+
+
+
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .d-flex.justify-content-between.align-items-center.mb-4.flex-wrap.gap-2
+//-         div
+//-             h1.mb-1 Categories
+//-             p.text-muted.mb-0 Explore items by category
+
+//-     .row.g-4
+//-         each category in categories
+//-             .col-md-6.col-lg-4
+//-                 .card.h-100.shadow-sm.border-0.text-center
+//-                     .card-body.d-flex.flex-column
+//-                         .display-5.mb-3
+//-                             if category.category_name == "Books"
+//-                                 | 📚
+//-                             else if category.category_name == "Electronics"
+//-                                 | 💻
+//-                             else if category.category_name == "Sports"
+//-                                 | ⚽
+//-                             else
+//-                                 | 📦
+
+//-                         h4.card-title.mb-2 #{category.category_name}
+
+//-                         if category.description
+//-                             p.card-text.text-muted.mb-3 #{category.description}
+
+//-                         p.text-muted.small.mb-3 #{category.listing_count} listings
+
+//-                         .mt-auto
+//-                             a.btn.btn-dark.w-100(href=`/all-categories/${category.category_id}`) View Category
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //- extends layout
 

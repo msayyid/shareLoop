@@ -1,35 +1,124 @@
 extends layout
 
 block content
-    .container.d-flex.justify-content-center.align-items-center(style="min-height:80vh;")
-        .card.p-4.shadow(style="width:100%; max-width:400px;")
+    style.
+        /* Reusing the same styles for consistency */
+        .auth-card {
+            border-radius: 24px;
+            border: none;
+            background: #ffffff;
+        }
+        .form-control {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+        .auth-bg {
+            background: radial-gradient(circle at top right, #f8fafc, #f1f5f9);
+            min-height: 90vh;
+        }
 
-            h3.text-center.mb-3 Register
+    .auth-bg.d-flex.justify-content-center.align-items-center.py-5
+        .container
+            .row.justify-content-center
+                .col-12(style="max-width: 480px;")
+                    .card.auth-card.shadow-lg.p-4.p-md-5
+                        .text-center.mb-4
+                            span.badge.bg-primary.bg-opacity-10.text-primary.px-3.py-2.rounded-pill.mb-2.small.fw-bold Start Sharing
+                            h3.fw-bold Create Account
+                            p.text-muted.small Join thousands of neighbors today
 
-            if error
-                .alert.alert-danger #{error}
+                        if error
+                            .alert.alert-danger.py-2.small.border-0.rounded-3 #{error}
 
-            form(action="/register" method="POST")
+                        form(action="/register" method="POST")
+                            .row.g-3.mb-3
+                                .col-md-6
+                                    label.form-label.fw-semibold.small First Name
+                                    input.form-control(
+                                        type="text" 
+                                        name="first_name" 
+                                        value=first_name || "" 
+                                        placeholder="Jane"
+                                        required
+                                    )
+                                .col-md-6
+                                    label.form-label.fw-semibold.small Last Name
+                                    input.form-control(
+                                        type="text" 
+                                        name="last_name" 
+                                        value=last_name || "" 
+                                        placeholder="Doe"
+                                        required
+                                    )
 
-                .mb-3
-                    label.form-label First Name
-                    input.form-control(type="text" name="first_name" value=first_name || "" required)
+                            .mb-3
+                                label.form-label.fw-semibold.small Email Address
+                                input.form-control(
+                                    type="email" 
+                                    name="email" 
+                                    value=email || "" 
+                                    placeholder="jane@example.com"
+                                    required
+                                )
 
-                .mb-3
-                    label.form-label Last Name
-                    input.form-control(type="text" name="last_name" value=last_name || "" required)
+                            .mb-4
+                                label.form-label.fw-semibold.small Create Password
+                                input.form-control(
+                                    type="password" 
+                                    name="password" 
+                                    placeholder="*****"
+                                    required
+                                )
 
-                .mb-3
-                    label.form-label Email
-                    input.form-control(type="email" name="email" value=email || "" required)
+                            button.btn.btn-dark.btn-lg.w-100.rounded-pill.fw-bold.mb-3(type="submit") Register
 
-                .mb-3
-                    label.form-label Password
-                    input.form-control(type="password" name="password" required)
+                        .text-center
+                            p.text-muted.small.mb-0
+                                | Already have an account? 
+                                a.text-dark.fw-bold.text-decoration-none(href="/login") Log in instead
 
-                button.btn.btn-dark.w-100(type="submit") Register
 
-            .text-center.mt-3
-                small
-                    | Already have an account?
-                    a(href="/login") Login
+
+
+//- extends layout
+
+//- block content
+//-     .container.d-flex.justify-content-center.align-items-center(style="min-height:80vh;")
+//-         .card.p-4.shadow(style="width:100%; max-width:400px;")
+
+//-             h3.text-center.mb-3 Register
+
+//-             if error
+//-                 .alert.alert-danger #{error}
+
+//-             form(action="/register" method="POST")
+
+//-                 .mb-3
+//-                     label.form-label First Name
+//-                     input.form-control(type="text" name="first_name" value=first_name || "" required)
+
+//-                 .mb-3
+//-                     label.form-label Last Name
+//-                     input.form-control(type="text" name="last_name" value=last_name || "" required)
+
+//-                 .mb-3
+//-                     label.form-label Email
+//-                     input.form-control(type="email" name="email" value=email || "" required)
+
+//-                 .mb-3
+//-                     label.form-label Password
+//-                     input.form-control(type="password" name="password" required)
+
+//-                 button.btn.btn-dark.w-100(type="submit") Register
+
+//-             .text-center.mt-3
+//-                 small
+//-                     | Already have an account?
+//-                     a(href="/login") Login

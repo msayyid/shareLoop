@@ -1,63 +1,206 @@
 extends layout
 
 block content
-    .container.mt-4
-        h2.mb-4 Create New Listing
+    style.
+        .form-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+        .form-control, .form-select {
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .section-header i {
+            margin-right: 10px;
+            color: #3b82f6;
+        }
+        .upload-box {
+            border: 2px dashed #e2e8f0;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .upload-box:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
 
-        form(action="/listings" method="POST" enctype="multipart/form-data")
+    .container.mt-5.mb-5
+        .row.justify-content-center
+            .col-lg-8
+                .form-card.shadow-lg.p-4.p-md-5
+                    header.mb-5
+                        h2.fw-bold.mb-1 Share Something New
+                        p.text-muted Give your item a second life in your community.
 
-            // TITLE
-            .mb-3
-                label.form-label Title
-                input.form-control(type="text" name="title" required)
+                    form(action="/listings" method="POST" enctype="multipart/form-data")
+                        
+                        //- SECTION 1: ESSENTIALS
+                        .section-header 
+                            i.bi.bi-info-circle-fill
+                            | Essential Information
+                        
+                        .mb-4
+                            label.form-label Title
+                            input.form-control(type="text" name="title" placeholder="e.g. Vintage Film Camera" required)
+                        
+                        .mb-4
+                            label.form-label Description
+                            textarea.form-control(name="description" rows="4" placeholder="Describe the item, how it works, and any specific details for the community..." required)
 
-            // DESCRIPTION
-            .mb-3
-                label.form-label Description
-                textarea.form-control(name="description" required)
+                        .row.g-3.mb-5
+                            .col-md-6
+                                label.form-label Exchange Type
+                                select.form-select(name="exchange_type" required)
+                                    option(value="lending") 🤝 Lending
+                                    option(value="swap") 🔄 Swap
+                                    option(value="giveaway") 🎁 Give Away
+                            .col-md-6
+                                label.form-label Category
+                                select.form-select(name="category_id" required)
+                                    option(value="1") Books
+                                    option(value="2") Electronics
+                                    option(value="3") Kitchen
+                                    option(value="4") Sports
+                                    option(value="5") Furniture
 
-            // EXCHANGE TYPE
-            .mb-3
-                label.form-label Exchange Type
-                select.form-select(name="exchange_type" required)
-                    option(value="lending") Lending
-                    option(value="swap") Swap
-                    option(value="giveaway") Give Away
+                        //- SECTION 2: CONDITION
+                        .section-header.mt-5
+                            i.bi.bi-stars
+                            | Condition & Quality
+                        
+                        .row.g-3.mb-4
+                            .col-md-6
+                                label.form-label Item Condition
+                                select.form-select(name="condition_status")
+                                    option(value="like_new") Like New
+                                    option(value="good") Good
+                                    option(value="fair") Fair
+                                    option(value="well_used") Well Used
+                            .col-md-6
+                                label.form-label Availability
+                                select.form-select(name="is_available")
+                                    option(value="1") ✅ Available Now
+                                    option(value="0") ❌ Not Available
 
-            // CATEGORY
-            .mb-3
-                label.form-label Category
-                select.form-select(name="category_id" required)
-                    option(value="1") Books
-                    option(value="2") Electronics
-                    option(value="3") Kitchen
-                    option(value="4") Sports
-                    option(value="5") Furniture
+                        .mb-5
+                            label.form-label Condition Notes
+                            textarea.form-control(name="condition_notes" rows="2" placeholder="Mention any scratches, missing parts, or quirks...")
 
-            // CONDITION
-            .mb-3
-                label.form-label Condition
-                select.form-select(name="condition_status")
-                    option(value="like_new") Like New
-                    option(value="good") Good
-                    option(value="fair") Fair
-                    option(value="well_used") Well Used
+                        //- SECTION 3: MEDIA
+                        .section-header.mt-5
+                            i.bi.bi-camera-fill
+                            | Photos
+                        
+                        .mb-5
+                            .upload-box
+                                i.bi.bi-cloud-arrow-up.display-4.text-muted
+                                p.mt-2.mb-0.fw-bold Upload a clear photo
+                                p.text-muted.small JPEG or PNG (Max 5MB)
+                                input.form-control.mt-3(type="file" name="image" required)
 
-            // CONDITION NOTES
-            .mb-3
-                label.form-label Condition Notes
-                textarea.form-control(name="condition_notes")
+                        //- ACTIONS
+                        .d-flex.justify-content-end.gap-3.pt-4.border-top
+                            a.btn.btn-light.rounded-pill.px-4.fw-bold(href="/dashboard") Cancel
+                            button.btn.btn-dark.rounded-pill.px-5.fw-bold(type="submit") List Item
 
-            // AVAILABILITY
-            .mb-3
-                label.form-label Availability
-                select.form-select(name="is_available")
-                    option(value="1") Available
-                    option(value="0") Not Available
 
-            // IMAGE
-            .mb-3
-                label.form-label Upload Image
-                input.form-control(type="file" name="image" required)
 
-            button.btn.btn-dark(type="submit") Create Listing
+
+
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+//-         h2.mb-4 Create New Listing
+
+//-         form(action="/listings" method="POST" enctype="multipart/form-data")
+
+//-             // TITLE
+//-             .mb-3
+//-                 label.form-label Title
+//-                 input.form-control(type="text" name="title" required)
+
+//-             // DESCRIPTION
+//-             .mb-3
+//-                 label.form-label Description
+//-                 textarea.form-control(name="description" required)
+
+//-             // EXCHANGE TYPE
+//-             .mb-3
+//-                 label.form-label Exchange Type
+//-                 select.form-select(name="exchange_type" required)
+//-                     option(value="lending") Lending
+//-                     option(value="swap") Swap
+//-                     option(value="giveaway") Give Away
+
+//-             // CATEGORY
+//-             .mb-3
+//-                 label.form-label Category
+//-                 select.form-select(name="category_id" required)
+//-                     option(value="1") Books
+//-                     option(value="2") Electronics
+//-                     option(value="3") Kitchen
+//-                     option(value="4") Sports
+//-                     option(value="5") Furniture
+
+//-             // CONDITION
+//-             .mb-3
+//-                 label.form-label Condition
+//-                 select.form-select(name="condition_status")
+//-                     option(value="like_new") Like New
+//-                     option(value="good") Good
+//-                     option(value="fair") Fair
+//-                     option(value="well_used") Well Used
+
+//-             // CONDITION NOTES
+//-             .mb-3
+//-                 label.form-label Condition Notes
+//-                 textarea.form-control(name="condition_notes")
+
+//-             // AVAILABILITY
+//-             .mb-3
+//-                 label.form-label Availability
+//-                 select.form-select(name="is_available")
+//-                     option(value="1") Available
+//-                     option(value="0") Not Available
+
+//-             // IMAGE
+//-             .mb-3
+//-                 label.form-label Upload Image
+//-                 input.form-control(type="file" name="image" required)
+
+//-             button.btn.btn-dark(type="submit") Create Listing

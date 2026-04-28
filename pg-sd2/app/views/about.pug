@@ -1,58 +1,168 @@
 extends layout
 
 block content
-    .container.mt-5
+    style.
+        .about-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .feature-box {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0 !important;
+            background: #f8fafc;
+            border-radius: 16px;
+        }
+        .feature-box:hover {
+            background: #ffffff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: #0f172a !important;
+        }
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: #0f172a;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .hero-text {
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
-        // HERO
-        .text-center.mb-5
-            h1.fw-bold ShareLoop
-            p.lead.text-muted Share More. Waste Less. Connect Better.
+    .container.mt-5.mb-5
+        //- ===== HERO SECTION =====
+        .text-center.mb-5.hero-text
+            span.badge.bg-primary.bg-opacity-10.text-primary.px-3.py-2.rounded-pill.mb-3.small.fw-bold Our Story
+            h1.display-5.fw-bold.mb-3 🔄 ShareLoop
+            p.lead.text-muted.fs-4 Share More. Waste Less. Connect Better.
 
-        // MAIN CARD
+        //- ===== MAIN CONTENT =====
         .row.justify-content-center
-            .col-lg-9
-
-                .card.border-0.shadow-lg
+            .col-lg-10
+                .card.about-card.border-0.shadow-lg
                     .card-body.p-5
+                        .row.align-items-center.mb-5
+                            .col-md-7
+                                h3.fw-bold.mb-3 Our Mission
+                                p.text-muted.fs-5.lh-base
+                                    | ShareLoop exists to make sharing simple. Instead of buying more, we help people lend, borrow, and exchange items within their community. We're turning neighborhoods into shared libraries.
+                            .col-md-5.text-center
+                                //- A simple visual placeholder
+                                .p-5.bg-light.rounded-circle.d-inline-block
+                                    span(style="font-size: 5rem;") 🌍
 
-                        h4.mb-3 Our Mission
-                        p.text-muted ShareLoop exists to make sharing simple. Instead of buying more, we help people lend, borrow, and exchange items within their community.
+                        hr.my-5.opacity-10
 
-                        hr.my-4
-
-                        .row.g-4
+                        .row.g-4.mb-5
                             .col-md-6
-                                h5 The Problem
-                                p.text-muted Many people own items they rarely use, while others need those same items. This leads to unnecessary spending and waste.
+                                .p-4.border-start.border-4.border-danger
+                                    h5.fw-bold The Problem
+                                    p.text-muted.mb-0
+                                        | Many people own items they rarely use (like power tools or camping gear), while others need those same items. This leads to unnecessary spending, cluttered homes, and environmental waste.
 
                             .col-md-6
-                                h5 Our Solution
-                                p.text-muted ShareLoop connects people so they can share resources instead of owning everything individually.
+                                .p-4.border-start.border-4.border-success
+                                    h5.fw-bold Our Solution
+                                    p.text-muted.mb-0
+                                        | ShareLoop connects people so they can share resources instead of owning everything individually. By facilitating trust, we make borrowing as easy as buying.
 
-                        hr.my-4
+                        //- ===== STEPS / ACTIONS =====
+                        .bg-light.p-4.rounded-4.mb-5
+                            h5.fw-bold.mb-4.text-center What You Can Do
+                            .row.g-3
+                                .col-md-4
+                                    .p-4.feature-box.h-100
+                                        .icon-circle 📦
+                                        h6.fw-bold List Items
+                                        p.small.text-muted.mb-0 Share quality items you no longer use daily and earn community points.
 
-                        h5.mb-3 What You Can Do
-                        .row.g-3
+                                .col-md-4
+                                    .p-4.feature-box.h-100
+                                        .icon-circle 🔄
+                                        h6.fw-bold Request & Swap
+                                        p.small.text-muted.mb-0 Find exactly what you need nearby. Borrow for a day or swap forever.
 
-                            .col-md-4
-                                .p-3.border.rounded.text-center
-                                    h6.mb-1 📦 List Items
-                                    small.text-muted Share items you no longer use
+                                .col-md-4
+                                    .p-4.feature-box.h-100
+                                        .icon-circle ⭐
+                                        h6.fw-bold Build Trust
+                                        p.small.text-muted.mb-0 Our rating system and verified neighbors ensure every exchange is safe.
 
-                            .col-md-4
-                                .p-3.border.rounded.text-center
-                                    h6.mb-1 🔄 Request & Swap
-                                    small.text-muted Borrow or exchange items easily
+                        //- ===== VISION =====
+                        .text-center.py-4
+                            h4.fw-bold Our Vision
+                            p.text-muted.mx-auto(style="max-width: 600px;")
+                                | We believe in a world where **access matters more than ownership**. ShareLoop aims to build a global network of local communities where resources are shared, not wasted.
 
-                            .col-md-4
-                                .p-3.border.rounded.text-center
-                                    h6.mb-1 ⭐ Build Trust
-                                    small.text-muted Ratings and reviews ensure safety
+                            .mt-5
+                                a.btn.btn-dark.btn-lg.px-5.rounded-pill.fw-bold.shadow-sm(href="/register") Join the Movement
 
-                        hr.my-4
 
-                        h5 Our Vision
-                        p.text-muted.mb-0 We believe in a world where access matters more than ownership. ShareLoop aims to build communities where resources are shared, not wasted.
 
-                        .text-center.mt-4
-                            a.btn.btn-dark(href="/register") Join ShareLoop
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-5
+
+//-         // HERO
+//-         .text-center.mb-5
+//-             h1.fw-bold ShareLoop
+//-             p.lead.text-muted Share More. Waste Less. Connect Better.
+
+//-         // MAIN CARD
+//-         .row.justify-content-center
+//-             .col-lg-9
+
+//-                 .card.border-0.shadow-lg
+//-                     .card-body.p-5
+
+//-                         h4.mb-3 Our Mission
+//-                         p.text-muted ShareLoop exists to make sharing simple. Instead of buying more, we help people lend, borrow, and exchange items within their community.
+
+//-                         hr.my-4
+
+//-                         .row.g-4
+//-                             .col-md-6
+//-                                 h5 The Problem
+//-                                 p.text-muted Many people own items they rarely use, while others need those same items. This leads to unnecessary spending and waste.
+
+//-                             .col-md-6
+//-                                 h5 Our Solution
+//-                                 p.text-muted ShareLoop connects people so they can share resources instead of owning everything individually.
+
+//-                         hr.my-4
+
+//-                         h5.mb-3 What You Can Do
+//-                         .row.g-3
+
+//-                             .col-md-4
+//-                                 .p-3.border.rounded.text-center
+//-                                     h6.mb-1 📦 List Items
+//-                                     small.text-muted Share items you no longer use
+
+//-                             .col-md-4
+//-                                 .p-3.border.rounded.text-center
+//-                                     h6.mb-1 🔄 Request & Swap
+//-                                     small.text-muted Borrow or exchange items easily
+
+//-                             .col-md-4
+//-                                 .p-3.border.rounded.text-center
+//-                                     h6.mb-1 ⭐ Build Trust
+//-                                     small.text-muted Ratings and reviews ensure safety
+
+//-                         hr.my-4
+
+//-                         h5 Our Vision
+//-                         p.text-muted.mb-0 We believe in a world where access matters more than ownership. ShareLoop aims to build communities where resources are shared, not wasted.
+
+//-                         .text-center.mt-4
+//-                             a.btn.btn-dark(href="/register") Join ShareLoop

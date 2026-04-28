@@ -1,131 +1,300 @@
 extends layout
 
 block content
-    .container.mt-4
+    style.
+        .profile-card {
+            border-radius: 24px;
+            background: #fff;
+            overflow: hidden;
+        }
+        .profile-cover {
+            height: 120px;
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        }
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border: 6px solid #fff;
+            border-radius: 50%;
+            margin-top: -70px;
+            background: #fff;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            flex: 1;
+        }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            font-weight: 700;
+        }
+        .info-card {
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+        }
+        .review-item {
+            border: none;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 1.5rem 0;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .listing-thumb {
+            border-radius: 16px;
+            transition: transform 0.2s ease;
+        }
+        .listing-thumb:hover { transform: translateY(-5px); }
 
-        // ===== PROFILE HEADER =====
-        .text-center.mb-5
-            img.rounded-circle.shadow-sm.mb-3(
-                src=user.profile_image_path
-                width="140"
-                height="140"
-                style="object-fit:cover;"
-            )
-
-            h2.mb-1 #{user.first_name} #{user.last_name}
-
-            // ⭐ Rating
-            if ratingData && ratingData.total_ratings > 0
-                p.mb-1(style="color:#ffc107; font-size:1.2rem;")
-                    - const full = Math.floor(ratingData.avg_rating)
-                    - const empty = 5 - full
-                    | #{'★'.repeat(full)}#{'☆'.repeat(empty)}
-
-                p.text-muted.small.mb-1
-                    | #{ratingData.avg_rating.toFixed(1)} (#{ratingData.total_ratings} reviews)
-            else
-                p.text-muted.small.mb-1 No ratings yet
-
-            p.text-muted.small.mb-0
-                | Joined #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
-
-        // ===== INFO + BIO (MERGED) =====
-        .row.g-4.mb-5
-
-            .col-md-6
-                .card.border-0.shadow-sm.h-100
-                    .card-body
-                        h6.text-muted.mb-3 Basic Info
-
-                        p.mb-2
-                            strong Email:
-                            |  #{user.email}
-
-                        p.mb-2
-                            strong Location:
-                            |  #{user.location || "Unknown"}
-
-                        p.mb-0
-                            strong Points:
-                            |  #{user.points || 0}
-
-            .col-md-6
-                .card.border-0.shadow-sm.h-100
-                    .card-body
-                        h6.text-muted.mb-3 Bio
-
-                        if user.bio
-                            p.text-muted.mb-0 #{user.bio}
-                        else
-                            p.text-muted.mb-0 No bio available.
-
-        // ===== LISTINGS =====
-        .mb-5
-            h5.mb-3 Listings (#{listings.length})
-
-            if listings.length > 0
-                .row.g-4
-                    each listing, index in listings
-                        if index < 6
-                            .col-md-6.col-lg-4
-                                .card.listing-card.h-100.border-0.shadow-sm
-
-                                    img.card-img-top(
-                                        src=listing.image_path
-                                        style="height:180px; object-fit:cover;"
-                                    )
-
-                                    .card-body.d-flex.flex-column
-                                        h6.card-title
-                                            a.text-decoration-none.text-dark(
-                                                href=`/listing-detail/${listing.listing_id}`
-                                            ) #{listing.title}
-
-                                        p.text-muted.small.mb-2 #{listing.exchange_type || "Unknown"}
-
-                                        .mt-auto
-                                            a.btn.btn-outline-dark.btn-sm.w-100(
-                                                href=`/listing-detail/${listing.listing_id}`
-                                            ) View
-
-                if listings.length > 6
-                    .text-center.mt-3
-                        a.btn.btn-outline-dark(
-                            href=`/all-listings-formatted?user=${user.user_id}`
-                        ) View All Listings
-            else
-                p.text-muted This user has no listings yet.
-
-        // ===== REVIEWS =====
-        .mb-5
-            h5.mb-3 Reviews (#{reviews.length})
-
-            if reviews.length > 0
-                .list-group
-
-                    each review in reviews
-                        .list-group-item
-
-                            .d-flex.justify-content-between.align-items-center
-                                strong #{review.first_name}
-                                span.text-muted.small #{new Date(review.created_at).toLocaleDateString()}
-
-                            p.text-muted.small.mb-1
-                                | For: "#{review.title}"
-
-                            - const stars = "★".repeat(review.score) + "☆".repeat(5 - review.score)
-                            p.mb-1(style="color:#ffc107;") #{stars}
-
-                            if review.comment
-                                p.mb-0 #{review.comment}
+    .container.mt-5.mb-5
+        .row.justify-content-center
+            .col-lg-10
+                //- HEADER SECTION
+                .profile-card.shadow-sm.mb-5
+                    .profile-cover
+                    .text-center.pb-4
+                        img.profile-avatar.shadow-sm.mb-3(src=user.profile_image_path || "/images/users/default.jpg")
+                        h2.fw-bold.mb-1 #{user.first_name} #{user.last_name}
+                        
+                        .d-flex.justify-content-center.align-items-center.gap-2.mb-2
+                            if ratingData && ratingData.total_ratings > 0
+                                span.text-warning.fs-5
+                                    - const full = Math.floor(ratingData.avg_rating)
+                                    | #{'★'.repeat(full)}#{'☆'.repeat(5 - full)}
+                                span.text-muted.small.fw-bold (#{ratingData.avg_rating.toFixed(1)})
                             else
-                                p.text-muted.mb-0 No comment
-            else
-                p.text-muted No reviews yet.
+                                span.badge.bg-light.text-muted.rounded-pill New Member
 
-        // ===== BACK =====
-        .text-center
-            a.btn.btn-dark(href="/all-users-formatted") Back to Users
+                        p.text-muted.small Joined #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+                        //- STATS BAR
+                        .container.px-4
+                            .d-flex.gap-3.mt-4
+                                .stat-box
+                                    span.stat-value #{user.points || 0}
+                                    span.stat-label Points
+                                .stat-box
+                                    span.stat-value #{listings.length}
+                                    span.stat-label Listings
+                                .stat-box
+                                    span.stat-value #{ratingData ? ratingData.total_ratings : 0}
+                                    span.stat-label Reviews
+
+                .row.g-4
+                    //- LEFT: INFO & BIO
+                    .col-md-4
+                        .card.info-card.p-3.mb-4
+                            h6.fw-bold.mb-3.text-uppercase.small(style="letter-spacing:1px") About
+                            .mb-3
+                                label.text-muted.small.d-block Location
+                                span.fw-semibold #{user.location || "Community Member"}
+                            .mb-3
+                                label.text-muted.small.d-block Contact
+                                span.fw-semibold.small #{user.email}
+                            hr.my-3.opacity-25
+                            p.text-muted.small.lh-base #{user.bio || "No bio provided yet."}
+
+                    //- RIGHT: LISTINGS & REVIEWS
+                    .col-md-8
+                        //- LISTINGS
+                        section.mb-5
+                            .d-flex.justify-content-between.align-items-center.mb-4
+                                h5.fw-bold.mb-0 Active Listings
+                                if listings.length > 6
+                                    a.btn.btn-link.text-dark.fw-bold.text-decoration-none.small(href=`/all-listings-formatted?user=${user.user_id}`) View All
+                            
+                            if listings.length > 0
+                                .row.g-3
+                                    each listing, index in listings
+                                        if index < 6
+                                            .col-sm-6.col-md-4
+                                                .card.listing-thumb.h-100.border-0.shadow-sm
+                                                    img.card-img-top(src=listing.image_path style="height:120px; object-fit:cover; border-radius:16px 16px 0 0;")
+                                                    .card-body.p-2.text-center
+                                                        a.text-decoration-none.text-dark.small.fw-bold.stretched-link(href=`/listing-detail/${listing.listing_id}`) #{listing.title}
+                            else
+                                .p-5.text-center.bg-light.rounded-4
+                                    p.text-muted.mb-0 No active listings.
+
+                        //- REVIEWS
+                        section
+                            h5.fw-bold.mb-4 Community Feedback
+                            if reviews.length > 0
+                                .card.info-card.p-4
+                                    each review in reviews
+                                        .review-item
+                                            .d-flex.justify-content-between.mb-2
+                                                div
+                                                    span.fw-bold.text-dark #{review.first_name}
+                                                    span.text-warning.ms-2 #{'★'.repeat(review.score)}
+                                                small.text-muted #{new Date(review.created_at).toLocaleDateString()}
+                                            p.text-muted.small.mb-1 
+                                                i For item: 
+                                                span.fw-bold.text-secondary "#{review.title}"
+                                            p.mb-0.small.lh-base #{review.comment || "Left a rating."}
+                            else
+                                .p-5.text-center.bg-light.rounded-4
+                                    p.text-muted.mb-0 No reviews yet.
+
+                //- FOOTER ACTION
+                .text-center.mt-5
+                    a.btn.btn-light.rounded-pill.px-5.fw-bold(href="/all-users-formatted")
+                        i.bi.bi-arrow-left.me-2
+                        | Back to Users
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+
+//-         // ===== PROFILE HEADER =====
+//-         .text-center.mb-5
+//-             img.rounded-circle.shadow-sm.mb-3(
+//-                 src=user.profile_image_path
+//-                 width="140"
+//-                 height="140"
+//-                 style="object-fit:cover;"
+//-             )
+
+//-             h2.mb-1 #{user.first_name} #{user.last_name}
+
+//-             // ⭐ Rating
+//-             if ratingData && ratingData.total_ratings > 0
+//-                 p.mb-1(style="color:#ffc107; font-size:1.2rem;")
+//-                     - const full = Math.floor(ratingData.avg_rating)
+//-                     - const empty = 5 - full
+//-                     | #{'★'.repeat(full)}#{'☆'.repeat(empty)}
+
+//-                 p.text-muted.small.mb-1
+//-                     | #{ratingData.avg_rating.toFixed(1)} (#{ratingData.total_ratings} reviews)
+//-             else
+//-                 p.text-muted.small.mb-1 No ratings yet
+
+//-             p.text-muted.small.mb-0
+//-                 | Joined #{user.created_at.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}
+
+//-         // ===== INFO + BIO (MERGED) =====
+//-         .row.g-4.mb-5
+
+//-             .col-md-6
+//-                 .card.border-0.shadow-sm.h-100
+//-                     .card-body
+//-                         h6.text-muted.mb-3 Basic Info
+
+//-                         p.mb-2
+//-                             strong Email:
+//-                             |  #{user.email}
+
+//-                         p.mb-2
+//-                             strong Location:
+//-                             |  #{user.location || "Unknown"}
+
+//-                         p.mb-0
+//-                             strong Points:
+//-                             |  #{user.points || 0}
+
+//-             .col-md-6
+//-                 .card.border-0.shadow-sm.h-100
+//-                     .card-body
+//-                         h6.text-muted.mb-3 Bio
+
+//-                         if user.bio
+//-                             p.text-muted.mb-0 #{user.bio}
+//-                         else
+//-                             p.text-muted.mb-0 No bio available.
+
+//-         // ===== LISTINGS =====
+//-         .mb-5
+//-             h5.mb-3 Listings (#{listings.length})
+
+//-             if listings.length > 0
+//-                 .row.g-4
+//-                     each listing, index in listings
+//-                         if index < 6
+//-                             .col-md-6.col-lg-4
+//-                                 .card.listing-card.h-100.border-0.shadow-sm
+
+//-                                     img.card-img-top(
+//-                                         src=listing.image_path
+//-                                         style="height:180px; object-fit:cover;"
+//-                                     )
+
+//-                                     .card-body.d-flex.flex-column
+//-                                         h6.card-title
+//-                                             a.text-decoration-none.text-dark(
+//-                                                 href=`/listing-detail/${listing.listing_id}`
+//-                                             ) #{listing.title}
+
+//-                                         p.text-muted.small.mb-2 #{listing.exchange_type || "Unknown"}
+
+//-                                         .mt-auto
+//-                                             a.btn.btn-outline-dark.btn-sm.w-100(
+//-                                                 href=`/listing-detail/${listing.listing_id}`
+//-                                             ) View
+
+//-                 if listings.length > 6
+//-                     .text-center.mt-3
+//-                         a.btn.btn-outline-dark(
+//-                             href=`/all-listings-formatted?user=${user.user_id}`
+//-                         ) View All Listings
+//-             else
+//-                 p.text-muted This user has no listings yet.
+
+//-         // ===== REVIEWS =====
+//-         .mb-5
+//-             h5.mb-3 Reviews (#{reviews.length})
+
+//-             if reviews.length > 0
+//-                 .list-group
+
+//-                     each review in reviews
+//-                         .list-group-item
+
+//-                             .d-flex.justify-content-between.align-items-center
+//-                                 strong #{review.first_name}
+//-                                 span.text-muted.small #{new Date(review.created_at).toLocaleDateString()}
+
+//-                             p.text-muted.small.mb-1
+//-                                 | For: "#{review.title}"
+
+//-                             - const stars = "★".repeat(review.score) + "☆".repeat(5 - review.score)
+//-                             p.mb-1(style="color:#ffc107;") #{stars}
+
+//-                             if review.comment
+//-                                 p.mb-0 #{review.comment}
+//-                             else
+//-                                 p.text-muted.mb-0 No comment
+//-             else
+//-                 p.text-muted No reviews yet.
+
+//-         // ===== BACK =====
+//-         .text-center
+//-             a.btn.btn-dark(href="/all-users-formatted") Back to Users
+
+
+
+
+
+
+
+
+
+
 
 
 //- extends layout

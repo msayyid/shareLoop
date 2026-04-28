@@ -1,34 +1,91 @@
 extends layout
 
 block content
-    .container.mt-5
+    style.
+        .contact-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .form-control {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+        .contact-info-box {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: #0f172a;
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-        .text-center.mb-4
-            h2 Contact Us
-            p.text-muted We’re here to help. Send us a message anytime.
+    .container.mt-5.mb-5
+        //- ===== HEADER =====
+        .text-center.mb-5
+            span.badge.bg-dark.bg-opacity-10.text-dark.px-3.py-2.rounded-pill.mb-3.small.fw-bold Get In Touch
+            h2.fw-bold.mb-2 Contact Our Team
+            p.text-muted.mx-auto(style="max-width: 500px;") 
+                | Have questions about sharing or need help with your account? We're usually back to you within 24 hours.
 
         .row.justify-content-center
             .col-lg-6
+                .card.contact-card.border-0.shadow-lg
+                    .card-body.p-4.p-md-5
+                        form#contactForm
+                            .mb-4
+                                label.form-label.fw-semibold.small Name
+                                input.form-control(
+                                    type="text" 
+                                    placeholder="Jane Doe"
+                                    required
+                                )
 
-                .card.border-0.shadow-lg
-                    .card-body.p-4
+                            .mb-4
+                                label.form-label.fw-semibold.small Email Address
+                                input.form-control(
+                                    type="email" 
+                                    placeholder="jane@example.com"
+                                    required
+                                )
 
-                        form
-                            .mb-3
-                                label.form-label Name
-                                input.form-control(type="text" placeholder="Your name")
+                            .mb-4
+                                label.form-label.fw-semibold.small How can we help?
+                                textarea.form-control(
+                                    rows="5" 
+                                    placeholder="Tell us a bit about what's on your mind..."
+                                    required
+                                )
 
-                            .mb-3
-                                label.form-label Email
-                                input.form-control(type="email" placeholder="Your email")
+                            button.btn.btn-dark.btn-lg.w-100.rounded-pill.fw-bold.shadow-sm(type="submit") 
+                                | Send Message
 
-                            .mb-3
-                                label.form-label Message
-                                textarea.form-control(rows="4" placeholder="Write your message...")
-
-                            button.btn.btn-dark.w-100(type="submit") Send Message
-
-                        .text-center.mt-4
-                            small.text-muted
-                                | Or email us at 
-                                strong support@shareloop.com
+                        //- ===== SOCIAL/DIRECT INFO =====
+                        .mt-5.pt-4.border-top
+                            .row.g-3
+                                .col-sm-6
+                                    .contact-info-box.h-100
+                                        .icon-box ✉️
+                                        h6.fw-bold.mb-1 Direct Email
+                                        p.small.text-muted.mb-0 support@shareloop.com
+                                
+                                .col-sm-6
+                                    .contact-info-box.h-100
+                                        .icon-box 🏘️
+                                        h6.fw-bold.mb-1 Community
+                                        p.small.text-muted.mb-0 Active 24/7 online support

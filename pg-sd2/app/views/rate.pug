@@ -1,76 +1,203 @@
 extends layout
 
 block content
-    .container.mt-5
-        .row.justify-content-center
-            .col-md-6
-
-                .card.shadow-sm
-                    .card-body
-
-                        h3.mb-3 Rate your experience
-
-                        p.text-muted.mb-4
-                            | You are rating "
-                            strong #{listing.title}
-                            | "
-
-                        form(action=`/requests/${request.request_id}/rate` method="POST")
-
-                            // ⭐ STAR RATING
-                            .mb-4
-                                label.form-label Select rating:
-
-                                .star-rating
-                                    input(type="radio" id="star5" name="score" value="5" required)
-                                    label(for="star5") ★
-
-                                    input(type="radio" id="star4" name="score" value="4")
-                                    label(for="star4") ★
-
-                                    input(type="radio" id="star3" name="score" value="3")
-                                    label(for="star3") ★
-
-                                    input(type="radio" id="star2" name="score" value="2")
-                                    label(for="star2") ★
-
-                                    input(type="radio" id="star1" name="score" value="1")
-                                    label(for="star1") ★
-
-                            // COMMENT
-                            .mb-4
-                                label.form-label Comment (optional)
-                                textarea.form-control(
-                                    name="comment"
-                                    rows="3"
-                                    placeholder="Write your feedback..."
-                                )
-
-                            // BUTTONS
-                            .d-flex.justify-content-between
-                                a.btn.btn-outline-secondary(href="/my-requests") Cancel
-                                button.btn.btn-primary(type="submit") Submit Rating
-
-    // ⭐ CSS (simple but clean)
     style.
+        .rating-card {
+            border-radius: 24px;
+            border: none;
+            background: #ffffff;
+        }
+        .item-preview-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+        .item-preview-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
         .star-rating {
             direction: rtl;
-            display: inline-flex;
-            gap: 5px;
-            font-size: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 2.5rem;
         }
-
         .star-rating input {
             display: none;
         }
-
         .star-rating label {
-            color: #ccc;
+            color: #e2e8f0;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-
+        /* Hover & Checked Logic */
         .star-rating input:checked ~ label,
         .star-rating label:hover,
         .star-rating label:hover ~ label {
-            color: #ffc107;
+            color: #fbbf24;
+            transform: scale(1.1);
         }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+        }
+        .review-textarea {
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            padding: 15px;
+            resize: none;
+        }
+        .review-textarea:focus {
+            background: #fff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+
+    .container.mt-5.mb-5
+        .row.justify-content-center
+            .col-lg-6.col-md-8
+                .card.rating-card.shadow-lg.p-4
+                    .card-body
+                        h3.fw-bold.mb-1 Rate your experience
+                        p.text-muted.small How was your interaction regarding this item?
+
+                        //- ITEM PREVIEW
+                        .item-preview-box
+                            img.item-preview-img(src=listing.image_path || "/images/listings/default-pic.jpg")
+                            div
+                                h6.fw-bold.mb-0 #{listing.title}
+                                small.text-muted Shared by #{listing.first_name}
+
+                        form(action=`/requests/${request.request_id}/rate` method="POST")
+
+                            //- ⭐ STAR RATING
+                            .mb-5.text-center
+                                label.form-label.d-block.mb-3 Tap to rate
+                                .star-rating
+                                    input(type="radio" id="star5" name="score" value="5" required)
+                                    label(for="star5") ★
+                                    input(type="radio" id="star4" name="score" value="4")
+                                    label(for="star4") ★
+                                    input(type="radio" id="star3" name="score" value="3")
+                                    label(for="star3") ★
+                                    input(type="radio" id="star2" name="score" value="2")
+                                    label(for="star2") ★
+                                    input(type="radio" id="star1" name="score" value="1")
+                                    label(for="star1") ★
+
+                            //- COMMENT
+                            .mb-4
+                                label.form-label Your Review
+                                textarea.form-control.review-textarea(
+                                    name="comment"
+                                    rows="4"
+                                    placeholder="Tell others how it went. Was the item in good condition? Was the owner helpful?"
+                                )
+
+                            //- BUTTONS
+                            .d-grid.gap-2
+                                button.btn.btn-dark.btn-lg.rounded-pill.fw-bold(type="submit") Submit Review
+                                a.btn.btn-link.text-muted.text-decoration-none.small(href="/my-requests") Cancel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-5
+//-         .row.justify-content-center
+//-             .col-md-6
+
+//-                 .card.shadow-sm
+//-                     .card-body
+
+//-                         h3.mb-3 Rate your experience
+
+//-                         p.text-muted.mb-4
+//-                             | You are rating "
+//-                             strong #{listing.title}
+//-                             | "
+
+//-                         form(action=`/requests/${request.request_id}/rate` method="POST")
+
+//-                             // ⭐ STAR RATING
+//-                             .mb-4
+//-                                 label.form-label Select rating:
+
+//-                                 .star-rating
+//-                                     input(type="radio" id="star5" name="score" value="5" required)
+//-                                     label(for="star5") ★
+
+//-                                     input(type="radio" id="star4" name="score" value="4")
+//-                                     label(for="star4") ★
+
+//-                                     input(type="radio" id="star3" name="score" value="3")
+//-                                     label(for="star3") ★
+
+//-                                     input(type="radio" id="star2" name="score" value="2")
+//-                                     label(for="star2") ★
+
+//-                                     input(type="radio" id="star1" name="score" value="1")
+//-                                     label(for="star1") ★
+
+//-                             // COMMENT
+//-                             .mb-4
+//-                                 label.form-label Comment (optional)
+//-                                 textarea.form-control(
+//-                                     name="comment"
+//-                                     rows="3"
+//-                                     placeholder="Write your feedback..."
+//-                                 )
+
+//-                             // BUTTONS
+//-                             .d-flex.justify-content-between
+//-                                 a.btn.btn-outline-secondary(href="/my-requests") Cancel
+//-                                 button.btn.btn-primary(type="submit") Submit Rating
+
+//-     // ⭐ CSS (simple but clean)
+//-     style.
+//-         .star-rating {
+//-             direction: rtl;
+//-             display: inline-flex;
+//-             gap: 5px;
+//-             font-size: 2rem;
+//-         }
+
+//-         .star-rating input {
+//-             display: none;
+//-         }
+
+//-         .star-rating label {
+//-             color: #ccc;
+//-             cursor: pointer;
+//-         }
+
+//-         .star-rating input:checked ~ label,
+//-         .star-rating label:hover,
+//-         .star-rating label:hover ~ label {
+//-             color: #ffc107;
+//-         }

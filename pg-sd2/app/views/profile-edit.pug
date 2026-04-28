@@ -1,41 +1,136 @@
 extends layout
 
 block content
-    .container.mt-4
-        h3.mb-4 Edit Profile
+    style.
+        .edit-card {
+            border-radius: 24px;
+            background: #ffffff;
+        }
+        .form-control {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #f1f5f9;
+            margin-left: 15px;
+        }
 
-        form(method="POST" action="/profile/edit" enctype="multipart/form-data")
+    .container.mt-5.mb-5
+        .row.justify-content-center
+            .col-lg-8
+                .card.edit-card.border-0.shadow-lg
+                    .card-body.p-4.p-md-5
+                        .d-flex.justify-content-between.align-items-center.mb-5
+                            div
+                                h2.fw-bold.mb-1 Account Settings
+                                p.text-muted.small Update your personal information and security.
+                            a.btn-close(href="/profile")
 
-            // PROFILE IMAGE
-            .mb-3
-                label.form-label Profile Picture
-                input.form-control(type="file" name="image")
+                        form(method="POST" action="/profile/edit" enctype="multipart/form-data")
+                            
+                            .section-title Public Profile
 
-            .mb-3
-                label.form-label First Name
-                input.form-control(type="text" name="first_name" value=user.first_name required)
+                            .row.mb-4.align-items-center
+                                .col-md-3
+                                    label.form-label.fw-semibold.small Profile Photo
+                                .col-md-9
+                                    .d-flex.align-items-center.gap-3
+                                        img.rounded-circle.border(src=user.profile_image_path || '/images/default-avatar.png' width="60" height="60" style="object-fit:cover;")
+                                        input.form-control.form-control-sm(type="file" name="image")
 
-            .mb-3
-                label.form-label Last Name
-                input.form-control(type="text" name="last_name" value=user.last_name required)
+                            .row.g-3.mb-4
+                                .col-md-6
+                                    label.form-label.fw-semibold.small First Name
+                                    input.form-control(type="text" name="first_name" value=user.first_name required)
+                                .col-md-6
+                                    label.form-label.fw-semibold.small Last Name
+                                    input.form-control(type="text" name="last_name" value=user.last_name required)
 
-            .mb-3
-                label.form-label Bio
-                textarea.form-control(name="bio") #{user.bio}
+                            .mb-4
+                                label.form-label.fw-semibold.small Location
+                                input.form-control(type="text" name="location" value=user.location placeholder="e.g. London, UK")
 
-            .mb-3
-                label.form-label Location
-                input.form-control(type="text" name="location" value=user.location)
+                            .mb-4
+                                label.form-label.fw-semibold.small Bio
+                                textarea.form-control(name="bio" rows="4" placeholder="Tell the community a bit about yourself...") #{user.bio}
 
-            hr
+                            .section-title.mt-5 Security
 
-            h5 Change Password
+                            .mb-4
+                                label.form-label.fw-semibold.small New Password
+                                input.form-control(
+                                    type="password"
+                                    name="password"
+                                    placeholder="Leave empty to keep current password"
+                                )
 
-            .mb-3
-                input.form-control(
-                    type="password"
-                    name="password"
-                    placeholder="Leave empty to keep current password"
-                )
+                            .d-flex.justify-content-end.gap-2.mt-5
+                                a.btn.btn-light.rounded-pill.px-4.fw-bold(href="/profile") Cancel
+                                button.btn.btn-dark.rounded-pill.px-5.fw-bold(type="submit") Save Changes
 
-            button.btn.btn-dark(type="submit") Save Changes
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+//-         h3.mb-4 Edit Profile
+
+//-         form(method="POST" action="/profile/edit" enctype="multipart/form-data")
+
+//-             // PROFILE IMAGE
+//-             .mb-3
+//-                 label.form-label Profile Picture
+//-                 input.form-control(type="file" name="image")
+
+//-             .mb-3
+//-                 label.form-label First Name
+//-                 input.form-control(type="text" name="first_name" value=user.first_name required)
+
+//-             .mb-3
+//-                 label.form-label Last Name
+//-                 input.form-control(type="text" name="last_name" value=user.last_name required)
+
+//-             .mb-3
+//-                 label.form-label Bio
+//-                 textarea.form-control(name="bio") #{user.bio}
+
+//-             .mb-3
+//-                 label.form-label Location
+//-                 input.form-control(type="text" name="location" value=user.location)
+
+//-             hr
+
+//-             h5 Change Password
+
+//-             .mb-3
+//-                 input.form-control(
+//-                     type="password"
+//-                     name="password"
+//-                     placeholder="Leave empty to keep current password"
+//-                 )
+
+//-             button.btn.btn-dark(type="submit") Save Changes

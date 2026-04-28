@@ -1,136 +1,314 @@
 extends layout
 
 block content
-    .container.mt-4
+    style.
+        .listing-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .img-wrapper img {
+            transition: transform 0.5s ease;
+        }
+        .listing-card:hover .img-wrapper img {
+            transform: scale(1.05);
+        }
+        .filter-card {
+            border-radius: 16px;
+            background: #ffffff;
+        }
+        .badge-type {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+        .pagination .page-link {
+            border: none;
+            color: #475569;
+            margin: 0 3px;
+            border-radius: 8px;
+        }
+        .pagination .active .page-link {
+            background-color: #0f172a;
+            color: white;
+        }
 
-        // ===== HEADER =====
+    .container.mt-2
+        //- ===== HEADER =====
         .text-center.mb-5
-            h2.fw-bold.mb-2 All Listings
-            p.text-muted.mb-0 Discover items shared by the community
+            span.badge.bg-primary.bg-opacity-10.text-primary.px-3.py-2.rounded-pill.mb-3.small.fw-bold Marketplace
+            h2.fw-bold.mb-2 Community Listings
+            p.text-muted Discover unique items shared by your neighbors
 
-        // ===== FILTER BAR (clean + compact) =====
-        .card.border-0.shadow-sm.mb-4
-            .card-body
+        //- ===== FILTER BAR =====
+        .card.filter-card.border-0.shadow-sm.mb-5
+            .card-body.p-4
                 form(method="GET")
                     .row.g-3.align-items-end
+                        .col-lg-3.col-md-6
+                            label.form-label.fw-semibold.small Search
+                            .input-group.input-group-sm
+                                span.input-group-text.bg-light.border-end-0: i 🔍
+                                input.form-control.bg-light.border-start-0(
+                                    type="text"
+                                    name="search"
+                                    value=filters.search || ""
+                                    placeholder="Search listings..."
+                                )
 
-                        .col-md-3
-                            label.form-label.small.text-muted Search
-                            input.form-control.form-control-sm(
-                                type="text"
-                                name="search"
-                                value=filters.search || ""
-                                placeholder="Search listings..."
-                            )
-
-                        .col-md-2
-                            label.form-label.small.text-muted Exchange
-                            select.form-select.form-select-sm(name="exchange")
-                                option(value="") All
+                        .col-lg-2.col-md-3
+                            label.form-label.fw-semibold.small Exchange
+                            select.form-select.form-select-sm.bg-light(name="exchange")
+                                option(value="") All Types
                                 option(value="lending" selected=filters.exchange==="lending") Lending
                                 option(value="swap" selected=filters.exchange==="swap") Swap
                                 option(value="giveaway" selected=filters.exchange==="giveaway") Giveaway
 
-                        .col-md-2
-                            label.form-label.small.text-muted Condition
-                            select.form-select.form-select-sm(name="condition")
-                                option(value="") All
+                        .col-lg-2.col-md-3
+                            label.form-label.fw-semibold.small Condition
+                            select.form-select.form-select-sm.bg-light(name="condition")
+                                option(value="") Any Condition
                                 option(value="like_new" selected=filters.condition==="like_new") Like New
                                 option(value="good" selected=filters.condition==="good") Good
                                 option(value="fair" selected=filters.condition==="fair") Fair
-                                option(value="well_used" selected=filters.condition==="well_used") Well Used
 
-                        .col-md-2
-                            label.form-label.small.text-muted Sort
-                            select.form-select.form-select-sm(name="sort")
-                                option(value="newest" selected=filters.sort==="newest") Newest
-                                option(value="popular" selected=filters.sort==="popular") Popular
+                        .col-lg-2.col-md-6
+                            label.form-label.fw-semibold.small Sort By
+                            select.form-select.form-select-sm.bg-light(name="sort")
+                                option(value="newest" selected=filters.sort==="newest") Newest First
+                                option(value="popular" selected=filters.sort==="popular") Most Popular
 
-                        .col-md-2
-                            label.form-label.small.text-muted Availability
-                            select.form-select.form-select-sm(name="available")
-                                option(value="") All
-                                option(value="1" selected=filters.available==="1") Available
+                        .col-lg-3.col-md-6.d-flex.gap-2
+                            button.btn.btn-dark.btn-sm.flex-grow-1.fw-bold(type="submit") Apply Filters
+                            a.btn.btn-outline-secondary.btn-sm.px-3(href="/all-listings-formatted") 🔄
 
-                        .col-md-2.d-flex.align-items-end.gap-2
-                            button.btn.btn-dark.btn-sm.flex-fill(type="submit") Apply
-                            a.btn.btn-dark.btn-sm.flex-fill.opacity-75(
-                                href="/all-listings-formatted"
-                            ) Reset
-
-        // ===== LISTINGS GRID =====
+        //- ===== LISTINGS GRID =====
         if listings.length > 0
             .row.g-4
                 each listing in listings
                     .col-md-6.col-lg-4
                         .card.listing-card.h-100.border-0.shadow-sm
-
-                            // IMAGE WRAPPER
-                            .position-relative
-
+                            //- Image Area
+                            .img-wrapper
                                 img.card-img-top(
                                     src=listing.image_path
-                                    style="height:230px; object-fit:cover;"
+                                    style="height:240px; object-fit:cover;"
+                                    alt=listing.title
                                 )
+                                //- Status Overlay
+                                .position-absolute.top-0.end-0.m-3
+                                    if listing.is_available
+                                        span.badge.bg-success.shadow-sm.px-3 Available
+                                    else
+                                        span.badge.bg-secondary.shadow-sm.px-3 Taken
 
-                                // GRADIENT OVERLAY
-                                .listing-overlay
+                                //- Exchange Type Tag (Bottom Left of Image)
+                                .position-absolute.bottom-0.start-0.m-3
+                                    span.badge.bg-white.text-dark.shadow-sm.badge-type
+                                        | #{listing.exchange_type}
 
-                                // STATUS BADGE (TOP RIGHT)
-                                if listing.is_available
-                                    span.badge.bg-success.position-absolute.top-0.end-0.m-2 Available
-                                else
-                                    span.badge.bg-dark.position-absolute.top-0.end-0.m-2 Unavailable
+                            .card-body.p-4.d-flex.flex-column
+                                .d-flex.justify-content-between.align-items-start.mb-2
+                                    h5.card-title.fw-bold.mb-0
+                                        a.text-decoration-none.text-dark(href=`/listing-detail/${listing.listing_id}`) 
+                                            | #{listing.title}
+                                
+                                p.text-muted.small.mb-3
+                                    span.me-2 👤 #{listing.first_name}
+                                    if listing.total_ratings > 0
+                                        span.text-warning.fw-bold ⭐ #{parseFloat(listing.avg_rating).toFixed(1)} 
+                                        span.text-muted (#{listing.total_ratings})
+                                    else
+                                        span.text-muted.small No reviews yet
 
-                            .card-body.d-flex.flex-column
-
-                                // TITLE
-                                h6.card-title.mb-1
-                                    a.text-decoration-none.text-dark(
-                                        href=`/listing-detail/${listing.listing_id}`
-                                    ) #{listing.title}
-
-                                // OWNER
-                                p.text-muted.small.mb-1
-                                    | by #{listing.first_name}
-
-                                // RATING
-                                if listing.total_ratings > 0
-                                    p.text-muted.small.mb-2
-                                        | ⭐ #{parseFloat(listing.avg_rating).toFixed(1)} (#{listing.total_ratings})
-                                else
-                                    p.text-muted.small.mb-2 No ratings
-
-                                // META
-                                p.text-muted.small.mb-2
-                                    | #{listing.exchange_type} • #{listing.condition_status}
+                                .d-flex.align-items-center.gap-2.mb-4
+                                    span.badge.bg-light.text-secondary.border.small #{listing.condition_status}
+                                    span.text-muted.small •
+                                    span.text-muted.small community-shared
 
                                 .mt-auto
-                                    a.btn.btn-outline-dark.btn-sm.w-100(
-                                        href=`/listing-detail/${listing.listing_id}`
-                                    ) View
+                                    a.btn.btn-outline-dark.w-100.rounded-pill.fw-bold(href=`/listing-detail/${listing.listing_id}`) 
+                                        | View Details
 
         else
-            .text-center.mt-5
-                h5.text-muted No listings found
-                p.text-muted.small Try adjusting filters
+            .text-center.py-5
+                .display-1.text-muted.opacity-25.mb-3 📦
+                h4.fw-bold No listings match your search
+                p.text-muted Try clearing your filters or searching for something else.
+                a.btn.btn-dark.mt-2(href="/all-listings-formatted") Clear All Filters
 
-        // ===== PAGINATION =====
+        //- ===== PAGINATION =====
         if totalPages > 1
-            nav.mt-5
-                ul.pagination.justify-content-center.pagination-sm
-
+            nav.mt-5.py-4
+                ul.pagination.justify-content-center
                     if currentPage > 1
                         li.page-item
-                            a.page-link(href=`?page=${currentPage - 1}`) ←
-
+                            a.page-link.shadow-sm(href=`?page=${currentPage - 1}`) 
+                                span Prev
+                    
                     each pageNum in [...Array(totalPages).keys()].map(n => n + 1)
                         li.page-item(class=pageNum === currentPage ? "active" : "")
-                            a.page-link(href=`?page=${pageNum}`) #{pageNum}
+                            a.page-link.shadow-sm(href=`?page=${pageNum}`) #{pageNum}
 
                     if currentPage < totalPages
                         li.page-item
-                            a.page-link(href=`?page=${currentPage + 1}`) →
+                            a.page-link.shadow-sm(href=`?page=${currentPage + 1}`) 
+                                span Next
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+
+//-         // ===== HEADER =====
+//-         .text-center.mb-5
+//-             h2.fw-bold.mb-2 All Listings
+//-             p.text-muted.mb-0 Discover items shared by the community
+
+//-         // ===== FILTER BAR (clean + compact) =====
+//-         .card.border-0.shadow-sm.mb-4
+//-             .card-body
+//-                 form(method="GET")
+//-                     .row.g-3.align-items-end
+
+//-                         .col-md-3
+//-                             label.form-label.small.text-muted Search
+//-                             input.form-control.form-control-sm(
+//-                                 type="text"
+//-                                 name="search"
+//-                                 value=filters.search || ""
+//-                                 placeholder="Search listings..."
+//-                             )
+
+//-                         .col-md-2
+//-                             label.form-label.small.text-muted Exchange
+//-                             select.form-select.form-select-sm(name="exchange")
+//-                                 option(value="") All
+//-                                 option(value="lending" selected=filters.exchange==="lending") Lending
+//-                                 option(value="swap" selected=filters.exchange==="swap") Swap
+//-                                 option(value="giveaway" selected=filters.exchange==="giveaway") Giveaway
+
+//-                         .col-md-2
+//-                             label.form-label.small.text-muted Condition
+//-                             select.form-select.form-select-sm(name="condition")
+//-                                 option(value="") All
+//-                                 option(value="like_new" selected=filters.condition==="like_new") Like New
+//-                                 option(value="good" selected=filters.condition==="good") Good
+//-                                 option(value="fair" selected=filters.condition==="fair") Fair
+//-                                 option(value="well_used" selected=filters.condition==="well_used") Well Used
+
+//-                         .col-md-2
+//-                             label.form-label.small.text-muted Sort
+//-                             select.form-select.form-select-sm(name="sort")
+//-                                 option(value="newest" selected=filters.sort==="newest") Newest
+//-                                 option(value="popular" selected=filters.sort==="popular") Popular
+
+//-                         .col-md-2
+//-                             label.form-label.small.text-muted Availability
+//-                             select.form-select.form-select-sm(name="available")
+//-                                 option(value="") All
+//-                                 option(value="1" selected=filters.available==="1") Available
+
+//-                         .col-md-2.d-flex.align-items-end.gap-2
+//-                             button.btn.btn-dark.btn-sm.flex-fill(type="submit") Apply
+//-                             a.btn.btn-dark.btn-sm.flex-fill.opacity-75(
+//-                                 href="/all-listings-formatted"
+//-                             ) Reset
+
+//-         // ===== LISTINGS GRID =====
+//-         if listings.length > 0
+//-             .row.g-4
+//-                 each listing in listings
+//-                     .col-md-6.col-lg-4
+//-                         .card.listing-card.h-100.border-0.shadow-sm
+
+//-                             // IMAGE WRAPPER
+//-                             .position-relative
+
+//-                                 img.card-img-top(
+//-                                     src=listing.image_path
+//-                                     style="height:230px; object-fit:cover;"
+//-                                 )
+
+//-                                 // GRADIENT OVERLAY
+//-                                 .listing-overlay
+
+//-                                 // STATUS BADGE (TOP RIGHT)
+//-                                 if listing.is_available
+//-                                     span.badge.bg-success.position-absolute.top-0.end-0.m-2 Available
+//-                                 else
+//-                                     span.badge.bg-dark.position-absolute.top-0.end-0.m-2 Unavailable
+
+//-                             .card-body.d-flex.flex-column
+
+//-                                 // TITLE
+//-                                 h6.card-title.mb-1
+//-                                     a.text-decoration-none.text-dark(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) #{listing.title}
+
+//-                                 // OWNER
+//-                                 p.text-muted.small.mb-1
+//-                                     | by #{listing.first_name}
+
+//-                                 // RATING
+//-                                 if listing.total_ratings > 0
+//-                                     p.text-muted.small.mb-2
+//-                                         | ⭐ #{parseFloat(listing.avg_rating).toFixed(1)} (#{listing.total_ratings})
+//-                                 else
+//-                                     p.text-muted.small.mb-2 No ratings
+
+//-                                 // META
+//-                                 p.text-muted.small.mb-2
+//-                                     | #{listing.exchange_type} • #{listing.condition_status}
+
+//-                                 .mt-auto
+//-                                     a.btn.btn-outline-dark.btn-sm.w-100(
+//-                                         href=`/listing-detail/${listing.listing_id}`
+//-                                     ) View
+
+//-         else
+//-             .text-center.mt-5
+//-                 h5.text-muted No listings found
+//-                 p.text-muted.small Try adjusting filters
+
+//-         // ===== PAGINATION =====
+//-         if totalPages > 1
+//-             nav.mt-5
+//-                 ul.pagination.justify-content-center.pagination-sm
+
+//-                     if currentPage > 1
+//-                         li.page-item
+//-                             a.page-link(href=`?page=${currentPage - 1}`) ←
+
+//-                     each pageNum in [...Array(totalPages).keys()].map(n => n + 1)
+//-                         li.page-item(class=pageNum === currentPage ? "active" : "")
+//-                             a.page-link(href=`?page=${pageNum}`) #{pageNum}
+
+//-                     if currentPage < totalPages
+//-                         li.page-item
+//-                             a.page-link(href=`?page=${currentPage + 1}`) →
+
+
+
+
+
+
+
+
 
 //- extends layout
 

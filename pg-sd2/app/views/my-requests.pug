@@ -1,67 +1,176 @@
 extends layout
 
 block content
-    .container.mt-4
+    style.
+        .my-request-card {
+            border-radius: 20px;
+            border: 1px solid #f1f5f9 !important;
+            transition: all 0.2s ease;
+        }
+        .my-request-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+        }
+        .status-pill {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .item-link {
+            color: #0f172a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .item-link:hover {
+            color: #3b82f6;
+        }
 
-        h3.mb-4 My Requests
+    .container.mt-5.mb-5
+        //- ===== HEADER =====
+        .d-flex.justify-content-between.align-items-center.mb-4
+            div
+                h2.fw-bold.mb-1 My Requests
+                p.text-muted.small Tracking the items you've asked to borrow or swap.
+            a.btn.btn-outline-dark.btn-sm.rounded-pill.px-3(href="/all-listings-formatted") Find More
 
         if requests.length === 0
-            .alert.alert-light.border
-                p.mb-0 You haven’t made any requests yet.
-
+            .card.border-0.shadow-sm.rounded-4.text-center.p-5
+                .mb-3(style="font-size: 3rem;") 🔭
+                h5.fw-bold You haven't requested anything yet
+                p.text-muted Explore the community and find your first item to borrow!
+                .mt-3
+                    a.btn.btn-dark.rounded-pill.px-4(href="/all-listings-formatted") Browse Listings
         else
             .row.g-4
-
                 each request in requests
                     .col-md-6.col-lg-4
-                        .card.h-100.shadow-sm.border-0
-
-                            .card-body.d-flex.flex-column
-
-                                // ===== TITLE =====
-                                h6.card-title.mb-2
-                                    | You requested:
-                                    br
-                                    span.fw-bold "#{request.title}"
-
-                                // ===== STATUS =====
-                                .mb-3
+                        .card.my-request-card.shadow-sm.h-100
+                            .card-body.p-4.d-flex.flex-column
+                                
+                                //- HEADER: STATUS & DATE
+                                .d-flex.justify-content-between.align-items-center.mb-3
                                     if request.status === 'pending'
-                                        span.badge.bg-warning.text-dark Pending
+                                        span.status-pill.bg-warning.bg-opacity-10.text-dark ⏳ Pending
                                     else if request.status === 'accepted'
-                                        span.badge.bg-success Accepted
+                                        span.status-pill.bg-success.bg-opacity-10.text-success ✅ Accepted
                                     else if request.status === 'declined'
-                                        span.badge.bg-danger Declined
+                                        span.status-pill.bg-danger.bg-opacity-10.text-danger ✖ Declined
                                     else if request.status === 'cancelled'
-                                        span.badge.bg-secondary Cancelled
+                                        span.status-pill.bg-secondary.bg-opacity-10.text-secondary 🚫 Cancelled
                                     else if request.status === 'completed'
-                                        span.badge.bg-primary Completed
+                                        span.status-pill.bg-primary.bg-opacity-10.text-primary ✨ Completed
+                                    
+                                    small.text-muted.fw-light
+                                        | #{new Date(request.requested_date).toLocaleDateString("en-GB", {day:"numeric", month:"short"})}
 
-                                // ===== ACTIONS =====
-                                .mt-auto.d-flex.flex-column.gap-2
+                                //- TITLE
+                                .mb-4
+                                    small.text-uppercase.text-muted.ls-wide.fw-bold(style="font-size: 0.65rem;") You requested
+                                    a.item-link.d-block(href=`/listing-detail/${request.listing_id}`)
+                                        h6.fw-bold.mt-1.mb-0 "#{request.title}"
 
-                                    // VIEW
-                                    a.btn.btn-outline-dark.btn-sm.w-100(
-                                        href=`/listing-detail/${request.listing_id}`
-                                    ) View Listing
+                                //- ACTIONS
+                                .mt-auto.pt-3.border-top
+                                    .d-flex.flex-column.gap-2
+                                        //- Primary Chat Action
+                                        if request.status !== 'declined' && request.status !== 'cancelled'
+                                            a.btn.btn-dark.btn-sm.w-100.rounded-pill.fw-bold(
+                                                href=`/requests/${request.request_id}/messages`
+                                            ) 💬 Message Owner
+                                        
+                                        //- Secondary View Action
+                                        a.btn.btn-light.btn-sm.w-100.rounded-pill.fw-bold(
+                                            href=`/listing-detail/${request.listing_id}`
+                                        ) View Item
 
-                                    // MESSAGE
-                                    if request.status !== 'declined' && request.status !== 'cancelled'
-                                        a.btn.btn-outline-primary.btn-sm.w-100(
-                                            href=`/requests/${request.request_id}/messages`
-                                        ) Message
+                                        //- Cancel Action
+                                        if request.status === 'pending'
+                                            form(
+                                                action=`/requests/${request.request_id}/cancel`
+                                                method="POST"
+                                                onsubmit="return confirm('Stop requesting this item?');"
+                                            )
+                                                button.btn.btn-link.btn-sm.w-100.text-danger.text-decoration-none.mt-1(type="submit")
+                                                    small Cancel Request
 
-                                    // CANCEL
-                                    if request.status === 'pending'
-                                        form(
-                                            action=`/requests/${request.request_id}/cancel`
-                                            method="POST"
-                                            onsubmit="return confirm('Cancel this request?');"
-                                        )
-                                            button.btn.btn-outline-danger.btn-sm.w-100(type="submit") Cancel Request
+                                        //- Rate Action
+                                        if request.status === 'completed' && !request.hasRated
+                                            a.btn.btn-warning.btn-sm.w-100.rounded-pill.fw-bold(
+                                                href=`/requests/${request.request_id}/rate`
+                                            ) ⭐ Leave Review
 
-                                    // RATE
-                                    if request.status === 'completed' && !request.hasRated
-                                        a.btn.btn-dark.btn-sm.w-100(
-                                            href=`/requests/${request.request_id}/rate`
-                                        ) Rate Experience
+
+
+
+
+
+
+//- extends layout
+
+//- block content
+//-     .container.mt-4
+
+//-         h3.mb-4 My Requests
+
+//-         if requests.length === 0
+//-             .alert.alert-light.border
+//-                 p.mb-0 You haven’t made any requests yet.
+
+//-         else
+//-             .row.g-4
+
+//-                 each request in requests
+//-                     .col-md-6.col-lg-4
+//-                         .card.h-100.shadow-sm.border-0
+
+//-                             .card-body.d-flex.flex-column
+
+//-                                 // ===== TITLE =====
+//-                                 h6.card-title.mb-2
+//-                                     | You requested:
+//-                                     br
+//-                                     span.fw-bold "#{request.title}"
+
+//-                                 // ===== STATUS =====
+//-                                 .mb-3
+//-                                     if request.status === 'pending'
+//-                                         span.badge.bg-warning.text-dark Pending
+//-                                     else if request.status === 'accepted'
+//-                                         span.badge.bg-success Accepted
+//-                                     else if request.status === 'declined'
+//-                                         span.badge.bg-danger Declined
+//-                                     else if request.status === 'cancelled'
+//-                                         span.badge.bg-secondary Cancelled
+//-                                     else if request.status === 'completed'
+//-                                         span.badge.bg-primary Completed
+
+//-                                 // ===== ACTIONS =====
+//-                                 .mt-auto.d-flex.flex-column.gap-2
+
+//-                                     // VIEW
+//-                                     a.btn.btn-outline-dark.btn-sm.w-100(
+//-                                         href=`/listing-detail/${request.listing_id}`
+//-                                     ) View Listing
+
+//-                                     // MESSAGE
+//-                                     if request.status !== 'declined' && request.status !== 'cancelled'
+//-                                         a.btn.btn-outline-primary.btn-sm.w-100(
+//-                                             href=`/requests/${request.request_id}/messages`
+//-                                         ) Message
+
+//-                                     // CANCEL
+//-                                     if request.status === 'pending'
+//-                                         form(
+//-                                             action=`/requests/${request.request_id}/cancel`
+//-                                             method="POST"
+//-                                             onsubmit="return confirm('Cancel this request?');"
+//-                                         )
+//-                                             button.btn.btn-outline-danger.btn-sm.w-100(type="submit") Cancel Request
+
+//-                                     // RATE
+//-                                     if request.status === 'completed' && !request.hasRated
+//-                                         a.btn.btn-dark.btn-sm.w-100(
+//-                                             href=`/requests/${request.request_id}/rate`
+//-                                         ) Rate Experience

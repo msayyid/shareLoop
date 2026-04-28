@@ -3,224 +3,456 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport" content="width=device-width, initial-scale=1")
-        title #{title || "ShareLoop"}
+        title #{title || "ShareLoop | Community Sharing"}
 
+        //- Google Fonts for a more modern feel
+        link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet")
+        
         link(
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
             rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
         )
+        
+        style.
+            body { font-family: 'Inter', sans-serif; color: #1e293b; }
+            .navbar { border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+            
+            /* Category Pills */
+            .category-pill {
+                display: inline-block;
+                padding: 6px 16px;
+                border-radius: 50px;
+                background: #f1f5f9;
+                color: #475569;
+                text-decoration: none;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                border: 1px solid transparent;
+            }
+            .category-pill:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+                transform: translateY(-1px);
+            }
+
+            /* Notifications & Dropdowns */
+            .notification-bell { font-size: 1.2rem; cursor: pointer; }
+            .notification-badge { font-size: 0.6rem; padding: 4px 6px; }
+            .dropdown-menu { border: none; shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-radius: 12px; padding: 0.75rem; }
+            .dropdown-item { border-radius: 8px; padding: 8px 12px; transition: background 0.2s; }
+            
+            /* Footer Styling */
+            footer { background-color: #0f172a !important; }
+            footer a { text-decoration: none; transition: color 0.2s; color: #94a3b8 !important; }
+            footer a:hover { color: #f8f9fa !important; }
 
         link(rel="stylesheet", href="/css/style.css")
 
     body.bg-light.d-flex.flex-column.min-vh-100(data-logged-in=loggedIn ? "true" : "false")
-        // MAIN NAVBAR (ROW 1)
-        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+        
+        //- ===== MAIN NAVIGATION =====
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top.py-3
             .container
-                a.navbar-brand(href="/") ShareLoop
+                a.navbar-brand.d-flex.align-items-center(href="/")
+                    span.me-2 🔄
+                    | ShareLoop
 
-                button.navbar-toggler(
+                button.navbar-toggler.border-0(
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#mainNav"
-                    aria-controls="mainNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
                 )
                     span.navbar-toggler-icon
 
                 #mainNav.collapse.navbar-collapse
-                    ul.navbar-nav.ms-auto
-                        li.nav-item
-                            a.nav-link(href="/") Home
-                        li.nav-item
-                            a.nav-link(href="/all-users-formatted") Users
-                        li.nav-item
-                            a.nav-link(href="/all-listings-formatted") Listings
-                        li.nav-item
-                            a.nav-link(href="/about") About
+                    ul.navbar-nav.mx-auto
+                        li.nav-item: a.nav-link.px-3(href="/") Home
+                        li.nav-item: a.nav-link.px-3(href="/all-listings-formatted") Listings
+                        li.nav-item: a.nav-link.px-3(href="/all-users-formatted") Neighbors
+                        li.nav-item: a.nav-link.px-3(href="/about") About
 
+                    ul.navbar-nav.ms-auto.align-items-center
                         if loggedIn
-                            //- li.nav-item
-                            //-     a.nav-link(href="/dashboard") Dashboard
-
-                            li.nav-item
-                                a.nav-link.fw-bold(href="/my-chats") My Chats
-
-                            // USER AVATAR DROPDOWN
-                            li.nav-item.dropdown
-                                a.nav-link.dropdown-toggle(
+                            //- Messages/Chats
+                            li.nav-item.me-3
+                                a.nav-link.position-relative(href="/my-chats")
+                                    | 💬
+                            
+                            //- Notifications Dropdown
+                            li.nav-item.dropdown.me-3
+                                a.nav-link.dropdown-toggle.hide-caret(
                                     href="#"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                 )
-                                    if currentUser && currentUser.profile_image_path
-                                        img(
-                                            src=currentUser.profile_image_path
-                                            style="width:32px; height:32px; object-fit:cover; border-radius:50%;"
-                                        )
-
-                                ul.dropdown-menu.dropdown-menu-end
-                                    li
-                                        a.dropdown-item(href="/profile") Profile
-                                    li
-                                        a.dropdown-item(href="/dashboard") Dashboard
-                                    li
-                                        hr.dropdown-divider
-                                    li
-                                        a.dropdown-item(href="/logout") Logout
-
-                            // Notifications
-                            li.nav-item.dropdown
-                                a.nav-link.dropdown-toggle(
-                                    href="#"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                )
-                                    span.position-relative.notification-bell
+                                    span.notification-bell.position-relative
                                         | 🔔
                                         if unreadCount > 0
                                             span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.notification-badge
                                                 | #{unreadCount}
 
-                                ul.dropdown-menu.dropdown-menu-end.notifications-dropdown
+                                ul.dropdown-menu.dropdown-menu-end.notifications-dropdown.shadow-lg(style="width: 300px;")
+                                    li.dropdown-header.text-uppercase.fw-bold.small Notifications
                                     if notifications.length === 0
-                                        li
-                                            span.dropdown-item.text-muted No notifications
+                                        li: span.dropdown-item.text-muted.small No new alerts
                                     else
                                         each n in notifications
-                                            li
-                                                a.dropdown-item(
-                                                    href=`/notifications/${n.notification_id}/read`
-                                                    class=n.is_read ? "" : "fw-bold"
-                                                )
-                                                    | #{n.message}
+                                            li: a.dropdown-item.small(href=`/notifications/${n.notification_id}/read` class=n.is_read ? "" : "fw-bold")
+                                                | #{n.message}
 
-                            //- li.nav-item
-                            //-     a.nav-link(href="/logout") Logout
+                            //- User Profile Dropdown
+                            li.nav-item.dropdown
+                                a.nav-link.dropdown-toggle.d-flex.align-items-center(
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                )
+                                    if currentUser && currentUser.profile_image_path
+                                        img.border.border-2.border-secondary(
+                                            src=currentUser.profile_image_path
+                                            style="width:36px; height:36px; object-fit:cover; border-radius:50%;"
+                                        )
+                                    else
+                                        .bg-secondary.rounded-circle.d-flex.align-items-center.justify-content-center(style="width:36px; height:36px;")
+                                            span.text-white.small 👤
 
+                                ul.dropdown-menu.dropdown-menu-end.shadow-lg
+                                    li: a.dropdown-item(href="/profile") My Profile
+                                    li: a.dropdown-item(href="/dashboard") Dashboard
+                                    li: hr.dropdown-divider
+                                    li: a.dropdown-item.text-danger(href="/logout") Logout
                         else
-                            li.nav-item
-                                a.nav-link(href="/login") Login
-                            li.nav-item
-                                a.nav-link(href="/register") Register
+                            li.nav-item: a.nav-link(href="/login") Login
+                            li.nav-item.ms-lg-2
+                                a.btn.btn-light.btn-sm.px-3.fw-bold(href="/register") Join Free
 
-        // CATEGORY BAR (ROW 2)
+        //- ===== SECONDARY CATEGORY BAR =====
         if !hideCategories && categories && categories.length
-            .bg-white.border-bottom
-                .container.py-2
-                    .d-flex.flex-wrap.justify-content-center.gap-2
-                        each category in categories
-                            a.category-pill(
-                                href=`/all-categories/${category.category_id}`
-                            ) #{category.category_name}
+            .bg-white.shadow-sm.py-2
+                .container
+                    .d-flex.align-items-center.overflow-auto.py-1(style="white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none;")
+                        span.text-muted.small.fw-bold.me-3.text-uppercase Categories:
+                        .d-flex.gap-2
+                            each category in categories
+                                a.category-pill(href=`/all-categories/${category.category_id}`) #{category.category_name}
 
-        main.container.py-4.flex-grow-1
+        //- ===== MAIN CONTENT =====
+        main.container.py-5.flex-grow-1
             block content
 
-        footer.bg-dark.text-light.mt-5.py-4
+        //- ===== FOOTER =====
+        footer.mt-auto.py-4(style="background-color: #0f172a;")
             .container
-                .row
+                .row.gy-3.align-items-start
+                    //- LEFT COLUMN: Brand & Description
+                    .col-md-5.col-lg-4.text-center.text-md-start
+                        h5.text-white.fw-bold.mb-2 ShareLoop
+                        p.mb-0(style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.5;")
+                            | Building stronger communities through the power of sharing. Reduce waste, meet neighbors, and save money.
+                    
+                    //- MIDDLE COLUMN: Links 1
+                    .col-6.col-md-3.col-lg-2.offset-lg-2.text-center.text-md-start
+                        h6.text-white.fw-bold.mb-2.small.text-uppercase(style="letter-spacing: 1px;") Platform
+                        ul.list-unstyled.mb-0
+                            li: a.footer-link.small(href="/all-listings-formatted") Browse Items
+                            li: a.footer-link.small(href="/all-users-formatted") Neighbors
+                            li: a.footer-link.small(href="/about") Our Mission
+                    
+                    //- RIGHT COLUMN: Links 2
+                    .col-6.col-md-3.col-lg-2.text-center.text-md-start
+                        h6.text-white.fw-bold.mb-2.small.text-uppercase(style="letter-spacing: 1px;") Support
+                        ul.list-unstyled.mb-0
+                            li: a.footer-link.small(href="/contact") Contact Us
+                            li: a.footer-link.small(href="/privacy") Privacy Policy
+                            li: a.footer-link.small(href="/terms") Terms of Service
 
-                    // LEFT
-                    .col-md-6
-                        h5.mb-2 ShareLoop
-                        p.text-muted.small.mb-0
-                            | Share More. Waste Less. Connect Better.
+                //- Thin line with less margin
+                hr.my-3(style="border-top: 1px solid rgba(255,255,255,0.1);")
+                
+                //- BOTTOM ROW: Copyright
+                .row.align-items-center
+                    .col-md-6.text-center.text-md-start
+                        p.mb-0.small(style="color: #94a3b8;") © #{new Date().getFullYear()} ShareLoop Inc. All rights reserved.
+                    .col-md-6.text-center.text-md-end.mt-2.mt-md-0
+                        span.small(style="color: #cbd5e1; font-weight: 500;") Made with ❤️ for the Planet
 
-                    // RIGHT
-                    .col-md-6.text-md-end.mt-3.mt-md-0
-                        a.text-light.me-3(href="/about") About
-                        a.text-light.me-3(href="/contact") Contact
-                        a.text-light.me-3(href="/privacy") Privacy
-                        a.text-light(href="/terms") Terms
-
-                hr.border-secondary.my-3
-
-                .text-center.small.text-muted
-                    | © #{new Date().getFullYear()} ShareLoop. All rights reserved.
-
+        //- Scripts (Bootstrap & Custom)
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
         script.
             const isLoggedIn = document.body.dataset.loggedIn === "true";
 
-            document.addEventListener("DOMContentLoaded", () => {
-                if (!isLoggedIn) return;
-
+            if (isLoggedIn) {
                 async function refreshNotifications() {
                     try {
                         const res = await fetch("/api/notifications");
                         if (!res.ok) return;
-
                         const data = await res.json();
-
-                        // ===== BADGE =====
-                        let badge = document.querySelector(".notification-badge");
+                        
+                        const badge = document.querySelector(".notification-badge");
                         const bellContainer = document.querySelector(".notification-bell");
-
-                        if (data.unreadCount > 0) {
-                            if (!badge && bellContainer) {
-                                badge = document.createElement("span");
-                                badge.className = "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge";
-                                bellContainer.appendChild(badge);
-                            }
-
-                            if (badge) {
-                                badge.textContent = data.unreadCount;
-                            }
-                        } else {
-                            if (badge) {
-                                badge.remove();
-                            }
-                        }
-
-                        // ===== DROPDOWN =====
                         const dropdown = document.querySelector(".notifications-dropdown");
 
+                        // Update Badge
+                        if (data.unreadCount > 0) {
+                            if (!badge && bellContainer) {
+                                const newBadge = document.createElement("span");
+                                newBadge.className = "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge";
+                                newBadge.textContent = data.unreadCount;
+                                bellContainer.appendChild(newBadge);
+                            } else if (badge) {
+                                badge.textContent = data.unreadCount;
+                            }
+                        } else if (badge) badge.remove();
+
+                        // Update Dropdown List
                         if (dropdown) {
-                            dropdown.innerHTML = "";
-
+                            const header = '<li class="dropdown-header text-uppercase fw-bold small">Notifications</li>';
                             if (data.notifications.length === 0) {
-                                dropdown.innerHTML = `
-                                    <li>
-                                        <span class="dropdown-item text-muted">
-                                            No notifications
-                                        </span>
-                                    </li>
-                                `;
+                                dropdown.innerHTML = header + '<li><span class="dropdown-item text-muted small">No new alerts</span></li>';
                             } else {
-                                data.notifications.forEach(n => {
-                                    const item = document.createElement("li");
-
-                                    item.innerHTML = `
-                                        <a class="dropdown-item ${n.is_read ? "" : "fw-bold"}"
-                                        href="/notifications/${n.notification_id}/read">
+                                const items = data.notifications.map(n => `
+                                    <li>
+                                        <a class="dropdown-item small ${n.is_read ? '' : 'fw-bold'}" href="/notifications/${n.notification_id}/read">
                                             ${n.message}
                                         </a>
-                                    `;
-
-                                    dropdown.appendChild(item);
-                                });
+                                    </li>
+                                `).join('');
+                                dropdown.innerHTML = header + items;
                             }
                         }
-
-                    } catch (err) {
-                        console.error("notif error", err);
-                    }
+                    } catch (err) { console.error("Notification Sync Error", err); }
                 }
+                setInterval(refreshNotifications, 10000); // Polling every 10s for performance
+            }
 
-                // 🔥 IMPORTANT: run immediately + poll
-                refreshNotifications();
-                setInterval(refreshNotifications, 5000);
-            });
-
-        script(
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"
-        )
 
 //- doctype html
+//- html(lang="en")
+//-     head
+//-         meta(charset="UTF-8")
+//-         meta(name="viewport" content="width=device-width, initial-scale=1")
+//-         title #{title || "ShareLoop"}
+
+//-         link(
+//-             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+//-             rel="stylesheet"
+//-             integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+//-             crossorigin="anonymous"
+//-         )
+
+//-         link(rel="stylesheet", href="/css/style.css")
+
+//-     body.bg-light.d-flex.flex-column.min-vh-100(data-logged-in=loggedIn ? "true" : "false")
+//-         // MAIN NAVBAR (ROW 1)
+//-         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+//-             .container
+//-                 a.navbar-brand(href="/") ShareLoop
+
+//-                 button.navbar-toggler(
+//-                     type="button"
+//-                     data-bs-toggle="collapse"
+//-                     data-bs-target="#mainNav"
+//-                     aria-controls="mainNav"
+//-                     aria-expanded="false"
+//-                     aria-label="Toggle navigation"
+//-                 )
+//-                     span.navbar-toggler-icon
+
+//-                 #mainNav.collapse.navbar-collapse
+//-                     ul.navbar-nav.ms-auto
+//-                         li.nav-item
+//-                             a.nav-link(href="/") Home
+//-                         li.nav-item
+//-                             a.nav-link(href="/all-users-formatted") Users
+//-                         li.nav-item
+//-                             a.nav-link(href="/all-listings-formatted") Listings
+//-                         li.nav-item
+//-                             a.nav-link(href="/about") About
+
+//-                         if loggedIn
+//-                             //- li.nav-item
+//-                             //-     a.nav-link(href="/dashboard") Dashboard
+
+//-                             li.nav-item
+//-                                 a.nav-link.fw-bold(href="/my-chats") My Chats
+
+//-                             // USER AVATAR DROPDOWN
+//-                             li.nav-item.dropdown
+//-                                 a.nav-link.dropdown-toggle(
+//-                                     href="#"
+//-                                     role="button"
+//-                                     data-bs-toggle="dropdown"
+//-                                 )
+//-                                     if currentUser && currentUser.profile_image_path
+//-                                         img(
+//-                                             src=currentUser.profile_image_path
+//-                                             style="width:32px; height:32px; object-fit:cover; border-radius:50%;"
+//-                                         )
+
+//-                                 ul.dropdown-menu.dropdown-menu-end
+//-                                     li
+//-                                         a.dropdown-item(href="/profile") Profile
+//-                                     li
+//-                                         a.dropdown-item(href="/dashboard") Dashboard
+//-                                     li
+//-                                         hr.dropdown-divider
+//-                                     li
+//-                                         a.dropdown-item(href="/logout") Logout
+
+//-                             // Notifications
+//-                             li.nav-item.dropdown
+//-                                 a.nav-link.dropdown-toggle(
+//-                                     href="#"
+//-                                     role="button"
+//-                                     data-bs-toggle="dropdown"
+//-                                 )
+//-                                     span.position-relative.notification-bell
+//-                                         | 🔔
+//-                                         if unreadCount > 0
+//-                                             span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.notification-badge
+//-                                                 | #{unreadCount}
+
+//-                                 ul.dropdown-menu.dropdown-menu-end.notifications-dropdown
+//-                                     if notifications.length === 0
+//-                                         li
+//-                                             span.dropdown-item.text-muted No notifications
+//-                                     else
+//-                                         each n in notifications
+//-                                             li
+//-                                                 a.dropdown-item(
+//-                                                     href=`/notifications/${n.notification_id}/read`
+//-                                                     class=n.is_read ? "" : "fw-bold"
+//-                                                 )
+//-                                                     | #{n.message}
+
+//-                             //- li.nav-item
+//-                             //-     a.nav-link(href="/logout") Logout
+
+//-                         else
+//-                             li.nav-item
+//-                                 a.nav-link(href="/login") Login
+//-                             li.nav-item
+//-                                 a.nav-link(href="/register") Register
+
+//-         // CATEGORY BAR (ROW 2)
+//-         if !hideCategories && categories && categories.length
+//-             .bg-white.border-bottom
+//-                 .container.py-2
+//-                     .d-flex.flex-wrap.justify-content-center.gap-2
+//-                         each category in categories
+//-                             a.category-pill(
+//-                                 href=`/all-categories/${category.category_id}`
+//-                             ) #{category.category_name}
+
+//-         main.container.py-4.flex-grow-1
+//-             block content
+
+//-         footer.bg-dark.text-light.mt-5.py-4
+//-             .container
+//-                 .row
+
+//-                     // LEFT
+//-                     .col-md-6
+//-                         h5.mb-2 ShareLoop
+//-                         p.text-muted.small.mb-0
+//-                             | Share More. Waste Less. Connect Better.
+
+//-                     // RIGHT
+//-                     .col-md-6.text-md-end.mt-3.mt-md-0
+//-                         a.text-light.me-3(href="/about") About
+//-                         a.text-light.me-3(href="/contact") Contact
+//-                         a.text-light.me-3(href="/privacy") Privacy
+//-                         a.text-light(href="/terms") Terms
+
+//-                 hr.border-secondary.my-3
+
+//-                 .text-center.small.text-muted
+//-                     | © #{new Date().getFullYear()} ShareLoop. All rights reserved.
+
+//-         script.
+//-             const isLoggedIn = document.body.dataset.loggedIn === "true";
+
+//-             document.addEventListener("DOMContentLoaded", () => {
+//-                 if (!isLoggedIn) return;
+
+//-                 async function refreshNotifications() {
+//-                     try {
+//-                         const res = await fetch("/api/notifications");
+//-                         if (!res.ok) return;
+
+//-                         const data = await res.json();
+
+//-                         // ===== BADGE =====
+//-                         let badge = document.querySelector(".notification-badge");
+//-                         const bellContainer = document.querySelector(".notification-bell");
+
+//-                         if (data.unreadCount > 0) {
+//-                             if (!badge && bellContainer) {
+//-                                 badge = document.createElement("span");
+//-                                 badge.className = "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge";
+//-                                 bellContainer.appendChild(badge);
+//-                             }
+
+//-                             if (badge) {
+//-                                 badge.textContent = data.unreadCount;
+//-                             }
+//-                         } else {
+//-                             if (badge) {
+//-                                 badge.remove();
+//-                             }
+//-                         }
+
+//-                         // ===== DROPDOWN =====
+//-                         const dropdown = document.querySelector(".notifications-dropdown");
+
+//-                         if (dropdown) {
+//-                             dropdown.innerHTML = "";
+
+//-                             if (data.notifications.length === 0) {
+//-                                 dropdown.innerHTML = `
+//-                                     <li>
+//-                                         <span class="dropdown-item text-muted">
+//-                                             No notifications
+//-                                         </span>
+//-                                     </li>
+//-                                 `;
+//-                             } else {
+//-                                 data.notifications.forEach(n => {
+//-                                     const item = document.createElement("li");
+
+//-                                     item.innerHTML = `
+//-                                         <a class="dropdown-item ${n.is_read ? "" : "fw-bold"}"
+//-                                         href="/notifications/${n.notification_id}/read">
+//-                                             ${n.message}
+//-                                         </a>
+//-                                     `;
+
+//-                                     dropdown.appendChild(item);
+//-                                 });
+//-                             }
+//-                         }
+
+//-                     } catch (err) {
+//-                         console.error("notif error", err);
+//-                     }
+//-                 }
+
+//-                 // 🔥 IMPORTANT: run immediately + poll
+//-                 refreshNotifications();
+//-                 setInterval(refreshNotifications, 5000);
+//-             });
+
+//-         script(
+//-             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+//-             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+//-             crossorigin="anonymous"
+//-         )
+
+
+
+//- doctype html ---------------------------------------------------------------------------
 //- html(lang="en")
 //-     head
 //-         meta(charset="UTF-8")
