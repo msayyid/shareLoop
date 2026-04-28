@@ -52,81 +52,159 @@ html(lang="en")
 
     body.bg-light.d-flex.flex-column.min-vh-100(data-logged-in=loggedIn ? "true" : "false")
         
+        //- //- ===== MAIN NAVIGATION =====
+        //- nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top.py-3
+        //-     .container
+        //-         a.navbar-brand.d-flex.align-items-center(href="/")
+        //-             span.me-2 🔄
+        //-             | ShareLoop
+
+        //-         button.navbar-toggler.border-0(
+        //-             type="button"
+        //-             data-bs-toggle="collapse"
+        //-             data-bs-target="#mainNav"
+        //-         )
+        //-             span.navbar-toggler-icon
+
+        //-         #mainNav.collapse.navbar-collapse
+        //-             ul.navbar-nav.mx-auto
+        //-                 li.nav-item: a.nav-link.px-3(href="/") Home
+        //-                 li.nav-item: a.nav-link.px-3(href="/all-listings-formatted") Listings
+        //-                 li.nav-item: a.nav-link.px-3(href="/all-users-formatted") Neighbors
+        //-                 li.nav-item: a.nav-link.px-3(href="/about") About
+
+        //-             ul.navbar-nav.ms-auto.align-items-center
+        //-                 if loggedIn
+        //-                     //- Messages/Chats
+        //-                     li.nav-item.me-3
+        //-                         a.nav-link.position-relative(href="/my-chats")
+        //-                             | 💬
+                            
+        //-                     //- Notifications Dropdown
+        //-                     li.nav-item.dropdown.me-3
+        //-                         a.nav-link.dropdown-toggle.hide-caret(
+        //-                             href="#"
+        //-                             role="button"
+        //-                             data-bs-toggle="dropdown"
+        //-                         )
+        //-                             span.notification-bell.position-relative
+        //-                                 | 🔔
+        //-                                 if unreadCount > 0
+        //-                                     span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.notification-badge
+        //-                                         | #{unreadCount}
+
+        //-                         ul.dropdown-menu.dropdown-menu-end.notifications-dropdown.shadow-lg(style="width: 300px;")
+        //-                             li.dropdown-header.text-uppercase.fw-bold.small Notifications
+        //-                             if notifications.length === 0
+        //-                                 li: span.dropdown-item.text-muted.small No new alerts
+        //-                             else
+        //-                                 each n in notifications
+        //-                                     li: a.dropdown-item.small(href=`/notifications/${n.notification_id}/read` class=n.is_read ? "" : "fw-bold")
+        //-                                         | #{n.message}
+
+        //-                     //- User Profile Dropdown
+        //-                     li.nav-item.dropdown
+        //-                         a.nav-link.dropdown-toggle.d-flex.align-items-center(
+        //-                             href="#"
+        //-                             role="button"
+        //-                             data-bs-toggle="dropdown"
+        //-                         )
+        //-                             if currentUser && currentUser.profile_image_path
+        //-                                 img.border.border-2.border-secondary(
+        //-                                     src=currentUser.profile_image_path
+        //-                                     style="width:36px; height:36px; object-fit:cover; border-radius:50%;"
+        //-                                 )
+        //-                             else
+        //-                                 .bg-secondary.rounded-circle.d-flex.align-items-center.justify-content-center(style="width:36px; height:36px;")
+        //-                                     span.text-white.small 👤
+
+        //-                         ul.dropdown-menu.dropdown-menu-end.shadow-lg
+        //-                             li: a.dropdown-item(href="/profile") My Profile
+        //-                             li: a.dropdown-item(href="/dashboard") Dashboard
+        //-                             li: hr.dropdown-divider
+        //-                             li: a.dropdown-item.text-danger(href="/logout") Logout
+        //-                 else
+        //-                     li.nav-item: a.nav-link(href="/login") Login
+        //-                     li.nav-item.ms-lg-2
+        //-                         a.btn.btn-light.btn-sm.px-3.fw-bold(href="/register") Join Free
+
         //- ===== MAIN NAVIGATION =====
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top.py-3
             .container
+                //- 1. Brand (Always Visible)
                 a.navbar-brand.d-flex.align-items-center(href="/")
                     span.me-2 🔄
                     | ShareLoop
 
-                button.navbar-toggler.border-0(
+                //- 2. RIGHT-SIDE ACTIONS (Always Visible outside the collapse)
+                .d-flex.align-items-center.ms-auto.order-lg-3
+                    if loggedIn
+                        //- Messages
+                        a.nav-link.text-white.px-2.position-relative(href="/my-chats")
+                            | 💬
+                        
+                        //- Notifications Dropdown
+                        .dropdown.px-2
+                            a.nav-link.dropdown-toggle.hide-caret.text-white(
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                            )
+                                span.notification-bell.position-relative
+                                    | 🔔
+                                    if unreadCount > 0
+                                        span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.notification-badge
+                                            | #{unreadCount}
+
+                            ul.dropdown-menu.dropdown-menu-end.notifications-dropdown.shadow-lg(style="width: 280px; position: absolute;")
+                                li.dropdown-header.text-uppercase.fw-bold.small Notifications
+                                if notifications.length === 0
+                                    li: span.dropdown-item.text-muted.small No new alerts
+                                else
+                                    each n in notifications
+                                        li: a.dropdown-item.small(href=`/notifications/${n.notification_id}/read` class=n.is_read ? "" : "fw-bold")
+                                            | #{n.message}
+
+                        //- User Profile
+                        .dropdown.ms-2
+                            a.nav-link.dropdown-toggle.d-flex.align-items-center(
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                            )
+                                if currentUser && currentUser.profile_image_path
+                                    img.border.border-1.border-secondary(
+                                        src=currentUser.profile_image_path
+                                        style="width:32px; height:32px; object-fit:cover; border-radius:50%;"
+                                    )
+                                else
+                                    .bg-secondary.rounded-circle.d-flex.align-items-center.justify-content-center(style="width:32px; height:32px;")
+                                        span.text-white.small(style="font-size: 0.7rem;") 👤
+
+                            ul.dropdown-menu.dropdown-menu-end.shadow-lg
+                                li: a.dropdown-item(href="/profile") My Profile
+                                li: a.dropdown-item(href="/dashboard") Dashboard
+                                li: hr.dropdown-divider
+                                li: a.dropdown-item.text-danger(href="/logout") Logout
+                    else
+                        a.nav-link.text-white.small.me-2(href="/login") Login
+                        a.btn.btn-light.btn-sm.fw-bold(href="/register") Join
+
+                //- 3. The Toggle Button (Visible only on mobile)
+                button.navbar-toggler.border-0.ms-2(
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#mainNav"
                 )
                     span.navbar-toggler-icon
 
-                #mainNav.collapse.navbar-collapse
+                //- 4. The Collapsible Links (Home, Listings, etc.)
+                #mainNav.collapse.navbar-collapse.order-lg-2
                     ul.navbar-nav.mx-auto
                         li.nav-item: a.nav-link.px-3(href="/") Home
                         li.nav-item: a.nav-link.px-3(href="/all-listings-formatted") Listings
                         li.nav-item: a.nav-link.px-3(href="/all-users-formatted") Neighbors
                         li.nav-item: a.nav-link.px-3(href="/about") About
-
-                    ul.navbar-nav.ms-auto.align-items-center
-                        if loggedIn
-                            //- Messages/Chats
-                            li.nav-item.me-3
-                                a.nav-link.position-relative(href="/my-chats")
-                                    | 💬
-                            
-                            //- Notifications Dropdown
-                            li.nav-item.dropdown.me-3
-                                a.nav-link.dropdown-toggle.hide-caret(
-                                    href="#"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                )
-                                    span.notification-bell.position-relative
-                                        | 🔔
-                                        if unreadCount > 0
-                                            span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.notification-badge
-                                                | #{unreadCount}
-
-                                ul.dropdown-menu.dropdown-menu-end.notifications-dropdown.shadow-lg(style="width: 300px;")
-                                    li.dropdown-header.text-uppercase.fw-bold.small Notifications
-                                    if notifications.length === 0
-                                        li: span.dropdown-item.text-muted.small No new alerts
-                                    else
-                                        each n in notifications
-                                            li: a.dropdown-item.small(href=`/notifications/${n.notification_id}/read` class=n.is_read ? "" : "fw-bold")
-                                                | #{n.message}
-
-                            //- User Profile Dropdown
-                            li.nav-item.dropdown
-                                a.nav-link.dropdown-toggle.d-flex.align-items-center(
-                                    href="#"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                )
-                                    if currentUser && currentUser.profile_image_path
-                                        img.border.border-2.border-secondary(
-                                            src=currentUser.profile_image_path
-                                            style="width:36px; height:36px; object-fit:cover; border-radius:50%;"
-                                        )
-                                    else
-                                        .bg-secondary.rounded-circle.d-flex.align-items-center.justify-content-center(style="width:36px; height:36px;")
-                                            span.text-white.small 👤
-
-                                ul.dropdown-menu.dropdown-menu-end.shadow-lg
-                                    li: a.dropdown-item(href="/profile") My Profile
-                                    li: a.dropdown-item(href="/dashboard") Dashboard
-                                    li: hr.dropdown-divider
-                                    li: a.dropdown-item.text-danger(href="/logout") Logout
-                        else
-                            li.nav-item: a.nav-link(href="/login") Login
-                            li.nav-item.ms-lg-2
-                                a.btn.btn-light.btn-sm.px-3.fw-bold(href="/register") Join Free
 
         //- ===== SECONDARY CATEGORY BAR =====
         if !hideCategories && categories && categories.length
