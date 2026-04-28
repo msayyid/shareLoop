@@ -2,13 +2,17 @@ name: Node CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: pg-sd2   
 
     steps:
       - name: Checkout repo
@@ -22,5 +26,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check app builds
+      - name: Basic check
         run: node -e "console.log('Build OK')"
