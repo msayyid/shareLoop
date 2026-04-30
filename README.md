@@ -1,185 +1,241 @@
-# Community Skill & Item Sharing Platform
+# ShareLoop
 
-**Group Name:** Version 0.1
-**Module:** Software Engineering
-**University:** University of Roehampton
-**Sprint:** Sprint 1 - Setup & Planning
-**Date:** 07/02/2026
+> A community item sharing platform — lend, swap, or give away things with your neighbours.
+
+ShareLoop is a full-stack web application built for the **Software Engineering** module (CMP-N204-0) at the **University of Roehampton**. The project addresses the cost-of-living crisis and household waste by letting local residents share physical items with each other through three non-financial exchange modes: **lending**, **swapping**, and **giving away**.
 
 ---
 
-## Project Overview
+## Table of Contents
 
-The **Community Skill & Item Sharing Platform** is a web-based application designed to help local community members share **skills** and **items** through mutual, non-financial exchange.
-
-The project responds to the current **cost-of-living crisis** by reducing unnecessary spending and waste, while encouraging trust-based community interaction.
-
-This repository contains the **initial project setup**, planning artefacts, and environment configuration required for **Sprint 1**.
-
----
-
-## Problem Statement
-
-Many people struggle to afford items they need only occasionally or services they cannot easily pay for. At the same time, many individuals possess underutilised skills and items that remain unused.
-
-Existing solutions are often:
-
-* Expensive
-* Environmentally wasteful
-* Exclusionary to low-income users
-* Transaction-focused rather than community-focused
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Team — Version 0.1](#team--version-01)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Continuous Integration](#continuous-integration)
+- [Project Management](#project-management)
+- [Sprint Progress](#sprint-progress)
+- [Ethics & Academic Integrity](#ethics--academic-integrity)
+- [AI Use](#ai-use)
+- [License](#license)
 
 ---
 
-## Our Solution
+## Overview
 
-We propose a platform that enables users to:
+Many people buy items they only use once or twice — drills, ladders, textbooks, baby clothes, party outfits — and then leave them to gather dust or throw them away. At the same time, neighbours often have exactly what others need but no easy way to find each other.
 
-* Exchange skills (e.g. tutoring, repairs, cooking)
-* Share items (e.g. tools, books, equipment)
-* Build trust through ratings and reputation
-* Support one another through mutual, non-financial exchange
+ShareLoop creates a circular economy at the neighbourhood level by connecting people who **have** items with people who **need** them, at no financial cost to either party. Every exchange falls into one of three modes:
 
----
+| Mode | What it means |
+| --- | --- |
+| **Lending** | Temporary borrowing. The item returns to the owner and to the platform's available pool when the request is marked complete. |
+| **Swapping** | A permanent trade between two users. |
+| **Giving away** | A free gift, no expectation of return. |
 
-## How the Platform Works
-
-1. **Sign Up** – Users create a profile with basic information and location
-2. **List** – Users offer skills or items they are willing to share
-3. **Browse** – Users search for skills or items nearby
-4. **Request** – Users request help or items from others
-5. **Exchange** – Users meet to exchange items or services
-6. **Rate** – Users leave ratings to build trust and accountability
+Each user has a public profile with a bio, location, listings, and a rating history that builds trust over time.
 
 ---
 
-## Target Users
+## Features
 
-### Primary Users
+**Accounts & profiles**
 
-* Students
-* Local residents
-* Families
-* Retirees
+- Registration and login with `bcrypt` password hashing
+- Session-based authentication with route-level middleware protection
+- Editable profile (name, bio, location, profile picture, password)
+- Public user pages showing listings, average rating, and reviews
 
-### Secondary Users
+**Listings**
 
-* Community organisations
-* Universities
-* Local councils
+- Create, edit, delete listings with image upload (`multer`)
+- Title, description, category, condition, exchange type, availability
+- Ownership checks on every mutation route
 
----
+**Discovery**
 
-## Project Benefits
+- Paginated browse pages for both listings and users
+- Search by keyword, filter by exchange type / condition / availability / category, sort by recency
+- Categories and tags navigation
 
-### Economic
+**Request lifecycle**
 
-* Reduces personal expenses
-* Encourages a sharing-based economy
+- Request → Accept / Decline → Complete (or Cancel)
+- Automatic decline of competing requests when one is accepted
+- Lending requests automatically return the item to availability when completed
+- Inbox views for both sides: *Requests Received* (owner) and *My Requests* (requester)
 
-### Social
+**Messaging**
 
-* Builds trust and community connections
-* Reduces isolation
-* Encourages mutual support
+- In-app chat tied to each request, with near-real-time updates via AJAX polling
+- "Start a chat" without committing to a request, for pre-request questions
+- Per-user chat list and unread state tracking
 
-### Environmental
+**Ratings & trust**
 
-* Reduces over-consumption
-* Extends product lifecycles
-* Minimises waste
+- 1–5 star rating with optional comment after a completed exchange
+- Average rating and review history shown on every profile
+- Database-level constraint preventing double-rating the same exchange
 
----
+**Notifications**
 
-## Team Information
-
-**Group Name:** Version 0.1
-
-| Name                   | Role   | GitHub    |
-| ---------------------- | ------ | --------- |
-| Mukhammadsaiid Norbaev | [Role] | @username |
-| Azlan Rashid           | [Role] | @azlanr1  |
-| [Full Name]            | [Role] | @username |
-| [Full Name]            | [Role] | @username |
-
-### Communication
-
-* **Primary:** WhatsApp
-* **Backup:** University email
-* **Meetings:** Weekly stand-up on agreed day and time
+- Generated for new requests, accepted/declined requests, and new messages
+- Header dropdown with unread count, polled via AJAX
+- Click-through to mark as read and navigate to the relevant page
 
 ---
 
-## Development Stack
+## Tech Stack
 
-* **Frontend:** HTML, CSS, JavaScript, PUG
-* **Backend:** Node.js, Express.js
-* **Database:** MySQL
-* **DevOps:** Docker, Docker Compose
-* **Project Management:** GitHub Projects (Kanban board)
-
----
-
-## Repository Structure (Sprint 1)
-
-
-community-skills-platform/ ├── README.md ├── pg-sd2/ # Module-provided scaffolding files ├── [folder-name]/ # Placeholder (project-related) ├── [folder-name]/ # Placeholder (project-related) ├── [folder-name]/ # Placeholder (project-related) ├── [folder-name]/ # Placeholder (project-related)
-
-All scaffolding files are provided by the module and customised by the team.
+- **Frontend:** HTML, CSS, JavaScript, Pug templates
+- **Backend:** Node.js, Express.js
+- **Database:** MySQL
+- **Auth & sessions:** `bcryptjs`, `express-session`
+- **File uploads:** `multer`
+- **DevOps:** Docker, Docker Compose, GitHub Actions
+- **Project management:** GitHub Projects (Kanban)
 
 ---
 
-## Environment Setup
+## Team — Version 0.1
+
+| Name | Role | GitHub |
+| --- | --- | --- |
+| Mukhammadsaiid Norbaev | Backend / Coordinator | [@msayyid](https://github.com/msayyid) |
+| Azlan Rashid | Frontend | [@azlanr1](https://github.com/azlanr1) |
+| Eyob Mamo Abebe | Database | [@eyobabebe93](https://github.com/eyobabebe93) |
+| Suphachok Salee | Organisation / Documentation | [@kimmi007](https://github.com/kimmi007) |
+
+**Communication**
+
+- Primary: WhatsApp
+- Backup: University of Roehampton email
+- Stand-ups: weekly during scheduled lab time
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-* Docker Desktop
-* Git
-* Node.js 18+ (optional for local testing)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Git
+- (Optional, for local non-Docker testing) Node.js 20+
 
-### Running the Project
+### Run with Docker
 
 ```bash
-git clone https://github.com/<repo-url>
-cd community-skills-platform
+git clone https://github.com/msayyid/shareLoop.git
+cd shareLoop/pg-sd2
 docker-compose up
+```
 
-Application: http://localhost:3000
-Database: localhost:3306
-All team members have successfully run the project using Docker.
+Once the containers are up:
 
-Project Management
-We use GitHub Projects as a Kanban board with the following columns:
-Backlog
-To Do
-In Progress
-Review
-Done
-Sprint 1 focuses on:
-Team setup
-GitHub repository
-Project planning
-Ethical analysis
-Personas
-Environment configuration
+- App: <http://localhost:3000>
+- MySQL: `localhost:3306`
 
-Sprint Progress
-✅ Sprint 1: Setup & Planning
-⏳ Sprint 2: Requirements & Design
-⏳ Sprint 3: Core Development
-⏳ Sprint 4: Advanced Features
+All four team members have run the project successfully through Docker on their own machines.
 
-Ethics & Academic Integrity
-Ethical considerations addressed include:
-Privacy and data protection (UK GDPR)
-User safety and trust
-Accessibility and inclusion
-Fair participation and anti-exploitation
-AI tools may be used only for:
-Debugging
-Explanation
-Writing assistance
-AI is not used to generate complete features, and all submitted work is fully understood by contributors.
+### Stopping
 
-License
-This project is developed for educational purposes only as part of the University of Roehampton Software Engineering module.
+```bash
+docker-compose down
+```
+
+---
+
+## Project Structure
+
+```
+shareLoop/
+├── .github/
+│   └── workflows/
+│       └── node.yml             # Node CI workflow
+├── pg-sd2/                      # Application root
+│   ├── app.js                   # Express app entry point, routes, middleware
+│   ├── package.json
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── app/
+│   │   ├── views/               # Pug templates
+│   │   └── static/
+│   │       ├── css/
+│   │       ├── js/
+│   │       └── images/
+│   │           ├── listings/    # Listing photos uploaded by users
+│   │           └── profiles/    # Profile pictures
+│   ├── models/                  # Data access layer
+│   │   ├── user.js
+│   │   ├── listing.js
+│   │   ├── category.js
+│   │   ├── request.js
+│   │   ├── rating.js
+│   │   ├── message.js
+│   │   └── notification.js
+│   └── services/
+│       └── db.js                # MySQL connection / query helper
+└── README.md
+```
+
+---
+
+## Continuous Integration
+
+A GitHub Actions workflow named **Node CI** runs automatically on every push and pull request targeting `main`. The workflow:
+
+1. Checks out the repository
+2. Sets up Node.js 20
+3. Installs dependencies with `npm install`
+4. Runs a basic build verification step
+
+See [`.github/workflows/node.yml`](.github/workflows/node.yml) for the full configuration.
+
+---
+
+## Project Management
+
+We use a **Scrum-style** workflow with weekly stand-ups and four sprints. Tasks live on a public GitHub Projects Kanban board.
+
+- **Kanban board:** <https://github.com/users/msayyid/projects/2/views/1>
+- Columns: Backlog → To Do → In Progress → Ready → In Review → Done
+
+---
+
+## Sprint Progress
+
+- ✅ **Sprint 1** — Setup & Planning (repo scaffolding, project description, personas, code of conduct, Docker dev environment)
+- ✅ **Sprint 2** — Requirements & Design (user stories, use case diagram, ERD, wireframes, activity diagrams)
+- ✅ **Sprint 3** — Core Development (database schema, listings list/detail, users list/profile, categories, tags)
+- ✅ **Sprint 4** — Advanced Features (auth, full request lifecycle, in-app messaging, ratings & trust, notifications, search & filter, profile management, CI workflow)
+
+---
+
+## Ethics & Academic Integrity
+
+The project considers ethical issues throughout, including:
+
+- **Privacy & data protection** in line with UK GDPR — minimal personal data, hashed passwords, location stored only at area level
+- **User safety & trust** — ratings system, ownership checks, restriction of message access to participants of a request
+- **Accessibility & inclusion** — clear navigation, age-agnostic design, no financial barrier to participation
+- **Fair participation** — no monetisation; the platform is co-operative by design
+
+---
+
+## AI Use
+
+In line with the module's AI policy, AI tools have been used only for:
+
+- Debugging
+- Explanation of unfamiliar concepts
+- Writing assistance for documentation
+
+AI has **not** been used to generate complete features. All submitted code is fully understood by the contributors who authored it.
+
+---
+
+## License
+
+This project is developed for educational purposes only as part of the University of Roehampton Software Engineering module (CMP-N204-0). It is not licensed for commercial use.
